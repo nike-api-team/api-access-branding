@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Breaking4</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --red: #e63946;
+      --blue: #3a86ff;
+      --green: #22c55e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Branded Header ────────────────────────────────── */
+    .brand-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.9);
+    }
+
+    .brand-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    .brand-logo .logo-icon {
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    .brand-logo .logo-text {
+      display: flex;
+      align-items: baseline;
+    }
+
+    .brand-logo .api {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .brand-logo .access {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .team-logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .team-logo-wrap img {
+      height: 48px;
+      width: auto;
+      border-radius: 6px;
+      background: #fff;
+      padding: 6px 10px;
+    }
+
+    .brand-edition {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .edition-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .edition-date {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .brand-intro {
+      padding: 32px 0 0;
+      text-align: center;
+    }
+
+    .brand-intro .from-line {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .brand-intro .team-name {
+      font-size: 14px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .brand-intro .edition-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--accent);
+      margin: 0 auto;
+    }
+
+    /* ── Content Sections ──────────────────────────────── */
+    section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 48px 0;
+    }
+
+    .hero-time {
+      font-size: 84px;
+      font-weight: 900;
+      letter-spacing: -3px;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .hero-sub {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .hero-detail {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 340px;
+      line-height: 1.7;
+    }
+
+    .scroll-hint {
+      margin-top: 48px;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    /* ── Poll ── */
+    .poll-question {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 24px;
+    }
+
+    .poll-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .poll-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .poll-option:hover { border-color: #444; }
+    .poll-option.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+
+    .option-num {
+      min-width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--border);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .poll-option.selected .option-num {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .option-text {
+      font-size: 15px;
+      line-height: 1.5;
+      padding-top: 4px;
+      color: var(--muted);
+    }
+    .poll-option.selected .option-text { color: var(--text); }
+
+    .poll-hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 16px;
+      font-style: italic;
+    }
+
+    /* ── Callout cards ── */
+    .callout-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .callout {
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .callout-chart {
+      flex-shrink: 0;
+      width: 96px;
+      height: 68px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .callout-content { flex: 1; }
+
+    .callout h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-light);
+      margin-bottom: 4px;
+    }
+
+    .callout p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .callout.red { border-left-color: var(--red); }
+    .callout.red h3 { color: #ff8fa3; }
+    .callout.blue { border-left-color: var(--blue); }
+    .callout.blue h3 { color: #7ab8ff; }
+    .callout.green { border-left-color: var(--green); }
+    .callout.green h3 { color: #6ee7a0; }
+
+    /* ── Limiter ── */
+    .limiter-statement {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 24px;
+    }
+    .limiter-statement em {
+      color: var(--accent-light);
+      font-style: normal;
+    }
+
+    .chart-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 16px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .chart-caption {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    .divider {
+      width: 40px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin: 24px 0;
+    }
+
+    /* ── Stats ── */
+    .stat-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-number .unit {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .stat-explain {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Reveal ── */
+    .reveal-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .reveal-card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .reveal-card p {
+      font-size: 14px;
+      color: #777;
+      line-height: 1.5;
+    }
+
+    .reveal-card.winner {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .reveal-card.winner h3 { color: var(--accent-light); }
+    .reveal-card.winner p { color: var(--muted); }
+
+    .winner-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--accent);
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    /* ── Close ── */
+    .close-section {
+      text-align: center;
+      padding: 80px 0;
+    }
+
+    .close-statement {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .close-body {
+      font-size: 15px;
+      color: #c8c8e0;
+      line-height: 1.7;
+    }
+
+    /* ── Branded Footer ────────────────────────────────── */
+    .brand-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+
+    .footer-inner {
+      text-align: center;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: baseline;
+      margin-bottom: 16px;
+      user-select: none;
+    }
+
+    .footer-logo .api {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .footer-logo .access {
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .footer-team {
+      font-size: 13px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 360px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    .footer-cta {
+      display: inline-block;
+      padding: 12px 32px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    .footer-cta:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .footer-fine {
+      margin-top: 32px;
+      font-size: 11px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ BRANDED HEADER ═══ -->
+  <header class="brand-header">
+    <div class="container">
+      <div class="brand-logo">
+        <svg class="logo-icon" width="20" height="20" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="18" r="11" stroke="#3a6df5" stroke-width="3" fill="none"/>
+          <rect x="19" y="27" width="10" height="14" rx="2" fill="#3a6df5"/>
+          <circle cx="24" cy="33" r="2.5" fill="#12121c"/>
+          <line x1="24" y1="35" x2="24" y2="38" stroke="#12121c" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div class="logo-text">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </div>
+      </div>
+      <div class="brand-edition">
+        <span class="edition-title">Breaking4</span>
+        <span class="edition-date">Feb 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="team-logo-wrap">
+        <img src="API Logo_Full Color.jpg" alt="Applied Performance Innovation" />
+      </div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 1: THE GOAL ═══ -->
+  <section class="hero">
+    <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="hero-time">3:59.99</div>
+      <p class="hero-sub">The barrier no woman has broken.</p>
+      <p class="hero-detail">We studied what happens inside your body at race pace — every heartbeat, every pulse of blood, every breath of air. Here's what we found.</p>
+      <div class="scroll-hint">Scroll &#8595;</div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 2: THE POLL ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Before we show you</div>
+      <p class="poll-question">What product solution is most likely to help a woman break the four-minute mile?</p>
+
+      <div class="poll-options">
+        <div class="poll-option" onclick="selectOption(this)">
+          <div class="option-num">1</div>
+          <div class="option-text">A <strong>shoe</strong> designed to improve speed around track curves</div>
+        </div>
+        <div class="poll-option" onclick="selectOption(this)">
+          <div class="option-num">2</div>
+          <div class="option-text">A <strong>bra</strong> that fits better and reduces discomfort</div>
+        </div>
+        <div class="poll-option" onclick="selectOption(this)">
+          <div class="option-num">3</div>
+          <div class="option-text">A <strong>method</strong> to get more oxygen to working muscles at the right time</div>
+        </div>
+        <div class="poll-option" onclick="selectOption(this)">
+          <div class="option-num">4</div>
+          <div class="option-text"><strong>Hard to say</strong> — we don't know enough about what's limiting this athlete yet</div>
+        </div>
+      </div>
+
+      <p class="poll-hint">Tap your answer — we'll come back to this at the end</p>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 3: YOUR BODY AT RACE PACE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Your body at race pace</div>
+      <h2 class="section-title">Here's what's happening inside you.</h2>
+
+      <div class="callout-stack">
+        <div class="callout red">
+          <div class="callout-chart">
+            <svg width="88" height="56" viewBox="0 0 64 40">
+              <polyline points="4,8 16,10 28,14 40,22 52,30 60,36" fill="none" stroke="#e63946" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="4" y1="38" x2="60" y2="38" stroke="#333" stroke-width="0.5"/>
+              <polygon points="56,28 62,36 56,34" fill="#e63946" opacity="0.6"/>
+            </svg>
+          </div>
+          <div class="callout-content">
+            <h3>Blood oxygen is dropping</h3>
+            <p>As you push harder, the oxygen in your blood falls. Your body can't keep up with what your muscles are demanding.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="callout-chart">
+            <svg width="88" height="56" viewBox="0 0 64 40">
+              <polyline points="4,32 12,16 20,10 28,8 36,8 44,8 52,8 60,8" fill="none" stroke="#7a9dff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="4" y1="38" x2="60" y2="38" stroke="#333" stroke-width="0.5"/>
+              <line x1="28" y1="6" x2="60" y2="6" stroke="#3a6df5" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>
+              <text x="62" y="9" fill="#3a6df5" font-size="6" opacity="0.6">MAX</text>
+            </svg>
+          </div>
+          <div class="callout-content">
+            <h3>Your heart is maxed out</h3>
+            <p>It's pumping as hard and fast as it can — but each beat is carrying less oxygen than you need.</p>
+          </div>
+        </div>
+
+        <div class="callout blue">
+          <div class="callout-chart">
+            <svg width="88" height="56" viewBox="0 0 64 40">
+              <polyline points="4,32 14,14 24,10 34,10 44,10 50,14 56,22 60,28" fill="none" stroke="#3a86ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="4" y1="38" x2="60" y2="38" stroke="#333" stroke-width="0.5"/>
+              <polygon points="54,18 62,28 56,26" fill="#3a86ff" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="callout-content">
+            <h3>Blood flow to your legs drops</h3>
+            <p>It rises, plateaus, then falls just before exhaustion — right when you need it most.</p>
+          </div>
+        </div>
+
+        <div class="callout green">
+          <div class="callout-chart">
+            <svg width="88" height="56" viewBox="0 0 64 40">
+              <polyline points="4,34 12,22 20,12 28,8 36,6 44,5 52,5 60,5" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="4" y1="38" x2="60" y2="38" stroke="#333" stroke-width="0.5"/>
+              <line x1="28" y1="3" x2="60" y2="3" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.4"/>
+              <text x="62" y="6" fill="#22c55e" font-size="5" opacity="0.5">~100%</text>
+            </svg>
+          </div>
+          <div class="callout-content">
+            <h3>Your muscles are extracting everything</h3>
+            <p>They're pulling out nearly every molecule of O&#8322; they receive. The problem isn't your muscles — it's what's being delivered to them.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 4: THE REAL LIMITER ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The real limiter</div>
+      <p class="limiter-statement">
+        It's not your legs. It's not your fitness. It's not your willpower.<br><br>
+        It's <em>oxygen delivery</em> — how much oxygen your blood carries and when it arrives at your muscles.
+      </p>
+
+      <div class="divider"></div>
+
+      <p style="font-size:15px;color:var(--muted);margin-bottom:20px;">We tested this directly. We made the work of breathing harder or easier during 4 minutes all out:</p>
+
+      <div class="chart-wrap">
+        <svg width="100%" viewBox="0 0 360 200">
+          <line x1="50" y1="170" x2="340" y2="170" stroke="#555" stroke-width="1"/>
+          <line x1="50" y1="170" x2="50" y2="20" stroke="#555" stroke-width="1"/>
+          <text x="195" y="196" fill="#888" font-size="11" text-anchor="middle" font-family="system-ui">Blood Oxygen &#8594;</text>
+          <text x="16" y="95" fill="#888" font-size="11" text-anchor="middle" font-family="system-ui" transform="rotate(-90,16,95)">Time to Exhaustion &#8594;</text>
+          <polygon points="80,155 130,140 170,120 210,100 250,80 300,55 330,40 330,170 80,170" fill="url(#trendGrad)" opacity="0.15"/>
+          <rect x="55" y="100" width="110" height="58" rx="4" fill="#e63946" opacity="0.08"/>
+          <text x="110" y="116" fill="#ff8fa3" font-size="8" text-anchor="middle" font-family="system-ui" font-weight="600">HARDER WORK</text>
+          <text x="110" y="126" fill="#ff8fa3" font-size="8" text-anchor="middle" font-family="system-ui" font-weight="600">OF BREATHING</text>
+          <rect x="200" y="25" width="125" height="70" rx="4" fill="#22c55e" opacity="0.08"/>
+          <text x="262" y="41" fill="#6ee7a0" font-size="8" text-anchor="middle" font-family="system-ui" font-weight="600">EASIER WORK</text>
+          <text x="262" y="51" fill="#6ee7a0" font-size="8" text-anchor="middle" font-family="system-ui" font-weight="600">OF BREATHING</text>
+          <circle cx="85" cy="155" r="5" fill="#e63946" opacity="0.7"/>
+          <circle cx="95" cy="148" r="5" fill="#e63946" opacity="0.7"/>
+          <circle cx="105" cy="160" r="5" fill="#e63946" opacity="0.7"/>
+          <circle cx="120" cy="142" r="5" fill="#e63946" opacity="0.7"/>
+          <circle cx="110" cy="152" r="5" fill="#e63946" opacity="0.7"/>
+          <circle cx="135" cy="138" r="5" fill="#e63946" opacity="0.7"/>
+          <circle cx="145" cy="145" r="5" fill="#e63946" opacity="0.7"/>
+          <circle cx="225" cy="90" r="5" fill="#22c55e" opacity="0.7"/>
+          <circle cx="240" cy="82" r="5" fill="#22c55e" opacity="0.7"/>
+          <circle cx="255" cy="75" r="5" fill="#22c55e" opacity="0.7"/>
+          <circle cx="250" cy="85" r="5" fill="#22c55e" opacity="0.7"/>
+          <circle cx="270" cy="65" r="5" fill="#22c55e" opacity="0.7"/>
+          <circle cx="280" cy="72" r="5" fill="#22c55e" opacity="0.7"/>
+          <circle cx="295" cy="55" r="5" fill="#22c55e" opacity="0.7"/>
+          <circle cx="310" cy="50" r="5" fill="#22c55e" opacity="0.7"/>
+          <circle cx="325" cy="42" r="5" fill="#22c55e" opacity="0.7"/>
+          <line x1="75" y1="162" x2="330" y2="38" stroke="#7a9dff" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>
+          <defs>
+            <linearGradient id="trendGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#e63946"/>
+              <stop offset="100%" stop-color="#22c55e"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <p class="chart-caption">When we increase oxygen in the blood, you run longer. When we decrease it, you stop sooner. Every single time.</p>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 5: THE NUMBERS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The numbers</div>
+      <h2 class="section-title">How close is close?</h2>
+
+      <div class="stat-stack">
+        <div class="stat-card">
+          <div class="stat-number">~8 <span class="unit">sec</span></div>
+          <p class="stat-explain">The gap between the current women's world record and 4:00 flat. That's it.</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1.5<span class="unit">%</span></div>
+          <p class="stat-explain">The increase in blood oxygen saturation needed to close that gap. That's it.</p>
+        </div>
+        <div class="stat-card" style="border-color:var(--accent);">
+          <div class="stat-number">~70 <span class="unit">mL O&#8322;/min</span></div>
+          <p class="stat-explain">The additional oxygen delivery to working muscle needed to close the gap.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 6: BACK TO THE QUESTION ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Back to the question</div>
+      <h2 class="section-title">What does the data say?</h2>
+
+      <div class="reveal-card">
+        <h3>Option 1 — A shoe for speed around curves</h3>
+        <p>Shoes matter for performance, but the data shows the limiter here is internal — it's about oxygen in the blood, not mechanics on the track.</p>
+      </div>
+
+      <div class="reveal-card">
+        <h3>Option 2 — A better-fitting bra</h3>
+        <p>Comfort matters, but the data points to a physiological ceiling — blood oxygen delivery — not a comfort problem.</p>
+      </div>
+
+      <div class="reveal-card winner">
+        <div class="winner-badge">Most supported by the data</div>
+        <h3>Option 3 — A method to get more oxygen to muscles</h3>
+        <p>This is exactly what the data shows. More oxygen in the blood = longer time to exhaustion. Every single time we tested it. The gap is ~70 mL O&#8322;/min — now we have a number to chase.</p>
+      </div>
+
+      <div class="reveal-card">
+        <h3>Option 4 — Hard to say</h3>
+        <p>A fair answer before seeing the data. But now we know: the problem is specific, measurable, and the evidence points clearly to oxygen delivery.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 7: THE GAP IS CLOSABLE ═══ -->
+  <section class="close-section">
+    <div class="container">
+      <div class="section-label">The takeaway</div>
+      <p class="close-statement">The gap is small. The problem is specific. It is solvable.</p>
+      <p class="close-body">
+        Now, for the first time, we know exactly what the target is — and we have data on approaches that could get there.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ BRANDED FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">
+          <svg class="logo-icon" width="22" height="22" viewBox="0 0 48 48" fill="none" style="margin-right:8px;align-self:center;">
+            <circle cx="24" cy="18" r="11" stroke="#3a6df5" stroke-width="3" fill="none"/>
+            <rect x="19" y="27" width="10" height="14" rx="2" fill="#3a6df5"/>
+            <circle cx="24" cy="33" r="2.5" fill="#12121c"/>
+            <line x1="24" y1="35" x2="24" y2="38" stroke="#12121c" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </div>
+        <div class="team-logo-wrap" style="margin-top:16px;">
+          <img src="API Logo_Full Color.jpg" alt="Applied Performance Innovation" />
+        </div>
+        <p class="footer-desc">Insights from the cutting edge of athlete performance — the problems, the solutions, and what we're learning along the way.</p>
+        <a class="footer-cta" href="#">Get Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+<script>
+function selectOption(el) {
+  document.querySelectorAll('.poll-option').forEach(function(opt) {
+    opt.classList.remove('selected');
+  });
+  el.classList.add('selected');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access — Brand Concepts</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-header {
+      text-align: center;
+      padding: 60px 24px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-header h1 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .page-header p {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .concept-section {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .concept-section:last-child { border-bottom: none; }
+
+    .concept-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .concept-name {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .concept-desc {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    .size-row {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .size-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .logo-display {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .logo-display.dark-bg {
+      background: var(--bg);
+      border-color: var(--border);
+    }
+
+    .sizes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .sizes-grid {
+        grid-template-columns: 1fr;
+      }
+      .size-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+    }
+
+    /* ── CONCEPT A: Minimal Typographic ── */
+    .logo-a {
+      display: flex;
+      align-items: baseline;
+      gap: 0;
+      user-select: none;
+    }
+
+    .logo-a .api {
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--text);
+    }
+
+    .logo-a .access {
+      font-weight: 300;
+      letter-spacing: 2px;
+      color: var(--accent);
+    }
+
+    .logo-a.hero .api { font-size: 72px; }
+    .logo-a.hero .access { font-size: 72px; }
+
+    .logo-a.header .api { font-size: 28px; }
+    .logo-a.header .access { font-size: 28px; }
+
+    .logo-a.compact .api { font-size: 16px; }
+    .logo-a.compact .access { font-size: 16px; }
+
+    /* ── CONCEPT B: Badge / Credential ── */
+    .logo-b {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+    }
+
+    .logo-b .badge {
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      padding: 12px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      box-shadow: 0 0 24px var(--accent-glow), inset 0 0 24px rgba(58, 109, 245, 0.05);
+    }
+
+    .logo-b .badge::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .logo-b .badge-api {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      color: var(--text);
+    }
+
+    .logo-b .badge-line {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 6px 0;
+    }
+
+    .logo-b .badge-access {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .logo-b.hero .badge { padding: 20px 40px; }
+    .logo-b.hero .badge-api { font-size: 48px; letter-spacing: 10px; }
+    .logo-b.hero .badge-access { font-size: 16px; letter-spacing: 8px; }
+
+    .logo-b.header .badge { padding: 8px 16px; border-radius: 8px; }
+    .logo-b.header .badge-api { font-size: 22px; letter-spacing: 4px; }
+    .logo-b.header .badge-line { margin: 4px 0; }
+    .logo-b.header .badge-access { font-size: 9px; letter-spacing: 4px; }
+    .logo-b.header .badge::before { width: 14px; height: 3px; top: -6px; }
+
+    .logo-b.compact .badge { padding: 5px 10px; border-radius: 6px; border-width: 1.5px; }
+    .logo-b.compact .badge-api { font-size: 14px; letter-spacing: 3px; }
+    .logo-b.compact .badge-line { margin: 2px 0; }
+    .logo-b.compact .badge-access { font-size: 6px; letter-spacing: 3px; }
+    .logo-b.compact .badge::before { width: 10px; height: 2px; top: -4px; }
+
+    /* ── CONCEPT C: Icon + Text ── */
+    .logo-c {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+    }
+
+    .logo-c .icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-c .text-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-c .text-api {
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .logo-c .text-access {
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .logo-c.hero .icon-wrap svg { width: 52px; height: 52px; }
+    .logo-c.hero .text-api { font-size: 42px; }
+    .logo-c.hero .text-access { font-size: 16px; margin-top: 2px; }
+    .logo-c.hero { gap: 16px; }
+
+    .logo-c.header .icon-wrap svg { width: 28px; height: 28px; }
+    .logo-c.header .text-api { font-size: 22px; }
+    .logo-c.header .text-access { font-size: 9px; margin-top: 1px; }
+    .logo-c.header { gap: 10px; }
+
+    .logo-c.compact .icon-wrap svg { width: 18px; height: 18px; }
+    .logo-c.compact .text-api { font-size: 14px; letter-spacing: 1px; }
+    .logo-c.compact .text-access { font-size: 6px; letter-spacing: 2px; }
+    .logo-c.compact { gap: 6px; }
+
+    /* ── CONCEPT D: Stacked Monogram ── */
+    .logo-d {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+    }
+
+    .logo-d .mono {
+      font-weight: 900;
+      letter-spacing: 12px;
+      color: var(--text);
+      line-height: 1;
+      position: relative;
+    }
+
+    .logo-d .mono-bar {
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      border-radius: 2px;
+      margin: 8px 0;
+    }
+
+    .logo-d .mono-sub {
+      font-weight: 600;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .logo-d.hero .mono { font-size: 80px; letter-spacing: 20px; }
+    .logo-d.hero .mono-bar { height: 4px; margin: 12px 0; }
+    .logo-d.hero .mono-sub { font-size: 20px; letter-spacing: 12px; }
+
+    .logo-d.header .mono { font-size: 32px; letter-spacing: 8px; }
+    .logo-d.header .mono-bar { height: 2px; margin: 6px 0; }
+    .logo-d.header .mono-sub { font-size: 10px; letter-spacing: 5px; }
+
+    .logo-d.compact .mono { font-size: 20px; letter-spacing: 5px; }
+    .logo-d.compact .mono-bar { height: 1.5px; margin: 3px 0; }
+    .logo-d.compact .mono-sub { font-size: 7px; letter-spacing: 3px; }
+
+    .byline {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .byline-inline {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>Brand Exploration</h1>
+    <p>Four logo concepts for API Access — each shown at hero, header, and compact sizes. Pick a direction or mix and match elements.</p>
+  </div>
+
+  <!-- ═══ CONCEPT A: Minimal Typographic ═══ -->
+  <div class="concept-section">
+    <div class="concept-label">Concept A</div>
+    <h2 class="concept-name">Minimal Typographic</h2>
+    <p class="concept-desc">Bold "API" paired with light-weight "ACCESS." Clean, horizontal, modern. Think Nike News meets Apple. The weight contrast does all the work.</p>
+
+    <div class="sizes-grid">
+      <div>
+        <div class="size-label">Hero</div>
+        <div class="logo-display">
+          <div>
+            <div class="logo-a hero"><span class="api">API</span><span class="access">ACCESS</span></div>
+            <div class="byline">from Applied Performance Innovation</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="size-label">Header</div>
+        <div class="logo-display">
+          <div>
+            <div class="logo-a header"><span class="api">API</span><span class="access">ACCESS</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="size-label">Compact</div>
+        <div class="logo-display">
+          <div>
+            <div class="logo-a compact"><span class="api">API</span><span class="access">ACCESS</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CONCEPT B: Badge / Credential ═══ -->
+  <div class="concept-section">
+    <div class="concept-label">Concept B</div>
+    <h2 class="concept-name">Badge / Credential</h2>
+    <p class="concept-desc">An access badge with blue glow. Plays on the "granted access" metaphor — like a VIP credential to the world of elite performance. The notch at top suggests a lanyard clip.</p>
+
+    <div class="sizes-grid">
+      <div>
+        <div class="size-label">Hero</div>
+        <div class="logo-display dark-bg">
+          <div>
+            <div class="logo-b hero">
+              <div class="badge">
+                <span class="badge-api">API</span>
+                <div class="badge-line"></div>
+                <span class="badge-access">Access</span>
+              </div>
+            </div>
+            <div class="byline">Applied Performance Innovation</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="size-label">Header</div>
+        <div class="logo-display dark-bg">
+          <div class="logo-b header">
+            <div class="badge">
+              <span class="badge-api">API</span>
+              <div class="badge-line"></div>
+              <span class="badge-access">Access</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="size-label">Compact</div>
+        <div class="logo-display dark-bg">
+          <div class="logo-b compact">
+            <div class="badge">
+              <span class="badge-api">API</span>
+              <div class="badge-line"></div>
+              <span class="badge-access">Access</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CONCEPT C: Icon + Text ═══ -->
+  <div class="concept-section">
+    <div class="concept-label">Concept C</div>
+    <h2 class="concept-name">Icon + Text Lockup</h2>
+    <p class="concept-desc">A keyhole/unlock icon paired with the text. The icon works as a standalone mark for favicons, social avatars, or app icons. Suggests unlocking insider knowledge.</p>
+
+    <div class="sizes-grid">
+      <div>
+        <div class="size-label">Hero</div>
+        <div class="logo-display">
+          <div>
+            <div class="logo-c hero">
+              <div class="icon-wrap">
+                <svg viewBox="0 0 48 48" fill="none">
+                  <circle cx="24" cy="18" r="11" stroke="#3a6df5" stroke-width="3" fill="none"/>
+                  <rect x="19" y="27" width="10" height="14" rx="2" fill="#3a6df5"/>
+                  <circle cx="24" cy="33" r="2.5" fill="#0a0a0f"/>
+                  <line x1="24" y1="35" x2="24" y2="38" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="text-wrap">
+                <span class="text-api">API</span>
+                <span class="text-access">Access</span>
+              </div>
+            </div>
+            <div class="byline-inline">from Applied Performance Innovation</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="size-label">Header</div>
+        <div class="logo-display">
+          <div class="logo-c header">
+            <div class="icon-wrap">
+              <svg viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="18" r="11" stroke="#3a6df5" stroke-width="3" fill="none"/>
+                <rect x="19" y="27" width="10" height="14" rx="2" fill="#3a6df5"/>
+                <circle cx="24" cy="33" r="2.5" fill="#0a0a0f"/>
+                <line x1="24" y1="35" x2="24" y2="38" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="text-wrap">
+              <span class="text-api">API</span>
+              <span class="text-access">Access</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="size-label">Compact</div>
+        <div class="logo-display">
+          <div class="logo-c compact">
+            <div class="icon-wrap">
+              <svg viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="18" r="11" stroke="#3a6df5" stroke-width="3" fill="none"/>
+                <rect x="19" y="27" width="10" height="14" rx="2" fill="#3a6df5"/>
+                <circle cx="24" cy="33" r="2.5" fill="#0a0a0f"/>
+                <line x1="24" y1="35" x2="24" y2="38" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="text-wrap">
+              <span class="text-api">API</span>
+              <span class="text-access">Access</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CONCEPT D: Stacked Monogram ═══ -->
+  <div class="concept-section">
+    <div class="concept-label">Concept D</div>
+    <h2 class="concept-name">Stacked Monogram</h2>
+    <p class="concept-desc">Large "API" monogram with a blue gradient bar and "ACCESS" beneath. Bold, broadcast-ready — like ESPN or HBO branding. Commands attention at any size.</p>
+
+    <div class="sizes-grid">
+      <div>
+        <div class="size-label">Hero</div>
+        <div class="logo-display dark-bg">
+          <div>
+            <div class="logo-d hero">
+              <span class="mono">API</span>
+              <div class="mono-bar"></div>
+              <span class="mono-sub">Access</span>
+            </div>
+            <div class="byline">Applied Performance Innovation</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="size-label">Header</div>
+        <div class="logo-display dark-bg">
+          <div class="logo-d header">
+            <span class="mono">API</span>
+            <div class="mono-bar"></div>
+            <span class="mono-sub">Access</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="size-label">Compact</div>
+        <div class="logo-display dark-bg">
+          <div class="logo-d compact">
+            <span class="mono">API</span>
+            <div class="mono-bar"></div>
+            <span class="mono-sub">Access</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

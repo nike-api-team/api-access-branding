@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access — Applied Performance Innovation</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Hero ── */
+    .landing-hero {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 24px;
+    }
+
+    .hero-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      user-select: none;
+    }
+
+    .hero-logo .logo-icon {
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    .hero-logo .logo-text {
+      display: flex;
+      align-items: baseline;
+    }
+
+    .hero-logo .api {
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      color: var(--text);
+    }
+
+    .hero-logo .access {
+      font-size: 64px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      color: var(--accent);
+    }
+
+    .team-logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    .team-logo-wrap img {
+      height: 56px;
+      width: auto;
+      border-radius: 8px;
+      background: #fff;
+      padding: 8px 12px;
+    }
+
+    .hero-tagline {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.3;
+      max-width: 380px;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 380px;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .hero-from {
+      font-size: 13px;
+      color: var(--accent-light);
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 40px;
+    }
+
+    .hero-scroll {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* ── Section shared ── */
+    .landing-section {
+      padding: 64px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    /* ── Featured Edition Card ── */
+    .featured-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .featured-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 32px var(--accent-glow);
+    }
+
+    .featured-banner {
+      background: linear-gradient(135deg, #1a1028 0%, #12121c 100%);
+      padding: 40px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-banner::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .featured-time {
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .featured-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .featured-body {
+      padding: 24px;
+    }
+
+    .featured-edition-label {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--accent);
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .featured-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .featured-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .featured-cta {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    /* ── Coming Soon Grid ── */
+    .coming-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .coming-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 16px;
+      text-align: center;
+    }
+
+    .coming-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: rgba(58, 109, 245, 0.1);
+    }
+
+    .coming-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .coming-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .coming-tag {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 2px 8px;
+      border-radius: 3px;
+      opacity: 0.7;
+    }
+
+    /* ── What is API Access ── */
+    .value-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .value-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .value-marker {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(58, 109, 245, 0.1);
+      border: 1px solid rgba(58, 109, 245, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .value-content h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .value-content p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Footer ── */
+    .landing-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      text-align: center;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: baseline;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+
+    .footer-logo .api {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .footer-logo .access {
+      font-size: 24px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .footer-team {
+      font-size: 13px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .footer-fine {
+      font-size: 11px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="landing-hero">
+    <div class="hero-logo">
+      <svg class="logo-icon" width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="18" r="11" stroke="#3a6df5" stroke-width="3" fill="none"/>
+        <rect x="19" y="27" width="10" height="14" rx="2" fill="#3a6df5"/>
+        <circle cx="24" cy="33" r="2.5" fill="#0a0a0f"/>
+        <line x1="24" y1="35" x2="24" y2="38" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="logo-text">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </div>
+    </div>
+    <p class="hero-tagline">Insider access to the world of elite athlete performance.</p>
+    <p class="hero-desc">The science, the stories, and the solutions — from the team working directly with the athletes pushing the boundaries of what's possible.</p>
+    <div class="team-logo-wrap">
+      <img src="API Logo_Full Color.jpg" alt="Applied Performance Innovation" />
+    </div>
+    <div class="hero-scroll">Explore &#8595;</div>
+  </div>
+
+  <!-- ═══ WHAT IS API ACCESS ═══ -->
+  <div class="landing-section">
+    <div class="container">
+      <div class="section-label">What you get</div>
+      <h2 class="section-title">Why API Access?</h2>
+
+      <div class="value-stack">
+        <div class="value-item">
+          <div class="value-marker">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-5-5 1.41-1.41L11 14.17l7.59-7.59L20 8l-9 9z" fill="#3a6df5"/>
+            </svg>
+          </div>
+          <div class="value-content">
+            <h3>Athlete stories, backed by data</h3>
+            <p>Real insights from real athletes — what we measured, what we found, and what it means for product and performance.</p>
+          </div>
+        </div>
+
+        <div class="value-item">
+          <div class="value-marker">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l4.59-4.58L18 11l-6 6z" fill="#3a6df5"/>
+            </svg>
+          </div>
+          <div class="value-content">
+            <h3>Cutting-edge applied science</h3>
+            <p>We translate complex physiology into clear, actionable takeaways you can actually use in your work.</p>
+          </div>
+        </div>
+
+        <div class="value-item">
+          <div class="value-marker">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z" fill="#3a6df5"/>
+            </svg>
+          </div>
+          <div class="value-content">
+            <h3>Insider access</h3>
+            <p>See what the Applied Performance Innovation team is working on before anyone else — the problems we're solving and the breakthroughs we're chasing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ LATEST EDITION ═══ -->
+  <div class="landing-section">
+    <div class="container">
+      <div class="section-label">Latest Edition</div>
+      <h2 class="section-title">Featured Story</h2>
+
+      <a class="featured-card" href="api-access-breaking4.html">
+        <div class="featured-banner">
+          <div class="featured-time">3:59.99</div>
+          <div class="featured-subtitle">The barrier no woman has broken</div>
+        </div>
+        <div class="featured-body">
+          <div class="featured-edition-label">Breaking4</div>
+          <h3 class="featured-title">What your body is telling us at race pace</h3>
+          <p class="featured-desc">We studied the physiology of a world-class miler at her limit — every heartbeat, every breath, every molecule of oxygen. Here's what we found, and why the gap is closer than you think.</p>
+          <span class="featured-cta">Read the full story &#8594;</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ═══ COMING SOON ═══ -->
+  <div class="landing-section">
+    <div class="container">
+      <div class="section-label">Coming soon</div>
+      <h2 class="section-title">More ways to get access</h2>
+
+      <div class="coming-grid">
+        <div class="coming-card">
+          <div class="coming-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z" fill="#3a6df5"/>
+            </svg>
+          </div>
+          <div class="coming-title">Newsletter</div>
+          <div class="coming-desc">Deep-dive editions delivered to your inbox</div>
+          <div class="coming-tag">Active</div>
+        </div>
+
+        <div class="coming-card">
+          <div class="coming-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" fill="#3a6df5"/>
+            </svg>
+          </div>
+          <div class="coming-title">Podcast</div>
+          <div class="coming-desc">Conversations with the scientists and athletes</div>
+          <div class="coming-tag">Coming Soon</div>
+        </div>
+
+        <div class="coming-card">
+          <div class="coming-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z" fill="#3a6df5"/>
+            </svg>
+          </div>
+          <div class="coming-title">Video</div>
+          <div class="coming-desc">Inside the lab and on the field</div>
+          <div class="coming-tag">Coming Soon</div>
+        </div>
+
+        <div class="coming-card">
+          <div class="coming-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="#3a6df5"/>
+            </svg>
+          </div>
+          <div class="coming-title">Data Drops</div>
+          <div class="coming-desc">Interactive dashboards and key findings</div>
+          <div class="coming-tag">Coming Soon</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <div class="landing-footer">
+    <div class="container">
+      <div class="footer-logo">
+        <svg width="20" height="20" viewBox="0 0 48 48" fill="none" style="margin-right:8px;align-self:center;">
+          <circle cx="24" cy="18" r="11" stroke="#3a6df5" stroke-width="3" fill="none"/>
+          <rect x="19" y="27" width="10" height="14" rx="2" fill="#3a6df5"/>
+          <circle cx="24" cy="33" r="2.5" fill="#0a0a0f"/>
+          <line x1="24" y1="35" x2="24" y2="38" stroke="#0a0a0f" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </div>
+      <div class="team-logo-wrap" style="margin-top:12px;">
+        <img src="API Logo_Full Color.jpg" alt="Applied Performance Innovation" />
+      </div>
+      <p class="footer-fine">Questions? Reach out to the API team.</p>
+    </div>
+  </div>
+
+</body>
+</html>
