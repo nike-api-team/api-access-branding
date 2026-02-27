@@ -448,6 +448,132 @@
     .page-content.visible {
       display: block;
     }
+
+    /* ── Section Tagline ── */
+    .section-tagline {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: -16px;
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+
+    /* ── Content Cards ── */
+    .card-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .content-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .content-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 24px var(--accent-glow);
+    }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .tag-drop {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .tag-story {
+      background: var(--accent-light);
+      color: #0a0a0f;
+    }
+
+    .tag-pub {
+      background: transparent;
+      color: var(--accent-light);
+      border: 1px solid rgba(122, 157, 255, 0.3);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .card-source {
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.7;
+      margin-bottom: 10px;
+    }
+
+    .card-cta {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    .content-card.placeholder {
+      border-style: dashed;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .content-card.placeholder .card-title {
+      color: var(--muted);
+    }
+
+    .placeholder-label {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+
+    .section-footer {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .view-all {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.35;
+      cursor: default;
+    }
   </style>
 </head>
 <body>
@@ -524,8 +650,7 @@
   <!-- ═══ LATEST EDITION ═══ -->
   <div class="landing-section">
     <div class="container">
-      <div class="section-label">Latest Edition</div>
-      <h2 class="section-title">Featured Story</h2>
+      <h2 class="section-title">Featured</h2>
 
       <a class="featured-card" href="api-access-breaking4.html">
         <div class="featured-banner">
@@ -542,6 +667,99 @@
     </div>
   </div>
 
+  <!-- ═══ DATA DROPS ═══ -->
+  <div class="landing-section">
+    <div class="container">
+      <h2 class="section-title">Data Drops</h2>
+      <p class="section-tagline">Our science. Our findings. Direct from the source.</p>
+
+      <div class="card-stack">
+        <a class="content-card" href="api-access-breaking4.html">
+          <div class="card-tag tag-drop">Data Drop</div>
+          <h3 class="card-title">Breaking4: What your body is telling us at race pace</h3>
+          <p class="card-desc">We studied the physiology of a world-class miler at her limit — every heartbeat, every breath, every molecule of oxygen. Here's why oxygen delivery is the key.</p>
+          <span class="card-cta">Explore &#8594;</span>
+        </a>
+
+        <div class="content-card placeholder">
+          <div class="card-tag tag-drop">Data Drop</div>
+          <h3 class="card-title">More coming soon</h3>
+          <p class="card-desc">New data-driven stories from the lab are on the way.</p>
+          <span class="placeholder-label">Coming Soon</span>
+        </div>
+      </div>
+
+      <div class="section-footer">
+        <span class="view-all">View all &#8594;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ATHLETE STORIES ═══ -->
+  <div class="landing-section">
+    <div class="container">
+      <h2 class="section-title">Athlete Stories</h2>
+      <p class="section-tagline">Time spent. Lessons learned.</p>
+
+      <div class="card-stack">
+        <div class="content-card placeholder">
+          <div class="card-tag tag-story">Athlete Story</div>
+          <h3 class="card-title">Stories from the field are coming</h3>
+          <p class="card-desc">First-hand accounts from time spent with the athletes who push boundaries every day.</p>
+          <span class="placeholder-label">Coming Soon</span>
+        </div>
+
+        <div class="content-card placeholder">
+          <div class="card-tag tag-story">Athlete Story</div>
+          <h3 class="card-title">More on the way</h3>
+          <p class="card-desc">The lessons we've learned — and the moments that changed how we think about performance.</p>
+          <span class="placeholder-label">Coming Soon</span>
+        </div>
+      </div>
+
+      <div class="section-footer">
+        <span class="view-all">View all &#8594;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BEYOND OUR WALLS ═══ -->
+  <div class="landing-section">
+    <div class="container">
+      <h2 class="section-title">Beyond Our Walls</h2>
+      <p class="section-tagline">What the world is discovering.</p>
+
+      <div class="card-stack">
+        <a class="content-card" href="api-access-boere-ultra-eeg.html">
+          <div class="card-tag tag-pub">Publication</div>
+          <h3 class="card-title">Your brain after 50km: ultramarathon racing alters executive function</h3>
+          <p class="card-desc">76 runners. Mobile EEG. The first large-sample evidence that ultramarathon racing reduces neural activity tied to inhibitory control and attention.</p>
+          <div class="card-source">Boere et al. — Journal of Applied Physiology, 2026</div>
+          <span class="card-cta">Read our take &#8594;</span>
+        </a>
+
+        <a class="content-card" href="api-access-jenkins-heat-vo2max.html">
+          <div class="card-tag tag-pub">Publication</div>
+          <h3 class="card-title">Hot baths, more oxygen: passive heat acclimation boosts VO&#8322;max by 4.4%</h3>
+          <p class="card-desc">5 weeks of hot water immersion increased hemoglobin mass and expanded the heart's stroke volume in trained runners — without changing their training.</p>
+          <div class="card-source">Jenkins et al. — The Journal of Physiology, 2025</div>
+          <span class="card-cta">Read our take &#8594;</span>
+        </a>
+
+        <div class="content-card placeholder">
+          <div class="card-tag tag-pub">Publication</div>
+          <h3 class="card-title">More on the way</h3>
+          <p class="card-desc">The best of what researchers around the world are publishing about the human body in sport.</p>
+          <span class="placeholder-label">Coming Soon</span>
+        </div>
+      </div>
+
+      <div class="section-footer">
+        <span class="view-all">View all &#8594;</span>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ COMING SOON ═══ -->
   <div class="landing-section">
     <div class="container">
@@ -549,17 +767,6 @@
       <h2 class="section-title">More ways to get access</h2>
 
       <div class="coming-grid">
-        <div class="coming-card">
-          <div class="coming-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z" fill="#3a6df5"/>
-            </svg>
-          </div>
-          <div class="coming-title">Newsletter</div>
-          <div class="coming-desc">Deep-dive editions delivered to your inbox</div>
-          <div class="coming-tag">Active</div>
-        </div>
-
         <div class="coming-card">
           <div class="coming-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -579,17 +786,6 @@
           </div>
           <div class="coming-title">Video</div>
           <div class="coming-desc">Inside the lab and on the field</div>
-          <div class="coming-tag">Coming Soon</div>
-        </div>
-
-        <div class="coming-card">
-          <div class="coming-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="#3a6df5"/>
-            </svg>
-          </div>
-          <div class="coming-title">Data Drops</div>
-          <div class="coming-desc">Interactive dashboards and key findings</div>
           <div class="coming-tag">Coming Soon</div>
         </div>
       </div>

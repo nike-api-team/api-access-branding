@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Passive Heat Acclimation &amp; VO₂max</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --red: #e63946;
+      --green: #22c55e;
+      --orange: #f59e0b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Branded Header ── */
+    .brand-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.9);
+    }
+
+    .brand-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: baseline;
+      user-select: none;
+    }
+
+    .brand-logo .api {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .brand-logo .access {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .brand-edition {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .edition-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .edition-date {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .brand-intro {
+      padding: 32px 0 0;
+      text-align: center;
+    }
+
+    .brand-intro .from-line {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .brand-intro .team-name {
+      font-size: 14px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .brand-intro .edition-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--accent);
+      margin: 0 auto;
+    }
+
+    /* ── Content Sections ── */
+    section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 48px 0;
+    }
+
+    .hero-headline {
+      font-size: 40px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--orange) 0%, var(--red) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .hero-sub {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.3;
+      max-width: 380px;
+    }
+
+    .hero-detail {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 360px;
+      line-height: 1.7;
+    }
+
+    .hero-paper-title {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: 24px;
+      max-width: 360px;
+      line-height: 1.5;
+      opacity: 0.7;
+    }
+
+    .scroll-hint {
+      margin-top: 48px;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    /* ── Why This Matters ── */
+    .matters-text {
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .matters-text em {
+      color: var(--accent-light);
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    /* ── Stats ── */
+    .stat-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-number .unit {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .stat-number.orange { color: var(--orange); }
+
+    .stat-explain {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Callout cards ── */
+    .callout-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .callout {
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .callout h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-light);
+      margin-bottom: 4px;
+    }
+
+    .callout p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .callout.red { border-left-color: var(--red); }
+    .callout.red h3 { color: #ff8fa3; }
+    .callout.green { border-left-color: var(--green); }
+    .callout.green h3 { color: #6ee7a0; }
+    .callout.orange { border-left-color: var(--orange); }
+    .callout.orange h3 { color: #fbbf24; }
+
+    .divider {
+      width: 40px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin: 24px 0;
+    }
+
+    /* ── Protocol card ── */
+    .protocol-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 20px;
+      margin-bottom: 16px;
+    }
+
+    .protocol-card h3 {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .protocol-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(42, 42, 69, 0.5);
+      font-size: 14px;
+    }
+
+    .protocol-row:last-child { border-bottom: none; }
+    .protocol-label { color: var(--muted); }
+    .protocol-value { color: var(--text); font-weight: 600; }
+
+    /* ── Takeaway / Close ── */
+    .close-section {
+      text-align: center;
+      padding: 80px 0;
+    }
+
+    .close-statement {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, var(--orange), var(--red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .close-body {
+      font-size: 15px;
+      color: #c8c8e0;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+
+    /* ── Connection callout ── */
+    .connection-card {
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 32px;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .connection-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .connection-card p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .connection-link {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── CTA Button ── */
+    .paper-cta {
+      display: inline-block;
+      padding: 14px 36px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+    .paper-cta:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ── Citation Block ── */
+    .citation-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 24px;
+    }
+
+    .citation-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .citation-text {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* ── Branded Footer ── */
+    .brand-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+
+    .footer-inner { text-align: center; }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: baseline;
+      margin-bottom: 16px;
+      user-select: none;
+    }
+
+    .footer-logo .api { font-size: 28px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 28px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+
+    .footer-team { font-size: 13px; color: var(--accent-light); font-weight: 600; margin-bottom: 8px; }
+
+    .footer-desc { font-size: 13px; color: var(--muted); max-width: 360px; margin: 0 auto 24px; line-height: 1.6; }
+
+    .footer-cta {
+      display: inline-block;
+      padding: 12px 32px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    .footer-cta:hover { background: var(--accent); color: #fff; }
+
+    .footer-fine { margin-top: 32px; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ BRANDED HEADER ═══ -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo" style="text-decoration:none;">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Beyond Our Walls</span>
+        <span class="edition-date">Feb 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">From</div>
+      <div class="team-name">Applied Performance Innovation</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="hero-headline">Hot baths. More oxygen.</div>
+      <p class="hero-sub">5 weeks of hot water immersion increased VO&#8322;max by 4.4% in trained runners — without changing their training.</p>
+      <p class="hero-detail">Passive heat acclimation produced hemoglobin mass gains comparable to altitude training, plus cardiac adaptations that altitude can't match.</p>
+      <p class="hero-paper-title">Jenkins et al. (2025) — The Journal of Physiology</p>
+      <div class="scroll-hint">Scroll &#8595;</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE PROTOCOL ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The protocol</div>
+      <h2 class="section-title">Simple. Accessible. No altitude required.</h2>
+
+      <div class="protocol-card">
+        <h3>Hot Water Immersion Protocol</h3>
+        <div class="protocol-row">
+          <span class="protocol-label">Duration</span>
+          <span class="protocol-value">5 weeks</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Frequency</span>
+          <span class="protocol-value">5 sessions / week</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Session length</span>
+          <span class="protocol-value">45 minutes</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Water temp</span>
+          <span class="protocol-value">&#8805;40°C (progressive)</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Timing</span>
+          <span class="protocol-value">~75% post-training</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Training change</span>
+          <span class="protocol-value">None — habitual training maintained</span>
+        </div>
+      </div>
+
+      <div class="protocol-card">
+        <h3>Participants</h3>
+        <div class="protocol-row">
+          <span class="protocol-label">Sample</span>
+          <span class="protocol-value">10 well-trained runners</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Baseline VO&#8322;max</span>
+          <span class="protocol-value">64.5 ± 8.1 mL/min/kg</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Design</span>
+          <span class="protocol-value">Crossover (HWI vs. control)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WHY THIS MATTERS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Why this matters</div>
+      <h2 class="section-title">An alternative to altitude. From a bathtub.</h2>
+
+      <p class="matters-text">
+        Athletes have long traveled to altitude camps to boost hemoglobin mass and oxygen-carrying capacity. It works — but it's <em>expensive, logistically complex, and environmentally costly</em>.
+      </p>
+      <p class="matters-text">
+        This study shows that <em>sitting in hot water</em> after training produces the same hemoglobin mass gains as altitude — plus something altitude doesn't give you: <em>cardiac remodeling</em> that increases how much blood your heart can pump per beat.
+      </p>
+      <p class="matters-text">
+        Heat expanded both the oxygen-carrying capacity of the blood <em>and</em> the heart's ability to deliver it. That dual mechanism is what makes this different.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ KEY FINDINGS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Key findings</div>
+      <h2 class="section-title">What changed in 5 weeks</h2>
+
+      <div class="stat-stack">
+        <div class="stat-card">
+          <div class="stat-number orange">+33 <span class="unit">g</span></div>
+          <p class="stat-explain">Hemoglobin mass increase — a 3.9% gain, comparable to altitude training protocols of similar duration.</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-number orange">+284 <span class="unit">mL</span></div>
+          <p class="stat-explain">Blood volume expansion. More blood to carry more oxygen to working muscles.</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-number">+10 <span class="unit">mL</span></div>
+          <p class="stat-explain">Left ventricular end-diastolic volume increase — the heart physically expanded its filling capacity, pumping more blood per beat.</p>
+        </div>
+
+        <div class="stat-card" style="border-color:var(--accent);">
+          <div class="stat-number">+2.7 <span class="unit">mL/kg/min</span></div>
+          <p class="stat-explain">VO&#8322;max improvement — a 4.4% gain in maximal oxygen consumption, with treadmill speed at VO&#8322;max increasing by 0.8 km/h.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ HOW IT WORKS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">Two pathways to more oxygen</h2>
+
+      <div class="callout-stack">
+        <div class="callout orange">
+          <h3>Blood: more hemoglobin, more carrying capacity</h3>
+          <p>Hot water immersion expanded plasma volume in weeks 1-2, which lowered hematocrit and triggered the kidneys to produce more red blood cells. By weeks 4-5, hemoglobin mass had climbed 33g — the body's way of restoring the oxygen-carrying balance.</p>
+        </div>
+
+        <div class="callout red">
+          <h3>Heart: bigger chamber, bigger stroke volume</h3>
+          <p>The expanded blood volume increased cardiac preload, stretching the left ventricle and increasing its filling capacity by 10 mL. Stroke volume rose by 7 mL — more oxygen delivered with every heartbeat.</p>
+        </div>
+
+        <div class="callout green">
+          <h3>Altitude can't do both</h3>
+          <p>Altitude training boosts hemoglobin mass but contracts plasma volume, limiting cardiac adaptation. Heat does the opposite — it expands plasma volume and drives both blood and heart adaptations simultaneously.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE TAKEAWAY ═══ -->
+  <section class="close-section">
+    <div class="container">
+      <div class="section-label">The takeaway</div>
+      <p class="close-statement">Same blood gains as altitude. Better heart gains. From a bathtub.</p>
+      <p class="close-body">
+        Passive heat acclimation produced VO&#8322;max improvements comparable to live-high-train-low altitude camps — without travel, without cost, and without compromising training quality. Hemoglobin mass was the strongest predictor of gains, with cardiac remodeling providing additional benefit. The model explained 96% of the variance in VO&#8322;max.
+      </p>
+      <p class="close-body">
+        For athletes and teams looking to enhance oxygen transport without the logistics of altitude, hot water immersion offers a practical, sustainable, and physiologically effective alternative.
+      </p>
+
+      <div class="connection-card">
+        <div class="connection-label">API Access Connection</div>
+        <p>Our Breaking4 analysis identified oxygen delivery as the key limiter for the women's 4-minute mile — and listed "heat adaptation to unlock more oxygen" as a solution pathway. This paper provides the mechanistic evidence for exactly that.</p>
+        <a class="connection-link" href="api-access-breaking4.html">See the Breaking4 data &#8594;</a>
+      </div>
+
+      <div class="divider" style="margin:32px auto;"></div>
+
+      <a class="paper-cta" href="https://doi.org/10.1113/JP289874" target="_blank" rel="noopener">Read the full paper &#8599;</a>
+
+      <div class="citation-block">
+        <div class="citation-label">Citation</div>
+        <p class="citation-text">Jenkins EJ, Killick JA, Zerilli O, Douglas AJM, Corr L, Hughes MG, Tremblay JC, Stembridge M. Long-term passive heat acclimation enhances maximal oxygen consumption via haematological and cardiac adaptation in endurance runners. J Physiol. 2025. doi:10.1113/JP289874</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BRANDED FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo" style="text-decoration:none;">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Curated science from beyond our walls — the research shaping how we understand athlete performance.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
