@@ -343,9 +343,126 @@
       font-size: 11px;
       color: #555;
     }
+
+    /* ── Password Gate ── */
+    .gate-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .gate-overlay.unlocked {
+      display: none;
+    }
+
+    .gate-logo {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 40px;
+      user-select: none;
+    }
+
+    .gate-logo .api {
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--text);
+    }
+
+    .gate-logo .access {
+      font-size: 48px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      color: var(--accent);
+    }
+
+    .gate-prompt {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .gate-input {
+      width: 240px;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 16px;
+      font-family: inherit;
+      text-align: center;
+      letter-spacing: 2px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .gate-input:focus {
+      border-color: var(--accent);
+    }
+
+    .gate-input.error {
+      border-color: #e63946;
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    .gate-submit {
+      margin-top: 14px;
+      padding: 10px 32px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      background: none;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      font-family: inherit;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .gate-submit:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .page-content {
+      display: none;
+    }
+
+    .page-content.visible {
+      display: block;
+    }
   </style>
 </head>
 <body>
+
+  <!-- ═══ PASSWORD GATE ═══ -->
+  <div id="gate" class="gate-overlay">
+    <div class="gate-logo">
+      <span class="api">API</span><span class="access">ACCESS</span>
+    </div>
+    <p class="gate-prompt">Enter password to continue</p>
+    <input id="gate-input" class="gate-input" type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" autofocus />
+    <button class="gate-submit" onclick="checkAccess()">Enter</button>
+  </div>
+
+  <div id="page-content" class="page-content">
 
   <!-- ═══ HERO ═══ -->
   <div class="landing-hero">
@@ -489,6 +606,32 @@
       <p class="footer-fine">Questions? Reach out to the API team.</p>
     </div>
   </div>
+
+  </div><!-- /page-content -->
+
+<script>
+function checkAccess() {
+  var input = document.getElementById('gate-input');
+  if (input.value.toLowerCase() === 'access') {
+    document.getElementById('gate').classList.add('unlocked');
+    document.getElementById('page-content').classList.add('visible');
+    sessionStorage.setItem('api-access-auth', '1');
+  } else {
+    input.classList.add('error');
+    input.value = '';
+    setTimeout(function() { input.classList.remove('error'); }, 400);
+  }
+}
+
+document.getElementById('gate-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') checkAccess();
+});
+
+if (sessionStorage.getItem('api-access-auth') === '1') {
+  document.getElementById('gate').classList.add('unlocked');
+  document.getElementById('page-content').classList.add('visible');
+}
+</script>
 
 </body>
 </html>
