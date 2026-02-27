@@ -58,19 +58,8 @@
 
     .brand-logo {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      user-select: none;
-    }
-
-    .brand-logo .logo-icon {
-      flex-shrink: 0;
-      opacity: 0.85;
-    }
-
-    .brand-logo .logo-text {
-      display: flex;
       align-items: baseline;
+      user-select: none;
     }
 
     .brand-logo .api {
@@ -85,20 +74,6 @@
       font-weight: 300;
       letter-spacing: 1.5px;
       color: var(--accent);
-    }
-
-    .team-logo-wrap {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 12px;
-    }
-
-    .team-logo-wrap img {
-      height: 48px;
-      width: auto;
-      border-radius: 6px;
-      background: #fff;
-      padding: 6px 10px;
     }
 
     .brand-edition {
@@ -549,15 +524,7 @@
   <header class="brand-header">
     <div class="container">
       <div class="brand-logo">
-        <svg class="logo-icon" width="20" height="20" viewBox="0 0 48 48" fill="none">
-          <circle cx="24" cy="18" r="11" stroke="#3a6df5" stroke-width="3" fill="none"/>
-          <rect x="19" y="27" width="10" height="14" rx="2" fill="#3a6df5"/>
-          <circle cx="24" cy="33" r="2.5" fill="#12121c"/>
-          <line x1="24" y1="35" x2="24" y2="38" stroke="#12121c" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <div class="logo-text">
-          <span class="api">API</span><span class="access">ACCESS</span>
-        </div>
+        <span class="api">API</span><span class="access">ACCESS</span>
       </div>
       <div class="brand-edition">
         <span class="edition-title">Breaking4</span>
@@ -568,9 +535,8 @@
 
   <div class="brand-intro">
     <div class="container">
-      <div class="team-logo-wrap">
-        <img src="API Logo_Full Color.jpg" alt="Applied Performance Innovation" />
-      </div>
+      <div class="from-line">From</div>
+      <div class="team-name">Applied Performance Innovation</div>
       <div class="edition-divider"></div>
     </div>
   </div>
@@ -806,17 +772,9 @@
     <div class="container">
       <div class="footer-inner">
         <div class="footer-logo">
-          <svg class="logo-icon" width="22" height="22" viewBox="0 0 48 48" fill="none" style="margin-right:8px;align-self:center;">
-            <circle cx="24" cy="18" r="11" stroke="#3a6df5" stroke-width="3" fill="none"/>
-            <rect x="19" y="27" width="10" height="14" rx="2" fill="#3a6df5"/>
-            <circle cx="24" cy="33" r="2.5" fill="#12121c"/>
-            <line x1="24" y1="35" x2="24" y2="38" stroke="#12121c" stroke-width="2" stroke-linecap="round"/>
-          </svg>
           <span class="api">API</span><span class="access">ACCESS</span>
         </div>
-        <div class="team-logo-wrap" style="margin-top:16px;">
-          <img src="API Logo_Full Color.jpg" alt="Applied Performance Innovation" />
-        </div>
+        <div class="footer-team">Applied Performance Innovation</div>
         <p class="footer-desc">Insights from the cutting edge of athlete performance — the problems, the solutions, and what we're learning along the way.</p>
         <a class="footer-cta" href="#">Get Access</a>
         <p class="footer-fine">Have questions? Reach out to the API team.</p>
