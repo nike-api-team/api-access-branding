@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Access: Breaking4 — The Exeter Model</title>
+  <title>API Access: Breaking4 — The Exeter Model — The Formula for the 4-Minute Mile</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -19,6 +19,7 @@
       --red: #e63946;
       --green: #22c55e;
       --orange: #f59e0b;
+      --fuchsia: #d946a8;
     }
 
     html { scroll-behavior: smooth; }
@@ -46,7 +47,7 @@
     .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
     .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
     .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
-    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--fuchsia); }
     .edition-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
 
     .brand-intro { padding: 32px 0 0; text-align: center; }
@@ -195,9 +196,9 @@
   <section class="hero">
     <div class="container" style="display:flex;flex-direction:column;align-items:center;">
       <div class="hero-headline">The formula for 4 minutes.</div>
-      <p class="hero-sub">Exeter built a mathematical model that predicts what it takes to run 4 minutes — then tested the world record holder against it.</p>
-      <p class="hero-detail">21 middle-distance athletes. Lab and track testing. Two predictive models. One clear answer about where the barrier lives.</p>
-      <p class="hero-collab">Osborne, Wangi, Kirby, Black, Vanhatalo &amp; Jones — University of Exeter &amp; Nike Sport Research Lab</p>
+      <p class="hero-sub">Before this, there was no model. No clarity as to what explains covering 1609 meters in 4 minutes. Exeter built two equations that answer the question.</p>
+      <p class="hero-detail">21 middle-distance athletes. Lab and track testing. Two predictive models. The first mathematical framework for the 4-minute mile.</p>
+      <p class="hero-collab">Osborne &amp; Jones — University of Exeter | Brett Kirby — Nike Sport Research Lab</p>
       <div class="scroll-hint">Scroll &#8595;</div>
     </div>
   </section>
@@ -209,7 +210,7 @@
       <h2 class="section-title">What do you test to predict a 4-minute mile?</h2>
 
       <p class="matters-text">
-        Middle-distance running is a collision of aerobic and anaerobic physiology. The 1500m sits right at the crossover — too long to sprint, too short to rely on endurance alone.
+        Middle-distance running is a collision of aerobic and anaerobic physiology. The Mile sits right at the crossover — too long to sprint, too short to rely on endurance alone.
       </p>
       <p class="matters-text">
         Exeter's team brought <em>21 elite middle-distance runners</em> (11 male, 10 female) through a comprehensive battery of lab and field tests to identify which physiological variables actually predict 4-minute performance.
@@ -279,16 +280,22 @@
 
       <div class="divider"></div>
 
-      <div class="figure-block">
-        <img src="exeter-model-1500m.jpg" alt="Exeter 1500m prediction model" class="figure-img" />
-        <p class="figure-caption">Exeter's 1500m prediction model using 20s sprint speed and lactate turnpoint. The model explains 81% of variance with near-perfect prediction accuracy (P = 0.98).</p>
-      </div>
-
       <div class="model-card">
         <div class="model-label">1500m Prediction Model</div>
         <div class="model-equation">1500m(s) = &minus;18.5(Sprint) &minus; 6.1(LTP) + 494</div>
         <div class="model-r2">81%</div>
         <div class="model-r2-label">of variance in 1500m time explained</div>
+      </div>
+
+      <div class="callout-stack">
+        <div class="callout red">
+          <h3>20s Sprint Speed — the anaerobic indicator</h3>
+          <p>Maximum speed during a 20-second all-out sprint captures peak anaerobic power and fast-twitch fiber recruitment. It is the strongest predictor in this model — the faster the sprint, the faster the 1500m (P &lt; 0.001).</p>
+        </div>
+        <div class="callout green">
+          <h3>Lactate Turnpoint (LTP) — the aerobic anchor</h3>
+          <p>The speed at which lactate begins to accumulate exponentially — a direct marker of aerobic capacity at high intensity. Higher LTP means you can sustain a faster pace before anaerobic reserves are tapped (P &lt; 0.001).</p>
+        </div>
       </div>
 
       <p class="matters-text" style="margin-top:24px;">
@@ -297,140 +304,39 @@
     </div>
   </section>
 
-  <!-- ═══ THE WORLD RECORD HOLDER ═══ -->
+  <!-- ═══ WHY THIS MATTERS ═══ -->
   <section>
     <div class="container">
-      <div class="section-label">Inside the lab</div>
-      <h2 class="section-title">Testing the world record holder</h2>
+      <div class="section-label">Why this matters</div>
+      <h2 class="section-title">Before this, there was no formula.</h2>
 
       <p class="matters-text">
-        With the models built, the team brought the <em>world's fastest 1500m runner</em> into the Exeter lab for a full physiological assessment. Here's what they found.
+        Until this work, there was no mathematical framework that explained what it takes to cover 1609 meters in 4 minutes. Coaches and athletes relied on intuition, race splits, and training tradition — but <em>no model existed</em> to identify the specific physiological levers that predict 4-minute performance.
       </p>
-
-      <div class="protocol-card">
-        <h3>Aerobic Profile</h3>
-        <table class="physio-table">
-          <tr>
-            <th>Measure</th>
-            <th style="text-align:right;">Result</th>
-          </tr>
-          <tr class="highlight">
-            <td>Running economy</td>
-            <td>170 mL/kg/km</td>
-          </tr>
-          <tr>
-            <td>VO&#8322;max</td>
-            <td>65.2 mL/kg/min</td>
-          </tr>
-          <tr>
-            <td>Lactate turnpoint</td>
-            <td>19 km/h</td>
-          </tr>
-          <tr>
-            <td>Lactate threshold</td>
-            <td>16 km/h</td>
-          </tr>
-          <tr>
-            <td>Critical Speed</td>
-            <td>5.72 m/s (20.6 km/h)</td>
-          </tr>
-        </table>
-      </div>
-
-      <div class="stat-card" style="margin-bottom:16px; border-color: var(--green);">
-        <div class="stat-number green">170</div>
-        <p class="stat-explain">mL O&#8322;/kg/km running economy — one of the best ever recorded. For reference, the average is 200. Paula Radcliffe was similar.</p>
-      </div>
-
-      <div class="protocol-card">
-        <h3>Anaerobic Profile</h3>
-        <table class="physio-table">
-          <tr>
-            <th>Measure</th>
-            <th style="text-align:right;">Result</th>
-          </tr>
-          <tr class="warning">
-            <td>D&#8242; (anaerobic reserve)</td>
-            <td>149 m</td>
-          </tr>
-          <tr class="warning">
-            <td>V&#775;La<sub>max</sub></td>
-            <td>0.39 mM/s</td>
-          </tr>
-          <tr class="warning">
-            <td>Peak lactate (post sprint)</td>
-            <td>7.4 mM</td>
-          </tr>
-          <tr>
-            <td>Max sprint speed</td>
-            <td>7.81 m/s</td>
-          </tr>
-          <tr>
-            <td>Anaerobic Speed Reserve</td>
-            <td>1.4 m/s</td>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ THE GAP ═══ -->
-  <section>
-    <div class="container">
-      <div class="section-label">The gap</div>
-      <h2 class="section-title">Where the 4-minute barrier lives</h2>
 
       <div class="callout-stack">
         <div class="callout green">
-          <h3>Aerobic engine: extraordinary</h3>
-          <p>Running economy among the best ever measured. Lactate turnpoint at 19 km/h. She is more than strong enough on the aerobic side — "she could afford to lose a little 5000m performance capability as long as it were balanced by improved 800m capability."</p>
+          <h3>Now we know: it's two engines</h3>
+          <p>The 4-minute mile demands a high aerobic ceiling (Critical Speed) and a substantial anaerobic reserve (D&#8242;). Neither alone is enough. Both models converge on the same conclusion — and together they explain 81–87% of the variance in performance.</p>
         </div>
-
-        <div class="callout red">
-          <h3>Anaerobic capacity: the limiter</h3>
-          <p>Low peak lactate values, limited D' (149m), and a modest VLaMax (0.39 mM/s) all point to the same conclusion: her anaerobic system doesn't match her aerobic engine. This is where the 4-minute gap lives.</p>
-        </div>
-
         <div class="callout orange">
-          <h3>VO&#8322;max: room to push</h3>
-          <p>At 65.2 mL/kg/min, there's headroom to push closer to 70. Targeted interval sessions at 3000m pace — not more mileage — are the prescription.</p>
+          <h3>A diagnostic tool, not just a prediction</h3>
+          <p>These models don't just predict performance — they diagnose where the gap lives for any individual athlete. Measure their CS, D&#8242;, sprint speed, and LTP, and the model tells you exactly which engine needs work.</p>
         </div>
       </div>
 
       <div class="divider"></div>
 
-      <p class="matters-text">
-        The Exeter analysis concludes: her profile resembles an <em>elite distance runner</em>, not a middle-distance specialist. The 4-minute mile demands a shift — less endurance bias, more anaerobic power — without losing what makes her extraordinary.
-      </p>
-    </div>
-  </section>
-
-  <!-- ═══ THE ROADMAP ═══ -->
-  <section>
-    <div class="container">
-      <div class="section-label">The roadmap</div>
-      <h2 class="section-title">What needs to change</h2>
-
       <div class="stat-stack">
         <div class="stat-card">
-          <div class="stat-number orange">70</div>
-          <p class="stat-explain">Target VO&#8322;max (mL/kg/min). Currently 65.2 — push it closer with 3000m-pace intervals: 4-5 x 1200m, 6-8 x 800m, or 12-16 x 400m with short recovery.</p>
+          <div class="stat-number green">87<span class="unit">%</span></div>
+          <p class="stat-explain">of variance in 4-minute performance explained by CS and D&#8242;/CS — the aerobic-anaerobic interaction</p>
         </div>
-
         <div class="stat-card">
-          <div class="stat-number red">&#8593; D&#8242;</div>
-          <p class="stat-explain">Build anaerobic capacity through speed endurance work: 8-12 x 200m, 6-8 x 300m, or 4-6 x 400m at 400-800m race pace with full recovery.</p>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-number">&#8593; V&#775;La<sub>max</sub></div>
-          <p class="stat-explain">Increase the rate of anaerobic energy production. Recruit more fast-twitch fibers. Improve the ability to generate — and tolerate — lactate.</p>
+          <div class="stat-number">81<span class="unit">%</span></div>
+          <p class="stat-explain">of variance in 1500m time explained by sprint speed and lactate turnpoint — two measurable, trainable variables</p>
         </div>
       </div>
-
-      <p class="matters-text" style="margin-top:24px;">
-        The key insight: <em>less volume, higher intensity, longer recovery</em>. The training shift isn't about running more — it's about running differently.
-      </p>
     </div>
   </section>
 
@@ -438,9 +344,9 @@
   <section class="close-section">
     <div class="container">
       <div class="section-label">The takeaway</div>
-      <p class="close-statement">The aerobic engine is built. The barrier is anaerobic.</p>
+      <p class="close-statement">For the first time, we have the formula.</p>
       <p class="close-body">
-        Exeter's models show that 4-minute performance demands both high critical speed and a substantial anaerobic reserve. When they tested the world record holder, the data was unambiguous: extraordinary aerobic efficiency, but an anaerobic system that doesn't yet match. The formula for sub-4 isn't about getting fitter — it's about getting faster.
+        The Exeter models give us something that didn't exist before — a mathematical framework that explains what it takes to run 4 minutes. Two equations, built from 21 elite athletes, that identify the exact physiological variables that determine performance at the barrier. The formula for sub-4 is no longer a mystery. It's an equation.
       </p>
 
       <div class="connection-card">
@@ -451,7 +357,7 @@
 
       <div class="citation-block">
         <div class="citation-label">Abstract</div>
-        <p class="citation-text">Osborne RJ, Wangi JT, Kirby BS, Black MI, Vanhatalo A, Jones AM. Understanding the 4-min-mile: modelling the physiological determinants of maximal 4-min running performance. CASES Conference Abstract, 2026.</p>
+        <p class="citation-text">Osborne RJ, Kirby BS, Jones AM. Understanding the 4-min-mile: modelling the physiological determinants of maximal 4-min running performance. University of Exeter &amp; Nike Sport Research Lab, 2026.</p>
       </div>
     </div>
   </section>

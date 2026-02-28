@@ -19,6 +19,7 @@
       --red: #e63946;
       --blue: #3a86ff;
       --green: #22c55e;
+      --fuchsia: #d946a8;
     }
 
     html { scroll-behavior: smooth; }
@@ -87,7 +88,7 @@
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--fuchsia);
     }
 
     .edition-date {
@@ -194,6 +195,16 @@
       line-height: 1.2;
       margin-bottom: 24px;
     }
+
+    .matters-text { font-size: 16px; color: var(--text); line-height: 1.7; margin-bottom: 16px; }
+    .matters-text em { color: var(--accent-light); font-style: normal; font-weight: 700; }
+
+    .protocol-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 20px; margin-bottom: 16px; }
+    .protocol-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 12px; color: var(--text); }
+    .protocol-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(42, 42, 69, 0.5); font-size: 14px; }
+    .protocol-row:last-child { border-bottom: none; }
+    .protocol-label { color: var(--muted); }
+    .protocol-value { color: var(--text); font-weight: 600; text-align: right; max-width: 55%; }
 
     /* ── Poll ── */
     .poll-question {
@@ -572,8 +583,8 @@
 
   <div class="brand-intro">
     <div class="container">
-      <div class="from-line">From</div>
-      <div class="team-name">Applied Performance Innovation</div>
+      <div class="from-line">With</div>
+      <div class="team-name">Institute of Exercise &amp; Environmental Medicine</div>
       <div class="edition-divider"></div>
     </div>
   </div>
@@ -583,8 +594,60 @@
     <div class="container" style="display:flex;flex-direction:column;align-items:center;">
       <div class="hero-time">3:59.99</div>
       <p class="hero-sub">The barrier no woman has broken.</p>
-      <p class="hero-detail">We studied what happens inside your body at race pace — every heartbeat, every pulse of blood, every breath of air. Here's what we found.</p>
+      <p class="hero-detail">We studied the physiology of running at your limit for 4 minutes — every heartbeat, every pulse of blood, every breath of air. Here's what we found.</p>
       <div class="scroll-hint">Scroll &#8595;</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE ATHLETE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The athlete</div>
+      <h2 class="section-title">The first study of its kind.</h2>
+
+      <p class="matters-text">
+        The first ever study examining the <em>complete cascade of O&#8322; transport</em> during running in humans — and the first to ask whether women face unique physiological challenges in closing the gap to four minutes.
+      </p>
+
+      <div class="video-block" style="margin:24px 0;">
+        <video id="athlete-video" controls playsinline preload="metadata" style="width:100%;border-radius:10px;border:1px solid var(--border);background:#000;">
+          <source src="athlete-walking-clip.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <p style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5;font-style:italic;">Instrumented athlete at equivalent 4-minute race pace — every heartbeat, breath, and pulse of blood measured directly.</p>
+      </div>
+
+      <div class="protocol-card">
+        <h3>Study Design</h3>
+        <div class="protocol-row">
+          <span class="protocol-label">Athletes</span>
+          <span class="protocol-value">12 top-level middle-distance runners</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Cardiac output</span>
+          <span class="protocol-value">Bolus thermodilution (direct)</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Blood gases</span>
+          <span class="protocol-value">Direct arterial &amp; venous sampling</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Leg blood flow</span>
+          <span class="protocol-value">Thermodilution catheter</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Muscle O&#8322;</span>
+          <span class="protocol-value">NIRS continuous monitoring</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Collaboration</span>
+          <span class="protocol-value">Institute of Exercise &amp; Environmental Medicine, Dallas</span>
+        </div>
+      </div>
+
+      <p class="matters-text">
+        State-of-the-art methods — <em>bolus thermodilution and direct measures of blood gases</em> — gave us the complete picture of oxygen transport from lungs to muscle at race pace.
+      </p>
     </div>
   </section>
 
