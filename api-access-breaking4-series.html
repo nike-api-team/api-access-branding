@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Breaking4 — The Scientific Expedition</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --fuchsia: #d946a8;
+      --fuchsia-glow: rgba(217, 70, 168, 0.2);
+      --green: #22c55e;
+      --orange: #f59e0b;
+      --red: #e63946;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 480px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Header ── */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.9);
+    }
+    .brand-header .container { display: flex; align-items: center; justify-content: space-between; }
+    .brand-logo { display: flex; align-items: baseline; user-select: none; }
+    .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--fuchsia); }
+    .edition-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+    .brand-intro { padding: 32px 0 0; text-align: center; }
+    .brand-intro .from-line { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .brand-intro .team-name { font-size: 14px; color: var(--accent-light); font-weight: 600; margin-bottom: 20px; }
+    .brand-intro .edition-divider { width: 40px; height: 2px; background: var(--fuchsia); margin: 0 auto; }
+
+    /* ── Sections ── */
+    section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    .hero {
+      min-height: 85vh; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center; padding: 48px 0;
+    }
+    .hero-series-tag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--fuchsia); border: 1px solid var(--fuchsia);
+      padding: 6px 16px; border-radius: 20px; margin-bottom: 28px;
+    }
+    .hero-headline {
+      font-size: 42px; font-weight: 900; letter-spacing: -1.5px; line-height: 1.05;
+      background: linear-gradient(135deg, var(--fuchsia) 0%, var(--accent-light) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 24px;
+    }
+    .hero-sub { font-size: 18px; font-weight: 400; color: #c8c8e0; max-width: 400px; line-height: 1.7; margin-bottom: 16px; }
+    .hero-detail { font-size: 14px; color: var(--muted); max-width: 380px; line-height: 1.7; }
+    .scroll-hint { margin-top: 48px; font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--fuchsia); margin-bottom: 12px; }
+    .section-title { font-size: 24px; font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
+
+    .narrative { font-size: 16px; color: #c8c8e0; line-height: 1.8; margin-bottom: 20px; }
+    .narrative em { color: var(--accent-light); font-style: normal; font-weight: 700; }
+    .narrative strong { color: var(--text); }
+
+    .divider { width: 40px; height: 3px; background: var(--fuchsia); border-radius: 2px; margin: 32px 0; }
+
+    /* ── Chapter Cards ── */
+    .chapter-stack { display: flex; flex-direction: column; gap: 20px; }
+    .chapter-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 28px 22px; text-decoration: none; color: inherit; display: block;
+      transition: border-color 0.3s, box-shadow 0.3s; position: relative;
+      border-left: 3px solid var(--fuchsia);
+    }
+    .chapter-card:hover { border-color: var(--fuchsia); box-shadow: 0 0 30px var(--fuchsia-glow); }
+    .chapter-num {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--fuchsia); margin-bottom: 6px;
+    }
+    .chapter-title { font-size: 18px; font-weight: 800; line-height: 1.25; margin-bottom: 8px; }
+    .chapter-collab { font-size: 11px; color: var(--muted); opacity: 0.7; margin-bottom: 12px; }
+    .chapter-summary { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 14px; }
+    .chapter-finding {
+      font-size: 13px; color: var(--accent-light); font-weight: 600; line-height: 1.5;
+      padding: 10px 14px; background: rgba(58, 109, 245, 0.06); border-radius: 8px; margin-bottom: 14px;
+    }
+    .chapter-cta { font-size: 12px; font-weight: 700; color: var(--fuchsia); letter-spacing: 0.5px; }
+
+    /* ── Stats row ── */
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .mini-stat {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 16px 14px; text-align: center;
+    }
+    .mini-stat-num { font-size: 28px; font-weight: 900; color: var(--fuchsia); line-height: 1; margin-bottom: 4px; }
+    .mini-stat-label { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+    /* ── Thesis ── */
+    .thesis-block {
+      background: var(--surface); border: 1px solid var(--fuchsia); border-radius: 14px;
+      padding: 28px 22px; box-shadow: 0 0 30px var(--fuchsia-glow); text-align: center;
+      margin-bottom: 24px;
+    }
+    .thesis-text {
+      font-size: 20px; font-weight: 800; line-height: 1.35;
+      background: linear-gradient(135deg, var(--fuchsia), var(--accent-light));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    /* ── Close ── */
+    .close-section { text-align: center; padding: 80px 0; }
+    .close-statement {
+      font-size: 22px; font-weight: 800; line-height: 1.3; margin-bottom: 24px;
+      background: linear-gradient(135deg, var(--fuchsia), var(--accent-light));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .close-body { font-size: 15px; color: #c8c8e0; line-height: 1.7; margin-bottom: 24px; }
+
+    /* ── Footer ── */
+    .brand-footer { border-top: 1px solid var(--border); padding: 48px 0; }
+    .footer-inner { text-align: center; }
+    .footer-logo { display: inline-flex; align-items: baseline; margin-bottom: 16px; user-select: none; }
+    .footer-logo .api { font-size: 28px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 28px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .footer-team { font-size: 13px; color: var(--accent-light); font-weight: 600; margin-bottom: 8px; }
+    .footer-desc { font-size: 13px; color: var(--muted); max-width: 360px; margin: 0 auto 24px; line-height: 1.6; }
+    .footer-cta { display: inline-block; padding: 12px 32px; border: 2px solid var(--accent); border-radius: 8px; color: var(--accent); font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: background 0.2s, color 0.2s; }
+    .footer-cta:hover { background: var(--accent); color: #fff; }
+    .footer-fine { margin-top: 32px; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo" style="text-decoration:none;">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Series</span>
+        <span class="edition-date">Breaking4</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">From</div>
+      <div class="team-name">Applied Performance Innovation &mdash; Nike Sport Research Lab</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="hero-series-tag">Research Series</div>
+      <div class="hero-headline">Breaking4</div>
+      <p class="hero-sub">A multi-year, multi-institution scientific expedition to answer one question: what would it take for a woman to run a mile in under four minutes?</p>
+      <p class="hero-detail">Five studies. Three universities. One sport research lab. A single thread of oxygen connects them all.</p>
+      <div class="scroll-hint">Scroll &#8595;</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE MISSION ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The mission</div>
+      <h2 class="section-title">Nobody had modeled it. So we did.</h2>
+
+      <p class="narrative">
+        No woman has run a mile in under four minutes. When the Breaking4 project began, there was no physiological model for what it would take — no equation, no framework, no systematic understanding of how close the best female milers actually are.
+      </p>
+      <p class="narrative">
+        The API team at Nike Sport Research Lab set out to build that understanding from the ground up. Not with a single study, but with a <em>series of investigations</em> — each one designed to answer a different piece of the question, each one building on what came before.
+      </p>
+      <p class="narrative">
+        What emerged was a chain of evidence that traces the limiter from the working muscle, through the blood, past the heart and lungs, and all the way to the spleen. The thread that connects every link: <em>oxygen</em>.
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="stats-row">
+        <div class="mini-stat">
+          <div class="mini-stat-num">5</div>
+          <div class="mini-stat-label">Studies</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">4</div>
+          <div class="mini-stat-label">Institutions</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">1</div>
+          <div class="mini-stat-label">Thread</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">O&#8322;</div>
+          <div class="mini-stat-label">Oxygen</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE CHAPTERS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The chapters</div>
+      <h2 class="section-title">Five studies. One story.</h2>
+
+      <div class="chapter-stack">
+
+        <!-- Chapter 1 -->
+        <a class="chapter-card" href="api-access-breaking4.html">
+          <div class="chapter-num">Chapter 1</div>
+          <h3 class="chapter-title">The Physiology of 4 Minutes</h3>
+          <div class="chapter-collab">With Institute of Exercise &amp; Environmental Medicine</div>
+          <p class="chapter-summary">We studied elite female runners at maximal effort for four minutes — measuring every heartbeat, every breath, every molecule of oxygen delivered to working muscle. The question: where exactly does the body hit its ceiling?</p>
+          <div class="chapter-finding">The gap between a 4-minute mile and failure is roughly 70 mL O&#8322;/min — about 1.5% more blood oxygen saturation. The limiter is oxygen delivery.</div>
+          <span class="chapter-cta">Read the full study &#8594;</span>
+        </a>
+
+        <!-- Chapter 2 -->
+        <a class="chapter-card" href="api-access-breaking4-exeter.html">
+          <div class="chapter-num">Chapter 2</div>
+          <h3 class="chapter-title">The Exeter Model</h3>
+          <div class="chapter-collab">With University of Exeter</div>
+          <p class="chapter-summary">With the limiter identified, Exeter built the equation. What combination of aerobic capacity and anaerobic reserve produces a 4-minute mile? They modeled it — and discovered that the aerobic side dominates.</p>
+          <div class="chapter-finding">Critical Speed has 5.7x more impact on mile time than anaerobic reserve (D&#8242;). The formula for 4 minutes is overwhelmingly aerobic.</div>
+          <span class="chapter-cta">Read the full study &#8594;</span>
+        </a>
+
+        <!-- Chapter 3 -->
+        <a class="chapter-card" href="api-access-breaking4-oregon.html">
+          <div class="chapter-num">Chapter 3</div>
+          <h3 class="chapter-title">The Oregon Study</h3>
+          <div class="chapter-collab">With University of Oregon</div>
+          <p class="chapter-summary">If oxygen is the limiter and aerobic capacity is the lever, what determines an individual athlete's oxygen capacity? Oregon tested whether hormones or menstrual cycle phase were factors. They weren't.</p>
+          <div class="chapter-finding">Muscle oxidative capacity and hemoglobin mass — the machinery that consumes and carries oxygen — predicted individual performance variation. Not hormones. Not cycle phase.</div>
+          <span class="chapter-cta">Read the full study &#8594;</span>
+        </a>
+
+        <!-- Chapter 4 -->
+        <a class="chapter-card" href="api-access-breaking4-wrholder.html">
+          <div class="chapter-num">Chapter 4</div>
+          <h3 class="chapter-title">The World Record Holder</h3>
+          <div class="chapter-collab">With University of Exeter</div>
+          <p class="chapter-summary">The model was built. Now test it against the best in the world. Exeter assessed the physiological profile of the fastest woman over 1500 meters and mapped her against the 4-minute equation.</p>
+          <div class="chapter-finding">An extraordinary aerobic engine — but the gap is anaerobic. The roadmap: shift toward speed without losing the aerobic foundation that makes her extraordinary.</div>
+          <span class="chapter-cta">Read the full study &#8594;</span>
+        </a>
+
+        <!-- Chapter 5 -->
+        <a class="chapter-card" href="api-access-breaking4-breathhold.html">
+          <div class="chapter-num">Chapter 5</div>
+          <h3 class="chapter-title">The Breath-Hold Priming Protocol</h3>
+          <div class="chapter-collab">Nike Sport Research Lab</div>
+          <p class="chapter-summary">The series identified oxygen delivery as the limiter and hemoglobin as a key carrier. The final question: is there an acute, race-day intervention that can shift the oxygen equation at the moment it matters most?</p>
+          <div class="chapter-finding">Five maximal breath holds before exercise triggered splenic contraction, raised circulating hemoglobin 6%, shifted lactate thresholds upward, and extended time to exhaustion by 3%.</div>
+          <span class="chapter-cta">Read the full study &#8594;</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE THREAD ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The thread</div>
+      <h2 class="section-title">Follow the oxygen.</h2>
+
+      <p class="narrative">
+        Each study in the Breaking4 series asked a different question. But every answer pointed back to the same molecule.
+      </p>
+      <p class="narrative">
+        <strong>Texas</strong> showed that the gap is oxygen delivery — a narrow margin between what the body can supply and what a 4-minute mile demands. <strong>Exeter</strong> proved that the aerobic pathway dominates the equation. <strong>Oregon</strong> identified the biological machinery — hemoglobin mass and muscle oxidative capacity — that determines how much oxygen an athlete can carry and consume. <strong>The world record holder assessment</strong> tested those principles against the best in the world. And <strong>the breath-hold protocol</strong> demonstrated that the spleen holds a reservoir of red blood cells that can be released on demand — acutely raising oxygen-carrying capacity before competition.
+      </p>
+      <p class="narrative">
+        From the working muscle to the blood to the spleen — every link in the chain is about <em>getting more oxygen to the place that needs it, at the moment it matters most</em>.
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="thesis-block">
+        <p class="thesis-text">The women's 4-minute mile is not a mystery. It is an oxygen delivery problem — and the series has mapped every link in the chain.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CLOSE ═══ -->
+  <section class="close-section">
+    <div class="container">
+      <div class="section-label">The horizon</div>
+      <p class="close-statement">Small works. Big picture.</p>
+      <p class="close-body">
+        Breaking4 is the first completed research series from the API team. Each study was a focused investigation — a small, rigorous piece of work. Together, they form a chapter-level view of where the team has pointed its attention and what that attention has revealed.
+      </p>
+      <p class="close-body">
+        This is how the API team works: directed scientific expeditions, study by study, until the picture becomes clear. More chapters will follow.
+      </p>
+    </div>
+  </section>
+
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo" style="text-decoration:none;">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Data-driven insights from the lab — direct from the team working with the world's best athletes.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

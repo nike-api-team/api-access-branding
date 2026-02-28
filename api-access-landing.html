@@ -517,6 +517,21 @@
       color: #fff;
     }
 
+    .tag-chapter {
+      background: transparent;
+      color: var(--fuchsia);
+      border: 1px solid rgba(217, 70, 168, 0.4);
+    }
+
+    .content-card.series-card {
+      border: 1px solid var(--fuchsia);
+      box-shadow: 0 0 20px rgba(217, 70, 168, 0.15);
+    }
+    .content-card.series-card:hover {
+      border-color: var(--fuchsia);
+      box-shadow: 0 0 36px rgba(217, 70, 168, 0.3);
+    }
+
     .tag-pub {
       background: transparent;
       color: var(--accent-light);
@@ -689,49 +704,13 @@
       <p class="section-tagline">Our science. Our findings. Direct from the source.</p>
 
       <div class="card-stack">
-        <a class="content-card" href="api-access-breaking4.html">
+        <a class="content-card series-card" href="api-access-breaking4-series.html">
           <div class="card-tag tag-series">Breaking4</div>
-          <div class="card-tag tag-drop">Data Drop</div>
-          <h3 class="card-title">Breaking4: The Physiology of 4 Minutes</h3>
-          <p class="card-desc">We studied the physiology of running at your limit for 4 minutes — every heartbeat, every breath, every molecule of oxygen. Here's why oxygen delivery is the key.</p>
-          <div class="card-source">With Institute of Exercise &amp; Environmental Medicine</div>
-          <span class="card-cta">Explore &#8594;</span>
-        </a>
-
-        <a class="content-card" href="api-access-breaking4-exeter.html">
-          <div class="card-tag tag-series">Breaking4</div>
-          <div class="card-tag tag-drop">Data Drop</div>
-          <h3 class="card-title">Breaking4: The Exeter Model — the formula for the 4-minute mile</h3>
-          <p class="card-desc">Before this, there was no model. What explains the ability to run 1609 meters in 4 minutes? Exeter built two equations that answer the question.</p>
-          <div class="card-source">With University of Exeter</div>
-          <span class="card-cta">Explore &#8594;</span>
-        </a>
-
-        <a class="content-card" href="api-access-breaking4-oregon.html">
-          <div class="card-tag tag-series">Breaking4</div>
-          <div class="card-tag tag-drop">Data Drop</div>
-          <h3 class="card-title">Breaking4: The Oregon Study — it's not the hormones, it's oxygen capacity</h3>
-          <p class="card-desc">Oregon tested whether menstrual cycle phase changes middle-distance running performance. Hormones didn't predict it — the capacity to consume oxygen did.</p>
-          <div class="card-source">With University of Oregon</div>
-          <span class="card-cta">Explore &#8594;</span>
-        </a>
-
-        <a class="content-card" href="api-access-breaking4-wrholder.html">
-          <div class="card-tag tag-series">Breaking4</div>
-          <div class="card-tag tag-drop">Data Drop</div>
-          <h3 class="card-title">Breaking4: The World Record Holder</h3>
-          <p class="card-desc">Exeter built the model, then tested the world's fastest 1500m runner against it. The aerobic engine is extraordinary — the gap is anaerobic.</p>
-          <div class="card-source">With University of Exeter</div>
-          <span class="card-cta">Explore &#8594;</span>
-        </a>
-
-        <a class="content-card" href="api-access-breaking4-breathhold.html">
-          <div class="card-tag tag-series">Breaking4</div>
-          <div class="card-tag tag-drop">Data Drop</div>
-          <h3 class="card-title">Breaking4: The Breath-Hold Priming Protocol</h3>
-          <p class="card-desc">Five breath holds before exercise raised circulating hemoglobin 6%, shifted lactate thresholds, and extended performance — a race-day intervention targeting the oxygen gap.</p>
-          <div class="card-source">Nike Sport Research Lab</div>
-          <span class="card-cta">Explore &#8594;</span>
+          <div class="card-tag tag-chapter">5 Studies</div>
+          <h3 class="card-title" style="font-size:19px;">Breaking4: The Women's 4-Minute Mile</h3>
+          <p class="card-desc">A multi-year scientific expedition across four institutions to answer one question: what would it take for a woman to break 4 minutes in the mile? Five studies. One thread of oxygen connecting them all.</p>
+          <div class="card-source">Nike SRL &bull; Exeter &bull; Oregon &bull; IEEM</div>
+          <span class="card-cta" style="color:var(--fuchsia);">Explore the series &#8594;</span>
         </a>
       </div>
 
