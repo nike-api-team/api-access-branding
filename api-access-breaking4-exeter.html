@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Breaking4 — The Exeter Model</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --red: #e63946;
+      --green: #22c55e;
+      --orange: #f59e0b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 480px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Header ── */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.9);
+    }
+    .brand-header .container { display: flex; align-items: center; justify-content: space-between; }
+    .brand-logo { display: flex; align-items: baseline; user-select: none; }
+    .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+    .edition-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+    .brand-intro { padding: 32px 0 0; text-align: center; }
+    .brand-intro .from-line { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .brand-intro .team-name { font-size: 14px; color: var(--accent-light); font-weight: 600; margin-bottom: 20px; }
+    .brand-intro .edition-divider { width: 40px; height: 2px; background: var(--accent); margin: 0 auto; }
+
+    /* ── Sections ── */
+    section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    .hero {
+      min-height: 80vh; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center; padding: 48px 0;
+    }
+    .hero-headline {
+      font-size: 38px; font-weight: 900; letter-spacing: -1px; line-height: 1.1;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px;
+    }
+    .hero-sub { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 16px; line-height: 1.3; max-width: 380px; }
+    .hero-detail { font-size: 15px; color: var(--muted); max-width: 360px; line-height: 1.7; }
+    .hero-collab { font-size: 13px; color: var(--muted); font-style: italic; margin-top: 24px; max-width: 360px; line-height: 1.5; opacity: 0.7; }
+    .scroll-hint { margin-top: 48px; font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .section-title { font-size: 24px; font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
+
+    /* ── Text ── */
+    .matters-text { font-size: 16px; color: var(--text); line-height: 1.7; margin-bottom: 16px; }
+    .matters-text em { color: var(--accent-light); font-style: normal; font-weight: 700; }
+
+    /* ── Stats ── */
+    .stat-stack { display: flex; flex-direction: column; gap: 16px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 20px; text-align: center; }
+    .stat-number { font-size: 48px; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+    .stat-number .unit { font-size: 20px; font-weight: 600; }
+    .stat-number.green { color: var(--green); }
+    .stat-number.orange { color: var(--orange); }
+    .stat-number.red { color: var(--red); }
+    .stat-explain { font-size: 15px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Callouts ── */
+    .callout-stack { display: flex; flex-direction: column; gap: 16px; }
+    .callout { background: var(--surface); border-left: 3px solid var(--accent); border-radius: 10px; padding: 16px; }
+    .callout h3 { font-size: 14px; font-weight: 700; color: var(--accent-light); margin-bottom: 4px; }
+    .callout p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .callout.red { border-left-color: var(--red); }
+    .callout.red h3 { color: #ff8fa3; }
+    .callout.green { border-left-color: var(--green); }
+    .callout.green h3 { color: #6ee7a0; }
+    .callout.orange { border-left-color: var(--orange); }
+    .callout.orange h3 { color: #fbbf24; }
+
+    .divider { width: 40px; height: 3px; background: var(--accent); border-radius: 2px; margin: 24px 0; }
+
+    /* ── Model Card ── */
+    .model-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 24px 20px; margin-bottom: 16px; text-align: center;
+    }
+    .model-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .model-equation {
+      font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.6;
+      font-family: 'Courier New', monospace; margin-bottom: 16px; word-break: break-all;
+    }
+    .model-r2 { font-size: 36px; font-weight: 900; color: var(--green); margin-bottom: 4px; }
+    .model-r2-label { font-size: 13px; color: var(--muted); }
+
+    /* ── Protocol ── */
+    .protocol-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 20px; margin-bottom: 16px; }
+    .protocol-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 12px; color: var(--text); }
+    .protocol-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(42, 42, 69, 0.5); font-size: 14px; }
+    .protocol-row:last-child { border-bottom: none; }
+    .protocol-label { color: var(--muted); }
+    .protocol-value { color: var(--text); font-weight: 600; text-align: right; max-width: 55%; }
+
+    /* ── Physiology table ── */
+    .physio-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+    .physio-table th { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); padding: 8px 4px; text-align: left; border-bottom: 1px solid var(--border); }
+    .physio-table td { font-size: 14px; padding: 10px 4px; border-bottom: 1px solid rgba(42, 42, 69, 0.3); }
+    .physio-table td:first-child { color: var(--muted); }
+    .physio-table td:last-child { font-weight: 700; text-align: right; }
+    .physio-table .highlight td { color: var(--green); }
+    .physio-table .warning td:last-child { color: var(--orange); }
+
+    /* ── Image ── */
+    .figure-block { margin: 24px 0; }
+    .figure-img { width: 100%; border-radius: 10px; border: 1px solid var(--border); }
+    .figure-caption { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.5; font-style: italic; }
+
+    /* ── Close ── */
+    .close-section { text-align: center; padding: 80px 0; }
+    .close-statement { font-size: 22px; font-weight: 800; line-height: 1.3; margin-bottom: 24px; background: linear-gradient(135deg, var(--accent), var(--accent-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .close-body { font-size: 15px; color: #c8c8e0; line-height: 1.7; margin-bottom: 36px; }
+
+    .connection-card { background: var(--surface); border: 1px solid var(--accent); border-radius: 12px; padding: 20px; margin-bottom: 32px; box-shadow: 0 0 20px var(--accent-glow); }
+    .connection-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .connection-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .connection-link { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 700; color: var(--accent); text-decoration: none; letter-spacing: 0.5px; }
+
+    /* ── CTA / Citation ── */
+    .paper-cta { display: inline-block; padding: 14px 36px; border: 2px solid var(--accent); border-radius: 8px; color: var(--accent); font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: background 0.2s, color 0.2s; margin-bottom: 16px; }
+    .paper-cta:hover { background: var(--accent); color: #fff; }
+    .citation-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-top: 24px; }
+    .citation-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .citation-text { font-size: 12px; color: var(--muted); line-height: 1.6; font-style: italic; }
+
+    /* ── Footer ── */
+    .brand-footer { border-top: 1px solid var(--border); padding: 48px 0; }
+    .footer-inner { text-align: center; }
+    .footer-logo { display: inline-flex; align-items: baseline; margin-bottom: 16px; user-select: none; }
+    .footer-logo .api { font-size: 28px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 28px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .footer-team { font-size: 13px; color: var(--accent-light); font-weight: 600; margin-bottom: 8px; }
+    .footer-desc { font-size: 13px; color: var(--muted); max-width: 360px; margin: 0 auto 24px; line-height: 1.6; }
+    .footer-cta { display: inline-block; padding: 12px 32px; border: 2px solid var(--accent); border-radius: 8px; color: var(--accent); font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: background 0.2s, color 0.2s; }
+    .footer-cta:hover { background: var(--accent); color: #fff; }
+    .footer-fine { margin-top: 32px; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo" style="text-decoration:none;">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Data Drop</span>
+        <span class="edition-date">Breaking4 Series</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">With</div>
+      <div class="team-name">University of Exeter</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="hero-headline">The formula for 4 minutes.</div>
+      <p class="hero-sub">Exeter built a mathematical model that predicts what it takes to run 4 minutes — then tested the world record holder against it.</p>
+      <p class="hero-detail">21 middle-distance athletes. Lab and track testing. Two predictive models. One clear answer about where the barrier lives.</p>
+      <p class="hero-collab">Osborne, Wangi, Kirby, Black, Vanhatalo &amp; Jones — University of Exeter &amp; Nike Sport Research Lab</p>
+      <div class="scroll-hint">Scroll &#8595;</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE STUDY ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The study</div>
+      <h2 class="section-title">What do you test to predict a 4-minute mile?</h2>
+
+      <p class="matters-text">
+        Middle-distance running is a collision of aerobic and anaerobic physiology. The 1500m sits right at the crossover — too long to sprint, too short to rely on endurance alone.
+      </p>
+      <p class="matters-text">
+        Exeter's team brought <em>21 elite middle-distance runners</em> (11 male, 10 female) through a comprehensive battery of lab and field tests to identify which physiological variables actually predict 4-minute performance.
+      </p>
+
+      <div class="protocol-card">
+        <h3>Lab Testing</h3>
+        <div class="protocol-row">
+          <span class="protocol-label">VO&#8322;max</span>
+          <span class="protocol-value">Incremental step test to exhaustion</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Running economy</span>
+          <span class="protocol-value">Oxygen cost at submaximal speeds</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Lactate thresholds</span>
+          <span class="protocol-value">LT1 and lactate turnpoint (LT2)</span>
+        </div>
+      </div>
+
+      <div class="protocol-card">
+        <h3>Track Testing</h3>
+        <div class="protocol-row">
+          <span class="protocol-label">Max sprint speed</span>
+          <span class="protocol-value">10m maximal sprint</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">V&#775;La<sub>max</sub></span>
+          <span class="protocol-value">20s max lactate accumulation sprint</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Time trials</span>
+          <span class="protocol-value">2, 4, 6, and 12-min efforts</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Derived</span>
+          <span class="protocol-value">Critical Speed (CS) &amp; D&#8242;</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE MODELS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The models</div>
+      <h2 class="section-title">Two equations. One answer.</h2>
+
+      <div class="model-card">
+        <div class="model-label">4-Minute Time Trial Model</div>
+        <div class="model-equation">4MTT = 247.8(CS) + 4.1(D&#8242;/CS) &minus; 26.7</div>
+        <div class="model-r2">87%</div>
+        <div class="model-r2-label">of variance in 4-minute performance explained</div>
+      </div>
+
+      <div class="callout-stack">
+        <div class="callout green">
+          <h3>Critical Speed (CS) — the aerobic engine</h3>
+          <p>The strongest single predictor (r = 0.84). CS represents the highest speed you can sustain in a metabolic steady state — your aerobic ceiling.</p>
+        </div>
+        <div class="callout orange">
+          <h3>D&#8242;/CS — the anaerobic ratio</h3>
+          <p>D&#8242; is your finite anaerobic reserve above critical speed. The ratio D&#8242;/CS captures how much kick you have relative to your aerobic base. Both variables were significant (P &lt; 0.001).</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="figure-block">
+        <img src="exeter-model-1500m.jpg" alt="Exeter 1500m prediction model" class="figure-img" />
+        <p class="figure-caption">Exeter's 1500m prediction model using 20s sprint speed and lactate turnpoint. The model explains 81% of variance with near-perfect prediction accuracy (P = 0.98).</p>
+      </div>
+
+      <div class="model-card">
+        <div class="model-label">1500m Prediction Model</div>
+        <div class="model-equation">1500m(s) = &minus;18.5(Sprint) &minus; 6.1(LTP) + 494</div>
+        <div class="model-r2">81%</div>
+        <div class="model-r2-label">of variance in 1500m time explained</div>
+      </div>
+
+      <p class="matters-text" style="margin-top:24px;">
+        Both models tell the same story: <em>you need both engines</em>. The aerobic system sets the floor. The anaerobic system determines how far above it you can go.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ THE WORLD RECORD HOLDER ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Inside the lab</div>
+      <h2 class="section-title">Testing the world record holder</h2>
+
+      <p class="matters-text">
+        With the models built, the team brought the <em>world's fastest 1500m runner</em> into the Exeter lab for a full physiological assessment. Here's what they found.
+      </p>
+
+      <div class="protocol-card">
+        <h3>Aerobic Profile</h3>
+        <table class="physio-table">
+          <tr>
+            <th>Measure</th>
+            <th style="text-align:right;">Result</th>
+          </tr>
+          <tr class="highlight">
+            <td>Running economy</td>
+            <td>170 mL/kg/km</td>
+          </tr>
+          <tr>
+            <td>VO&#8322;max</td>
+            <td>65.2 mL/kg/min</td>
+          </tr>
+          <tr>
+            <td>Lactate turnpoint</td>
+            <td>19 km/h</td>
+          </tr>
+          <tr>
+            <td>Lactate threshold</td>
+            <td>16 km/h</td>
+          </tr>
+          <tr>
+            <td>Critical Speed</td>
+            <td>5.72 m/s (20.6 km/h)</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="stat-card" style="margin-bottom:16px; border-color: var(--green);">
+        <div class="stat-number green">170</div>
+        <p class="stat-explain">mL O&#8322;/kg/km running economy — one of the best ever recorded. For reference, the average is 200. Paula Radcliffe was similar.</p>
+      </div>
+
+      <div class="protocol-card">
+        <h3>Anaerobic Profile</h3>
+        <table class="physio-table">
+          <tr>
+            <th>Measure</th>
+            <th style="text-align:right;">Result</th>
+          </tr>
+          <tr class="warning">
+            <td>D&#8242; (anaerobic reserve)</td>
+            <td>149 m</td>
+          </tr>
+          <tr class="warning">
+            <td>V&#775;La<sub>max</sub></td>
+            <td>0.39 mM/s</td>
+          </tr>
+          <tr class="warning">
+            <td>Peak lactate (post sprint)</td>
+            <td>7.4 mM</td>
+          </tr>
+          <tr>
+            <td>Max sprint speed</td>
+            <td>7.81 m/s</td>
+          </tr>
+          <tr>
+            <td>Anaerobic Speed Reserve</td>
+            <td>1.4 m/s</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE GAP ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The gap</div>
+      <h2 class="section-title">Where the 4-minute barrier lives</h2>
+
+      <div class="callout-stack">
+        <div class="callout green">
+          <h3>Aerobic engine: extraordinary</h3>
+          <p>Running economy among the best ever measured. Lactate turnpoint at 19 km/h. She is more than strong enough on the aerobic side — "she could afford to lose a little 5000m performance capability as long as it were balanced by improved 800m capability."</p>
+        </div>
+
+        <div class="callout red">
+          <h3>Anaerobic capacity: the limiter</h3>
+          <p>Low peak lactate values, limited D' (149m), and a modest VLaMax (0.39 mM/s) all point to the same conclusion: her anaerobic system doesn't match her aerobic engine. This is where the 4-minute gap lives.</p>
+        </div>
+
+        <div class="callout orange">
+          <h3>VO&#8322;max: room to push</h3>
+          <p>At 65.2 mL/kg/min, there's headroom to push closer to 70. Targeted interval sessions at 3000m pace — not more mileage — are the prescription.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="matters-text">
+        The Exeter analysis concludes: her profile resembles an <em>elite distance runner</em>, not a middle-distance specialist. The 4-minute mile demands a shift — less endurance bias, more anaerobic power — without losing what makes her extraordinary.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ THE ROADMAP ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The roadmap</div>
+      <h2 class="section-title">What needs to change</h2>
+
+      <div class="stat-stack">
+        <div class="stat-card">
+          <div class="stat-number orange">70</div>
+          <p class="stat-explain">Target VO&#8322;max (mL/kg/min). Currently 65.2 — push it closer with 3000m-pace intervals: 4-5 x 1200m, 6-8 x 800m, or 12-16 x 400m with short recovery.</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-number red">&#8593; D&#8242;</div>
+          <p class="stat-explain">Build anaerobic capacity through speed endurance work: 8-12 x 200m, 6-8 x 300m, or 4-6 x 400m at 400-800m race pace with full recovery.</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-number">&#8593; V&#775;La<sub>max</sub></div>
+          <p class="stat-explain">Increase the rate of anaerobic energy production. Recruit more fast-twitch fibers. Improve the ability to generate — and tolerate — lactate.</p>
+        </div>
+      </div>
+
+      <p class="matters-text" style="margin-top:24px;">
+        The key insight: <em>less volume, higher intensity, longer recovery</em>. The training shift isn't about running more — it's about running differently.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ TAKEAWAY ═══ -->
+  <section class="close-section">
+    <div class="container">
+      <div class="section-label">The takeaway</div>
+      <p class="close-statement">The aerobic engine is built. The barrier is anaerobic.</p>
+      <p class="close-body">
+        Exeter's models show that 4-minute performance demands both high critical speed and a substantial anaerobic reserve. When they tested the world record holder, the data was unambiguous: extraordinary aerobic efficiency, but an anaerobic system that doesn't yet match. The formula for sub-4 isn't about getting fitter — it's about getting faster.
+      </p>
+
+      <div class="connection-card">
+        <div class="connection-label">Breaking4 Series</div>
+        <p>This is the second piece in our Breaking4 Data Drop series. The main Breaking4 dashboard identified oxygen delivery as the key limiter. The Exeter model goes deeper — showing exactly which physiological levers need to move.</p>
+        <a class="connection-link" href="api-access-breaking4.html">See the Breaking4 dashboard &#8594;</a>
+      </div>
+
+      <div class="citation-block">
+        <div class="citation-label">Abstract</div>
+        <p class="citation-text">Osborne RJ, Wangi JT, Kirby BS, Black MI, Vanhatalo A, Jones AM. Understanding the 4-min-mile: modelling the physiological determinants of maximal 4-min running performance. CASES Conference Abstract, 2026.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo" style="text-decoration:none;">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Data-driven insights from the lab — direct from the team working with the world's best athletes.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

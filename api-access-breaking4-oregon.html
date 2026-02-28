@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Breaking4 — The Oregon Study</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --red: #e63946;
+      --green: #22c55e;
+      --orange: #f59e0b;
+      --purple: #a855f7;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 480px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Header ── */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.9);
+    }
+    .brand-header .container { display: flex; align-items: center; justify-content: space-between; }
+    .brand-logo { display: flex; align-items: baseline; user-select: none; }
+    .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+    .edition-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+    .brand-intro { padding: 32px 0 0; text-align: center; }
+    .brand-intro .from-line { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .brand-intro .team-name { font-size: 14px; color: var(--accent-light); font-weight: 600; margin-bottom: 20px; }
+    .brand-intro .edition-divider { width: 40px; height: 2px; background: var(--accent); margin: 0 auto; }
+
+    /* ── Sections ── */
+    section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    .hero {
+      min-height: 80vh; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center; padding: 48px 0;
+    }
+    .hero-headline {
+      font-size: 38px; font-weight: 900; letter-spacing: -1px; line-height: 1.1;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px;
+    }
+    .hero-sub { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 16px; line-height: 1.3; max-width: 380px; }
+    .hero-detail { font-size: 15px; color: var(--muted); max-width: 360px; line-height: 1.7; }
+    .hero-collab { font-size: 13px; color: var(--muted); font-style: italic; margin-top: 24px; max-width: 360px; line-height: 1.5; opacity: 0.7; }
+    .scroll-hint { margin-top: 48px; font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .section-title { font-size: 24px; font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
+
+    /* ── Text ── */
+    .matters-text { font-size: 16px; color: var(--text); line-height: 1.7; margin-bottom: 16px; }
+    .matters-text em { color: var(--accent-light); font-style: normal; font-weight: 700; }
+
+    /* ── Stats ── */
+    .stat-stack { display: flex; flex-direction: column; gap: 16px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 20px; text-align: center; }
+    .stat-number { font-size: 48px; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+    .stat-number .unit { font-size: 20px; font-weight: 600; }
+    .stat-number.green { color: var(--green); }
+    .stat-number.orange { color: var(--orange); }
+    .stat-number.red { color: var(--red); }
+    .stat-number.purple { color: var(--purple); }
+    .stat-explain { font-size: 15px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Callouts ── */
+    .callout-stack { display: flex; flex-direction: column; gap: 16px; }
+    .callout { background: var(--surface); border-left: 3px solid var(--accent); border-radius: 10px; padding: 16px; }
+    .callout h3 { font-size: 14px; font-weight: 700; color: var(--accent-light); margin-bottom: 4px; }
+    .callout p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .callout.red { border-left-color: var(--red); }
+    .callout.red h3 { color: #ff8fa3; }
+    .callout.green { border-left-color: var(--green); }
+    .callout.green h3 { color: #6ee7a0; }
+    .callout.orange { border-left-color: var(--orange); }
+    .callout.orange h3 { color: #fbbf24; }
+    .callout.purple { border-left-color: var(--purple); }
+    .callout.purple h3 { color: #c084fc; }
+
+    .divider { width: 40px; height: 3px; background: var(--accent); border-radius: 2px; margin: 24px 0; }
+
+    /* ── Protocol ── */
+    .protocol-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 20px; margin-bottom: 16px; }
+    .protocol-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 12px; color: var(--text); }
+    .protocol-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(42, 42, 69, 0.5); font-size: 14px; }
+    .protocol-row:last-child { border-bottom: none; }
+    .protocol-label { color: var(--muted); }
+    .protocol-value { color: var(--text); font-weight: 600; text-align: right; max-width: 55%; }
+
+    /* ── Physiology table ── */
+    .physio-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+    .physio-table th { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); padding: 8px 4px; text-align: left; border-bottom: 1px solid var(--border); }
+    .physio-table td { font-size: 14px; padding: 10px 4px; border-bottom: 1px solid rgba(42, 42, 69, 0.3); }
+    .physio-table td:first-child { color: var(--muted); }
+    .physio-table td:last-child { font-weight: 700; text-align: right; }
+    .physio-table .highlight td { color: var(--green); }
+    .physio-table .warning td:last-child { color: var(--orange); }
+
+    /* ── Correlation bar ── */
+    .corr-stack { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
+    .corr-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+    .corr-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .corr-name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .corr-val { font-size: 13px; font-weight: 800; }
+    .corr-val.high { color: var(--green); }
+    .corr-val.med { color: var(--orange); }
+    .corr-val.low { color: var(--muted); }
+    .corr-bar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+    .corr-fill { height: 100%; border-radius: 3px; }
+    .corr-note { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+    /* ── Individual dots ── */
+    .individual-grid {
+      display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px;
+      margin: 16px 0; justify-items: center;
+    }
+    .ind-dot {
+      width: 36px; height: 36px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; font-size: 11px; font-weight: 800;
+      border: 2px solid;
+    }
+    .ind-dot.down { background: rgba(230, 57, 70, 0.15); border-color: var(--red); color: var(--red); }
+    .ind-dot.up { background: rgba(34, 197, 94, 0.15); border-color: var(--green); color: var(--green); }
+    .ind-dot.same { background: rgba(153, 153, 184, 0.15); border-color: var(--muted); color: var(--muted); }
+    .ind-legend { display: flex; gap: 16px; justify-content: center; margin-top: 8px; }
+    .ind-legend span { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+    .ind-legend .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* ── Close ── */
+    .close-section { text-align: center; padding: 80px 0; }
+    .close-statement { font-size: 22px; font-weight: 800; line-height: 1.3; margin-bottom: 24px; background: linear-gradient(135deg, var(--accent), var(--accent-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .close-body { font-size: 15px; color: #c8c8e0; line-height: 1.7; margin-bottom: 36px; }
+
+    .connection-card { background: var(--surface); border: 1px solid var(--accent); border-radius: 12px; padding: 20px; margin-bottom: 32px; box-shadow: 0 0 20px var(--accent-glow); }
+    .connection-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .connection-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .connection-link { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 700; color: var(--accent); text-decoration: none; letter-spacing: 0.5px; }
+
+    /* ── CTA / Citation ── */
+    .citation-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-top: 24px; }
+    .citation-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .citation-text { font-size: 12px; color: var(--muted); line-height: 1.6; font-style: italic; }
+
+    /* ── Footer ── */
+    .brand-footer { border-top: 1px solid var(--border); padding: 48px 0; }
+    .footer-inner { text-align: center; }
+    .footer-logo { display: inline-flex; align-items: baseline; margin-bottom: 16px; user-select: none; }
+    .footer-logo .api { font-size: 28px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 28px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .footer-team { font-size: 13px; color: var(--accent-light); font-weight: 600; margin-bottom: 8px; }
+    .footer-desc { font-size: 13px; color: var(--muted); max-width: 360px; margin: 0 auto 24px; line-height: 1.6; }
+    .footer-cta { display: inline-block; padding: 12px 32px; border: 2px solid var(--accent); border-radius: 8px; color: var(--accent); font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: background 0.2s, color 0.2s; }
+    .footer-cta:hover { background: var(--accent); color: #fff; }
+    .footer-fine { margin-top: 32px; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo" style="text-decoration:none;">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Data Drop</span>
+        <span class="edition-date">Breaking4 Series</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">With</div>
+      <div class="team-name">University of Oregon</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="hero-headline">It's not the hormones.</div>
+      <p class="hero-sub">Oregon tested whether menstrual cycle phase changes middle-distance running performance. What actually mattered was in the blood — just not where anyone expected.</p>
+      <p class="hero-detail">9 highly trained women. Two time-to-exhaustion trials timed to low and high hormone phases. Blood, muscle, and metabolic profiling at every step.</p>
+      <p class="hero-collab">Wilkins, Richardson &amp; Schoeberlein — Oregon Performance Research Lab, University of Oregon</p>
+      <div class="scroll-hint">Scroll &#8595;</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE QUESTION ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The question</div>
+      <h2 class="section-title">Does menstrual cycle phase change how fast you run?</h2>
+
+      <p class="matters-text">
+        Estrogen and progesterone fluctuate dramatically across the menstrual cycle, affecting cardiovascular, respiratory, metabolic, and neuromuscular systems. Popular strategies claim training and racing should be timed to cycle phase.
+      </p>
+      <p class="matters-text">
+        But a 2020 meta-analysis found only a <em>"trivial detrimental effect"</em> of the early follicular phase on performance — and half the studies didn't even verify hormone levels with bloodwork.
+      </p>
+      <p class="matters-text">
+        Oregon's approach: <em>verify hormones, test performance, and measure everything in between</em> — in athletes actually running at 4-minute mile pace.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ THE ATHLETES ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The athletes</div>
+      <h2 class="section-title">Who runs a study like this?</h2>
+
+      <div class="protocol-card">
+        <h3>Participant Profile (n = 8)</h3>
+        <table class="physio-table">
+          <tr>
+            <th>Measure</th>
+            <th style="text-align:right;">Group Mean</th>
+          </tr>
+          <tr class="highlight">
+            <td>VO&#8322;max</td>
+            <td>58.6 &plusmn; 6.5 mL/kg/min</td>
+          </tr>
+          <tr>
+            <td>TTE speed</td>
+            <td>17.1 &plusmn; 1.4 kph</td>
+          </tr>
+          <tr>
+            <td>Avg pace</td>
+            <td>5:42 &plusmn; 0:30 per mile</td>
+          </tr>
+          <tr>
+            <td>Avg TTE</td>
+            <td>223.8 &plusmn; 39.8 sec</td>
+          </tr>
+        </table>
+      </div>
+
+      <p class="matters-text">
+        These are <em>highly trained middle-distance runners</em> — averaging sub-6 minute miles, running to exhaustion in about 3:44. Four with natural cycles, four with IUDs, one on combination birth control.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ THE PROTOCOL ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The protocol</div>
+      <h2 class="section-title">Four visits. Every system measured.</h2>
+
+      <div class="protocol-card">
+        <h3>Visit 1 — Baseline</h3>
+        <div class="protocol-row">
+          <span class="protocol-label">DXA scan</span>
+          <span class="protocol-value">Body composition, lean mass, leg lean mass</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Ramp test</span>
+          <span class="protocol-value">VO&#8322;max, lactate thresholds, max HR</span>
+        </div>
+      </div>
+
+      <div class="protocol-card">
+        <h3>Visit 2 — Familiarization</h3>
+        <div class="protocol-row">
+          <span class="protocol-label">mO&#8322; capacity</span>
+          <span class="protocol-value">NIRS muscle oxidative capacity test</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">TTE trial</span>
+          <span class="protocol-value">Familiarization run to exhaustion</span>
+        </div>
+      </div>
+
+      <div class="protocol-card">
+        <h3>Visits 3 &amp; 4 — The Key Trials</h3>
+        <div class="protocol-row">
+          <span class="protocol-label">Blood draw</span>
+          <span class="protocol-value">E&#8322;, P&#8324;, testosterone, LH, FSH, iron</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">TTE trial</span>
+          <span class="protocol-value">All-out run at ~4-min mile pace</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">CO rebreathe</span>
+          <span class="protocol-value">Hb mass, blood volume, RBCV, PV</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Timing</span>
+          <span class="protocol-value">13–15 days apart (low vs high hormone)</span>
+        </div>
+      </div>
+
+      <p class="matters-text" style="margin-top:16px;">
+        Continuous <em>VO&#8322; kinetics, muscle oxygenation (NIRS), heart rate, and blood lactate</em> were measured throughout every trial. Hormone status was verified by blood, not assumed from calendar.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ THE RESULT ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The result</div>
+      <h2 class="section-title">No group difference. Massive individual variation.</h2>
+
+      <div class="stat-card" style="margin-bottom:24px; border-color: var(--accent);">
+        <div class="stat-number">P = ns</div>
+        <p class="stat-explain">No statistically significant difference in time to exhaustion between low and high hormone profile days</p>
+      </div>
+
+      <p class="matters-text" style="margin-bottom:12px;">But the group average hides a more interesting story. Here is every participant's change in TTE from low to high hormone day:</p>
+
+      <div class="individual-grid">
+        <div class="ind-dot down">&#8595;</div>
+        <div class="ind-dot down">&#8595;</div>
+        <div class="ind-dot down">&#8595;</div>
+        <div class="ind-dot down">&#8595;</div>
+        <div class="ind-dot down">&#8595;</div>
+        <div class="ind-dot same">&#8776;</div>
+        <div class="ind-dot up">&#8593;</div>
+        <div class="ind-dot up">&#8593;</div>
+      </div>
+      <div class="ind-legend">
+        <span><span class="leg-dot" style="background:var(--red);"></span> Ran less (5)</span>
+        <span><span class="leg-dot" style="background:var(--muted);"></span> Same (1)</span>
+        <span><span class="leg-dot" style="background:var(--green);"></span> Ran more (2)</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="matters-text">
+        Five participants ran shorter on the high hormone day, two ran longer, and one was essentially unchanged (~1 sec). <em>There was no correlation between progesterone or estradiol concentration and TTE performance</em> (r = 0.14 and r = –0.14, respectively).
+      </p>
+      <p class="matters-text">
+        So if the hormones themselves don't explain the variation — what does?
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ PHYSIOLOGICAL PREDICTORS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The predictors</div>
+      <h2 class="section-title">Physiology predicts performance. Hormones don't.</h2>
+
+      <p class="matters-text" style="margin-bottom: 20px;">
+        When Oregon looked at which physiological characteristics actually predicted how fast their athletes ran, the results were overwhelming:
+      </p>
+
+      <div class="corr-stack">
+        <div class="corr-item">
+          <div class="corr-header">
+            <span class="corr-name">Lactate Turnpoint (LTP)</span>
+            <span class="corr-val high">r = 0.94</span>
+          </div>
+          <div class="corr-bar"><div class="corr-fill" style="width:94%;background:var(--green);"></div></div>
+          <div class="corr-note">P &lt; 0.001 — strongest predictor of TTE running speed</div>
+        </div>
+
+        <div class="corr-item">
+          <div class="corr-header">
+            <span class="corr-name">VO&#8322;max</span>
+            <span class="corr-val high">r = 0.93</span>
+          </div>
+          <div class="corr-bar"><div class="corr-fill" style="width:93%;background:var(--green);"></div></div>
+          <div class="corr-note">P &lt; 0.001 — aerobic ceiling nearly perfectly predicts speed</div>
+        </div>
+
+        <div class="corr-item">
+          <div class="corr-header">
+            <span class="corr-name">Muscle Oxidative Capacity (mO&#8322;)</span>
+            <span class="corr-val med">r = 0.68</span>
+          </div>
+          <div class="corr-bar"><div class="corr-fill" style="width:68%;background:var(--orange);"></div></div>
+          <div class="corr-note">P = 0.06 — mitochondrial capacity trending significant</div>
+        </div>
+
+        <div class="corr-item">
+          <div class="corr-header">
+            <span class="corr-name">Progesterone (P&#8324;)</span>
+            <span class="corr-val low">r = 0.14</span>
+          </div>
+          <div class="corr-bar"><div class="corr-fill" style="width:14%;background:var(--muted);"></div></div>
+          <div class="corr-note">P = 0.76 — no relationship to performance change</div>
+        </div>
+
+        <div class="corr-item">
+          <div class="corr-header">
+            <span class="corr-name">Estradiol (E&#8322;)</span>
+            <span class="corr-val low">r = –0.14</span>
+          </div>
+          <div class="corr-bar"><div class="corr-fill" style="width:14%;background:var(--muted);"></div></div>
+          <div class="corr-note">P = 0.77 — no relationship to performance change</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="matters-text">
+        The message is clear: <em>your physiology — not your cycle phase — determines how fast you run</em>. VO&#8322;max and lactate turnpoint explain over 85% of the variance in performance.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ THE REAL FINDING ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The real finding</div>
+      <h2 class="section-title">It's hemoglobin mass — not hormones.</h2>
+
+      <p class="matters-text">
+        When the Oregon team explored what actually explained the <em>individual differences</em> in performance between low and high hormone days, one family of variables stood out above everything:
+      </p>
+
+      <div class="stat-stack" style="margin-bottom:24px;">
+        <div class="stat-card" style="border-color: var(--green);">
+          <div class="stat-number green" style="font-size:36px;">r = 0.79</div>
+          <p class="stat-explain">Hb mass per kg body mass vs. change in TTE<br><strong style="color:var(--green);">P = 0.02</strong></p>
+        </div>
+        <div class="stat-card" style="border-color: var(--green);">
+          <div class="stat-number green" style="font-size:36px;">r = 0.71</div>
+          <p class="stat-explain">Red blood cell volume (RBCV) vs. change in TTE<br><strong style="color:var(--green);">P = 0.049</strong></p>
+        </div>
+      </div>
+
+      <div class="callout-stack">
+        <div class="callout green">
+          <h3>Less drop in Hb mass = less drop in performance</h3>
+          <p>Athletes who maintained their hemoglobin mass and red blood cell volume between trial days maintained their running performance. The relationship was statistically significant and robust.</p>
+        </div>
+
+        <div class="callout red">
+          <h3>Higher plasma volume = worse performance</h3>
+          <p>Both &Delta;PV (P = 0.003) and &Delta;BV (P = 0.02) were negatively correlated with &Delta;TTE — increased plasma volume diluted oxygen-carrying capacity and hurt performance.</p>
+        </div>
+
+        <div class="callout orange">
+          <h3>VO&#8322; onset kinetics trending</h3>
+          <p>Slower VO&#8322; onset kinetics (r = –0.63, P = 0.09) on the high hormone day were associated with shorter TTE — suggesting oxygen delivery speed also fluctuates with hormone profile.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="matters-text">
+        There was a modest relationship between progesterone and blood volume (r = 0.65, P = 0.12), pointing to a possible mechanism: <em>high progesterone may expand plasma volume, diluting Hb concentration and reducing oxygen delivery</em> — which is what actually impacts performance.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ WHAT THIS MEANS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">What this means</div>
+      <h2 class="section-title">Stop timing the cycle. Start tracking the blood.</h2>
+
+      <div class="callout-stack">
+        <div class="callout purple">
+          <h3>For coaches &amp; athletes</h3>
+          <p>Menstrual cycle phase alone doesn't predict performance in trained women. The popular advice to periodize training around cycle phase isn't supported by this data. What matters more is oxygen-carrying capacity — Hb mass and red blood cell volume.</p>
+        </div>
+
+        <div class="callout">
+          <h3>For sport science</h3>
+          <p>The individual variability is the finding. Group averages mask real physiological responses. Future work should track Hb mass alongside hormone profiles to isolate the mechanism — not just the phase.</p>
+        </div>
+
+        <div class="callout green">
+          <h3>For Breaking4</h3>
+          <p>If the 4-minute mile hinges on oxygen delivery — and the Exeter model says it does — then fluctuations in Hb mass and blood volume composition across the cycle are more relevant than estrogen or progesterone directly. Protecting oxygen-carrying capacity is the priority.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="protocol-card">
+        <h3>Key Numbers At A Glance</h3>
+        <div class="protocol-row">
+          <span class="protocol-label">TTE difference (group)</span>
+          <span class="protocol-value">Not significant</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">P&#8324; ↔ TTE</span>
+          <span class="protocol-value">r = 0.14, P = 0.76</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Hb/kg ↔ &Delta;TTE</span>
+          <span class="protocol-value" style="color:var(--green);">r = 0.79, P = 0.02</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">RBCV ↔ &Delta;TTE</span>
+          <span class="protocol-value" style="color:var(--green);">r = 0.71, P = 0.049</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">VO&#8322;max ↔ speed</span>
+          <span class="protocol-value" style="color:var(--green);">r = 0.93, P &lt; 0.001</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">LTP ↔ speed</span>
+          <span class="protocol-value" style="color:var(--green);">r = 0.94, P &lt; 0.001</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TAKEAWAY ═══ -->
+  <section class="close-section">
+    <div class="container">
+      <div class="section-label">The takeaway</div>
+      <p class="close-statement">The cycle doesn't predict performance. Hemoglobin mass does.</p>
+      <p class="close-body">
+        Oregon's data shows that fluctuating female sex hormones don't have a direct, measurable impact on middle-distance running performance in trained athletes. But the oxygen-carrying capacity of the blood — hemoglobin mass and red blood cell volume — is powerfully linked to individual performance differences. The mechanism may run through progesterone-driven plasma volume expansion, which dilutes Hb concentration. The practical takeaway: track iron and blood status, not cycle phase.
+      </p>
+
+      <div class="connection-card">
+        <div class="connection-label">Breaking4 Series</div>
+        <p>This is the third piece in our Breaking4 Data Drop series. The main Breaking4 dashboard identified oxygen delivery as the key limiter. Exeter built the models. Oregon now shows that even within a single athlete, it's oxygen-carrying capacity — not hormones — that shifts performance.</p>
+        <a class="connection-link" href="api-access-breaking4.html">See the Breaking4 dashboard &#8594;</a>
+        <br>
+        <a class="connection-link" href="api-access-breaking4-exeter.html">See the Exeter model &#8594;</a>
+      </div>
+
+      <div class="citation-block">
+        <div class="citation-label">Source</div>
+        <p class="citation-text">Wilkins BW, Richardson EW, Schoeberlein MI. The impact of sex hormone profile on fatigue progression in women middle distance runners. Oregon Performance Research Laboratory, Department of Human Physiology, University of Oregon. Project Victory Report, 2025.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo" style="text-decoration:none;">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Data-driven insights from the lab — direct from the team working with the world's best athletes.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
