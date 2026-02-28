@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Breaking4 — The Breath-Hold Priming Protocol</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --red: #e63946;
+      --green: #22c55e;
+      --orange: #f59e0b;
+      --fuchsia: #d946a8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 480px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Header ── */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.9);
+    }
+    .brand-header .container { display: flex; align-items: center; justify-content: space-between; }
+    .brand-logo { display: flex; align-items: baseline; user-select: none; }
+    .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--fuchsia); }
+    .edition-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+    .brand-intro { padding: 32px 0 0; text-align: center; }
+    .brand-intro .from-line { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .brand-intro .team-name { font-size: 14px; color: var(--accent-light); font-weight: 600; margin-bottom: 20px; }
+    .brand-intro .edition-divider { width: 40px; height: 2px; background: var(--accent); margin: 0 auto; }
+
+    /* ── Sections ── */
+    section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    .hero {
+      min-height: 80vh; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center; padding: 48px 0;
+    }
+    .hero-headline {
+      font-size: 38px; font-weight: 900; letter-spacing: -1px; line-height: 1.1;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px;
+    }
+    .hero-sub { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 16px; line-height: 1.3; max-width: 380px; }
+    .hero-detail { font-size: 15px; color: var(--muted); max-width: 360px; line-height: 1.7; }
+    .hero-collab { font-size: 13px; color: var(--muted); font-style: italic; margin-top: 24px; max-width: 360px; line-height: 1.5; opacity: 0.7; }
+    .scroll-hint { margin-top: 48px; font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .section-title { font-size: 24px; font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
+
+    .matters-text { font-size: 16px; color: var(--text); line-height: 1.7; margin-bottom: 16px; }
+    .matters-text em { color: var(--accent-light); font-style: normal; font-weight: 700; }
+
+    /* ── Stats ── */
+    .stat-stack { display: flex; flex-direction: column; gap: 16px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 20px; text-align: center; }
+    .stat-number { font-size: 48px; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+    .stat-number .unit { font-size: 20px; font-weight: 600; }
+    .stat-number.green { color: var(--green); }
+    .stat-number.orange { color: var(--orange); }
+    .stat-number.red { color: var(--red); }
+    .stat-explain { font-size: 15px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Callouts ── */
+    .callout-stack { display: flex; flex-direction: column; gap: 16px; }
+    .callout { background: var(--surface); border-left: 3px solid var(--accent); border-radius: 10px; padding: 16px; }
+    .callout h3 { font-size: 14px; font-weight: 700; color: var(--accent-light); margin-bottom: 4px; }
+    .callout p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .callout.red { border-left-color: var(--red); }
+    .callout.red h3 { color: #ff8fa3; }
+    .callout.green { border-left-color: var(--green); }
+    .callout.green h3 { color: #6ee7a0; }
+    .callout.orange { border-left-color: var(--orange); }
+    .callout.orange h3 { color: #fbbf24; }
+    .callout.purple { border-left-color: var(--fuchsia); }
+    .callout.purple h3 { color: #f0abfc; }
+
+    .divider { width: 40px; height: 3px; background: var(--accent); border-radius: 2px; margin: 24px 0; }
+
+    /* ── Protocol ── */
+    .protocol-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 20px; margin-bottom: 16px; }
+    .protocol-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 12px; color: var(--text); }
+    .protocol-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(42, 42, 69, 0.5); font-size: 14px; }
+    .protocol-row:last-child { border-bottom: none; }
+    .protocol-label { color: var(--muted); }
+    .protocol-value { color: var(--text); font-weight: 600; text-align: right; max-width: 55%; }
+
+    /* ── Timeline ── */
+    .timeline { position: relative; padding-left: 28px; margin-bottom: 24px; }
+    .timeline::before { content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px; width: 2px; background: var(--border); }
+    .timeline-step { position: relative; margin-bottom: 20px; }
+    .timeline-step:last-child { margin-bottom: 0; }
+    .timeline-dot { position: absolute; left: -24px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); }
+    .timeline-dot.green { background: var(--green); }
+    .timeline-dot.orange { background: var(--orange); }
+    .timeline-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 2px; }
+    .timeline-text { font-size: 14px; color: var(--muted); line-height: 1.5; }
+    .timeline-text strong { color: var(--text); }
+
+    /* ── Close ── */
+    .close-section { text-align: center; padding: 80px 0; }
+    .close-statement { font-size: 22px; font-weight: 800; line-height: 1.3; margin-bottom: 24px; background: linear-gradient(135deg, var(--accent), var(--accent-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .close-body { font-size: 15px; color: #c8c8e0; line-height: 1.7; margin-bottom: 36px; }
+
+    .connection-card { background: var(--surface); border: 1px solid var(--accent); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 0 20px var(--accent-glow); }
+    .connection-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .connection-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .connection-link { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 700; color: var(--accent); text-decoration: none; letter-spacing: 0.5px; }
+
+    /* ── Footer ── */
+    .brand-footer { border-top: 1px solid var(--border); padding: 48px 0; }
+    .footer-inner { text-align: center; }
+    .footer-logo { display: inline-flex; align-items: baseline; margin-bottom: 16px; user-select: none; }
+    .footer-logo .api { font-size: 28px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 28px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .footer-team { font-size: 13px; color: var(--accent-light); font-weight: 600; margin-bottom: 8px; }
+    .footer-desc { font-size: 13px; color: var(--muted); max-width: 360px; margin: 0 auto 24px; line-height: 1.6; }
+    .footer-cta { display: inline-block; padding: 12px 32px; border: 2px solid var(--accent); border-radius: 8px; color: var(--accent); font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: background 0.2s, color 0.2s; }
+    .footer-cta:hover { background: var(--accent); color: #fff; }
+    .footer-fine { margin-top: 32px; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo" style="text-decoration:none;">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Data Drop</span>
+        <span class="edition-date">Breaking4 Series</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">From</div>
+      <div class="team-name">Nike Sport Research Lab</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="hero-headline">Breathe. Hold. Prime.</div>
+      <p class="hero-sub">Five breath holds before the gun. More hemoglobin in the blood. Higher lactate thresholds. Longer time to exhaustion. A race-day intervention that shifts the oxygen equation.</p>
+      <p class="hero-detail">22 trained female athletes. Randomized crossover design. The first evidence that breath-hold priming enhances performance in women.</p>
+      <p class="hero-collab">Boere &amp; Kirby — Nike Sport Research Lab</p>
+      <div class="scroll-hint">Scroll &#8595;</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE CONTEXT ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The context</div>
+      <h2 class="section-title">The margin is tiny. That's the opportunity.</h2>
+
+      <p class="matters-text">
+        The Physiology of 4 Minutes showed that the gap between running a mile in 4 minutes and failing is measured in molecules of oxygen. The target: roughly <em>1.5% more blood oxygen saturation</em>, or <em>~70 mL O&#8322;/min</em> more delivered to working muscle.
+      </p>
+      <p class="matters-text">
+        Oregon showed that hemoglobin mass — a direct determinant of oxygen-carrying capacity — predicts individual performance variation more than any other factor.
+      </p>
+      <p class="matters-text">
+        The question became: <em>is there a way to acutely raise circulating hemoglobin right before a race?</em>
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ THE PROTOCOL ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The protocol</div>
+      <h2 class="section-title">Five breath holds. Five minutes before exercise.</h2>
+
+      <div class="protocol-card">
+        <h3>Breath-Hold Priming Protocol</h3>
+        <div class="protocol-row">
+          <span class="protocol-label">Breath holds</span>
+          <span class="protocol-value">5 maximal holds</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Rest between holds</span>
+          <span class="protocol-value">2 minutes</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Mean hold duration</span>
+          <span class="protocol-value">53 ± 18 seconds</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Time to exercise</span>
+          <span class="protocol-value">Within 5 minutes</span>
+        </div>
+      </div>
+
+      <div class="protocol-card">
+        <h3>Study Design</h3>
+        <div class="protocol-row">
+          <span class="protocol-label">Athletes</span>
+          <span class="protocol-value">22 trained female runners</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">VO&#8322;peak</span>
+          <span class="protocol-value">52.0 ± 7.3 mL/kg/min</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Running experience</span>
+          <span class="protocol-value">17.7 ± 4.5 years</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Design</span>
+          <span class="protocol-value">Randomized crossover</span>
+        </div>
+        <div class="protocol-row">
+          <span class="protocol-label">Performance test</span>
+          <span class="protocol-value">Incremental treadmill to exhaustion</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2 class="section-title">What happens during the holds</h2>
+
+      <div class="timeline">
+        <div class="timeline-step">
+          <div class="timeline-dot"></div>
+          <div class="timeline-label">Breath holds 1–5</div>
+          <div class="timeline-text">Hold duration <strong>increases linearly</strong> across the five holds. SpO&#8322; nadir <strong>declines progressively</strong> — the body is being pushed into transient hypoxia.</div>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-dot orange"></div>
+          <div class="timeline-label">Splenic contraction</div>
+          <div class="timeline-text">Spleen stiffness rises <strong>11%</strong> — the spleen contracts and releases its reservoir of stored red blood cells into circulation.</div>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-dot green"></div>
+          <div class="timeline-label">Hemoglobin surge</div>
+          <div class="timeline-text">Circulating hemoglobin concentration increases <strong>6%</strong> — more oxygen carriers now in the blood, ready for the effort ahead.</div>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-dot"></div>
+          <div class="timeline-label">Ventilatory drive</div>
+          <div class="timeline-text">Post-hold ventilatory drive <strong>increases linearly</strong> across holds — the respiratory system is primed to move more air when exercise begins.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE RESULTS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The results</div>
+      <h2 class="section-title">What changed at the start line</h2>
+
+      <div class="stat-stack">
+        <div class="stat-card" style="border-color: var(--green);">
+          <div class="stat-number green">+6<span class="unit">%</span></div>
+          <p class="stat-explain">Increase in circulating hemoglobin concentration. More oxygen carriers in the blood before the gun fires.</p>
+        </div>
+
+        <div class="stat-card" style="border-color: var(--orange);">
+          <div class="stat-number orange">+11<span class="unit">%</span></div>
+          <p class="stat-explain">Increase in spleen stiffness — the physiological signature of splenic contraction releasing stored red blood cells.</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-number">+0.71<span class="unit"> km/h</span></div>
+          <p class="stat-explain">Shift in lactate threshold (LT1) speed. The aerobic-anaerobic crossover point moved to a faster pace.</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-number">+0.58<span class="unit"> km/h</span></div>
+          <p class="stat-explain">Shift in lactate turnpoint (LT2) speed. The ceiling of sustainable intensity rose — the athlete can hold faster paces longer.</p>
+        </div>
+
+        <div class="stat-card" style="border-color: var(--accent);">
+          <div class="stat-number">+3<span class="unit">%</span></div>
+          <p class="stat-explain">Longer total test duration. Athletes ran longer before reaching exhaustion — the breath-hold protocol extended the performance ceiling.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WHY THIS MATTERS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Why this matters</div>
+      <h2 class="section-title">Closing the oxygen gap — before the race starts.</h2>
+
+      <div class="callout-stack">
+        <div class="callout green">
+          <h3>More hemoglobin = more oxygen-carrying capacity</h3>
+          <p>A 6% rise in circulating hemoglobin means more red blood cells available to carry oxygen to working muscle. The Physiology of 4 Minutes identified a narrow oxygen delivery gap as the limiter — this protocol directly targets that gap.</p>
+        </div>
+
+        <div class="callout orange">
+          <h3>Higher thresholds = faster sustainable pace</h3>
+          <p>When LT1 and LT2 shift to faster speeds, the athlete spends less of the race above the metabolic ceiling. In the Exeter model, this maps to a higher effective Critical Speed — the single most impactful variable in the 4-minute equation.</p>
+        </div>
+
+        <div class="callout purple">
+          <h3>An acute intervention, not a training block</h3>
+          <p>This isn't weeks of altitude camp or months of periodized training. It's five breath holds in the call room. A race-day protocol that shifts the oxygen equation at the moment it matters most.</p>
+        </div>
+
+        <div class="callout red">
+          <h3>Tested in women — not extrapolated from men</h3>
+          <p>This study was conducted with 22 trained female athletes. The effect is demonstrated in the population that matters for Breaking4. However, the athletes in this study were trained but not elite milers — the magnitude of effect in a world-class middle-distance runner may differ.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE CHAIN OF EVIDENCE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The chain of evidence</div>
+      <h2 class="section-title">How it all connects.</h2>
+
+      <div class="callout-stack">
+        <div class="callout">
+          <h3>1. The Physiology of 4 Minutes</h3>
+          <p>Identified oxygen delivery as the key limiter. The gap is ~70 mL O&#8322;/min — a narrow margin between 4:00 and failure.</p>
+        </div>
+
+        <div class="callout">
+          <h3>2. The Exeter Model</h3>
+          <p>Built the equation: Critical Speed + D&#8242;. Showed that raising aerobic capacity (CS) has 5.7x more impact on mile time than improving anaerobic reserve.</p>
+        </div>
+
+        <div class="callout">
+          <h3>3. The Oregon Study</h3>
+          <p>Demonstrated that the capacity to consume oxygen — muscle oxidative capacity and hemoglobin mass — predicts performance variation. Not hormones. Not cycle phase.</p>
+        </div>
+
+        <div class="callout">
+          <h3>4. The World Record Holder</h3>
+          <p>Revealed an extraordinary aerobic engine with an anaerobic gap. The roadmap: shift toward speed without losing what makes her extraordinary.</p>
+        </div>
+
+        <div class="callout green">
+          <h3>5. The Breath-Hold Priming Protocol</h3>
+          <p>Five breath holds before exercise acutely raise circulating hemoglobin by 6%, shift lactate thresholds upward, and extend time to exhaustion by 3%. A race-day intervention that targets the oxygen delivery gap directly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TAKEAWAY ═══ -->
+  <section class="close-section">
+    <div class="container">
+      <div class="section-label">The takeaway</div>
+      <p class="close-statement">The gap is oxygen. The spleen has a reservoir. Five breaths can open it.</p>
+      <p class="close-body">
+        The Breaking4 series has traced the limiter from the working muscle back through the blood to the heart and lungs. This study adds one more link: the spleen — a reservoir of red blood cells that can be released on demand with a simple breath-hold protocol. In a race where the margin is measured in fractions of a percent of blood oxygen, an acute 6% increase in circulating hemoglobin could be the difference.
+      </p>
+      <p class="close-body">
+        This was tested in trained female athletes. The effect in elite middle-distance runners remains to be confirmed — but the mechanism is clear, the protocol is simple, and the direction of effect is consistent with the oxygen delivery framework established across the Breaking4 series.
+      </p>
+
+      <div class="connection-card">
+        <div class="connection-label">Breaking4 Series</div>
+        <p>This is the final piece in the Breaking4 Data Drop series. It connects the oxygen delivery gap identified in the Physiology of 4 Minutes to a practical, race-day intervention.</p>
+        <a class="connection-link" href="api-access-breaking4.html">See the Physiology of 4 Minutes &#8594;</a>
+        <br>
+        <a class="connection-link" href="api-access-breaking4-exeter.html">See the Exeter Model &#8594;</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo" style="text-decoration:none;">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Data-driven insights from the lab — direct from the team working with the world's best athletes.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
