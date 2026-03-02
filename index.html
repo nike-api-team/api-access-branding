@@ -2,10 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0;url=api-access-landing.html" />
-  <title>Redirecting…</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access — Applied Performance Innovation</title>
 </head>
 <body>
-  <p>Redirecting to <a href="api-access-landing.html">API Access</a>…</p>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    var hash = window.location.hash;
+    var hasToken = hash.indexOf('invite_token') !== -1
+                || hash.indexOf('recovery_token') !== -1
+                || hash.indexOf('confirmation_token') !== -1;
+
+    netlifyIdentity.on('init', function(user) {
+      if (user) {
+        // Already logged in — go straight to the hub
+        window.location.href = '/api-access-landing.html';
+      } else if (!hasToken) {
+        // No token, not logged in — go to the gate/teaser page
+        window.location.href = '/api-access-gate.html';
+      }
+      // If there IS a token, the widget handles it automatically (shows the set-password modal)
+    });
+
+    // After successful login or invite completion, go to the hub
+    netlifyIdentity.on('login', function() {
+      window.location.href = '/api-access-landing.html';
+    });
+  </script>
 </body>
 </html>
