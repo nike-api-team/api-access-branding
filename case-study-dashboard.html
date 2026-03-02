@@ -146,6 +146,62 @@
         .finding-box .hl { color: var(--accent); font-weight: 700; }
         
         .footer { text-align: center; padding: 40px; font-size: 0.7rem; color: #999; border-top: 1.5px solid var(--border); margin-top: 40px; }
+
+        @media screen and (max-width: 600px) {
+            .nav { padding: 10px 16px; gap: 12px; flex-wrap: wrap; }
+            .nav-links { gap: 12px; flex-wrap: wrap; }
+            .nav-links a { font-size: 0.7rem; }
+
+            .section { padding: 80px 16px 40px; min-height: auto; }
+
+            .hero h1 { font-size: 1.5rem; }
+            .hero-sub { font-size: 0.9rem; }
+            .hero-stats { gap: 20px; flex-wrap: wrap; justify-content: center; }
+            .hero-stat-value { font-size: 1.4rem; }
+
+            .profile-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 30px; }
+            .profile-card { padding: 20px; }
+
+            .cascade-section h2 { font-size: 1.3rem; }
+            .cascade-row { gap: 4px; }
+            .cascade-node { width: 70px; height: 70px; border-width: 2px; }
+            .cascade-node .node-icon { font-size: 1.3rem; }
+            .cascade-node .node-label { font-size: 0.55rem; }
+            .cascade-node .node-status { font-size: 0.45rem; padding: 1px 5px; }
+            .cascade-arrow { font-size: 0.8rem; }
+
+            .detail-panel { padding: 20px; }
+            .detail-panel h3 { font-size: 1rem; }
+
+            .intensity-section h2 { font-size: 1.3rem; }
+            .intensity-slider { width: 95%; }
+            .intensity-label-row { max-width: 100%; padding: 0; }
+            .intensity-label-item { font-size: 0.55rem; }
+            .intensity-display { font-size: 1.1rem; }
+
+            .cascade-viz { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .viz-icon { font-size: 1.3rem; }
+            .viz-name { font-size: 0.65rem; }
+            .viz-metric { font-size: 0.9rem; }
+            .viz-detail { font-size: 0.55rem; }
+
+            .intensity-finding { padding: 16px; }
+            .intensity-finding h4 { font-size: 0.8rem; }
+            .intensity-finding p { font-size: 0.8rem; }
+
+            .whatif-section h2 { font-size: 1.3rem; }
+            .whatif-grid { grid-template-columns: 1fr; gap: 12px; }
+            .whatif-card { padding: 18px; }
+            .whatif-card .card-icon { font-size: 1.5rem; }
+
+            .whatif-result { padding: 20px; }
+
+            .finding-section h2 { font-size: 1.3rem; }
+            .finding-box { padding: 24px 20px; }
+            .finding-box p { font-size: 0.9rem; }
+
+            .footer { padding: 24px 16px; }
+        }
     </style>
 </head>
 <body>

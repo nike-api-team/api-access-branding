@@ -66,6 +66,19 @@
 
         footer { margin-top: 14px; padding-top: 8px; border-top: 1.5px solid var(--border); text-align: center; color: #999; font-size: 9px; }
 
+        @media screen and (max-width: 600px) {
+            body { padding: 20px 16px; font-size: 12px; }
+            h1 { font-size: 20px; }
+            .metrics { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .m-val { font-size: 18px; }
+            .cascade { flex-wrap: wrap; gap: 6px 4px; }
+            .c-node { width: 72px; height: 54px; border-radius: 6px; }
+            .c-icon { font-size: 14px; }
+            .c-label { font-size: 7px; }
+            .c-arrow { font-size: 10px; }
+            .two-col { grid-template-columns: 1fr; gap: 0; }
+        }
+
         @media print {
             body { padding: 20px 24px; max-width: 100%; }
             @page { size: letter; margin: 0.5in; }
