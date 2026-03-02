@@ -946,7 +946,20 @@
     </div>
   </div>
 
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
+  // Auth gate — redirect to gate page if not logged in
+  netlifyIdentity.on('init', function(user) {
+    if (!user) {
+      window.location.href = '/api-access-gate.html';
+    }
+  });
+
+  // Show logout option (optional — wire to a button if you want one)
+  netlifyIdentity.on('logout', function() {
+    window.location.href = '/api-access-gate.html';
+  });
+
 function handleNewsletterSubmit(formEl, successEl) {
   formEl.addEventListener('submit', function(e) {
     e.preventDefault();
