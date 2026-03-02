@@ -1,45 +1,52 @@
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method not allowed' };
   }
 
   try {
     const params = new URLSearchParams(event.body);
-    const email     = params.get('email')      || '';
+    const email = (params.get('email') || '').trim();
     const firstName = params.get('first-name') || '';
-    const lastName  = params.get('last-name')  || '';
+    const lastName = params.get('last-name') || '';
 
     if (!email) {
       return { statusCode: 400, body: JSON.stringify({ error: 'Email required' }) };
     }
 
-    const siteId = process.env.NETLIFY_SITE_ID;
-    const token  = process.env.NETLIFY_AUTH_TOKEN;
-
-    const response = await fetch(
-      `https://api.netlify.com/api/v1/sites/${siteId}/identity/users`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          send_invite: true,
-          user_metadata: {
-            full_name: `${firstName} ${lastName}`.trim(),
-          },
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Netlify Identity invite error:', response.status, errorText);
+    // Use built-in Identity admin token — no env vars needed
+    const rawCtx = context.clientContext?.custom?.netlify;
+    if (!rawCtx) {
+      console.error('No Identity context — is Identity enabled for this site?');
+      return { statusCode: 500, body: JSON.stringify({ error: 'Identity not configured' }) };
     }
 
-    // Always return success to the user — don't expose API errors client-side
+    const netlifyCtx = JSON.parse(Buffer.from(rawCtx, 'base64').toString('utf-8'));
+    const { identity } = netlifyCtx;
+    if (!identity?.url || !identity?.token) {
+      console.error('Missing identity.url or identity.token in context');
+      return { statusCode: 500, body: JSON.stringify({ error: 'Identity not configured' }) };
+    }
+
+    // GoTrue invite endpoint: POST {identity_url}/invite
+    const inviteUrl = identity.url.replace(/\/$/, '') + '/invite';
+    const response = await fetch(inviteUrl, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${identity.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        data: { full_name: `${firstName} ${lastName}`.trim() },
+      }),
+    });
+
+    const respText = await response.text();
+    if (!response.ok) {
+      console.error('GoTrue invite error:', response.status, respText);
+    }
+
+    // Always return success to the user — don't expose API errors
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
