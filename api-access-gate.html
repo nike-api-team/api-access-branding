@@ -596,8 +596,7 @@
       <h2 class="card-title">Get inside</h2>
       <p class="card-desc">Drop your email and we'll reach out with access. No spam — just the good stuff when we publish.</p>
 
-      <form class="request-form" id="request-form" name="access-request" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
-        <p class="honey"><input name="bot-field"></p>
+      <form class="request-form" id="request-form">
         <div class="form-row">
           <input type="text" name="first-name" placeholder="First name" required />
           <input type="text" name="last-name" placeholder="Last name" />
@@ -748,14 +747,18 @@
       netlifyIdentity.open('login');
     });
 
-    // Request access form submission
+    // Request access form — auto-invite via Netlify Function
     var form = document.getElementById('request-form');
     var success = document.getElementById('form-success');
+    var submitBtn = form.querySelector('button[type="submit"]');
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
       var data = new FormData(form);
-      fetch('/', {
+      fetch('/.netlify/functions/request-access', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(data).toString()
