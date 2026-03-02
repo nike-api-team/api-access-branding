@@ -314,6 +314,196 @@
       line-height: 1.5;
     }
 
+    /* ── Newsletter ── */
+    .newsletter-section {
+      padding: 48px 0 56px;
+    }
+
+    .newsletter-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .newsletter-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .newsletter-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 10px;
+    }
+
+    .newsletter-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .newsletter-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 360px;
+      margin: 0 auto 24px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 10px;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    .newsletter-form input[type="email"] {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .newsletter-form input[type="email"]:focus {
+      border-color: var(--accent);
+    }
+
+    .newsletter-form input[type="email"]::placeholder {
+      color: #555;
+    }
+
+    .newsletter-form button {
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .newsletter-form button:hover {
+      background: var(--accent-light);
+    }
+
+    .newsletter-honey { display: none; }
+
+    .newsletter-success {
+      display: none;
+      text-align: center;
+    }
+
+    .newsletter-success.visible {
+      display: block;
+    }
+
+    .newsletter-success .check {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .newsletter-success h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .newsletter-success p {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .newsletter-form.hidden { display: none; }
+
+    /* footer compact form */
+    .footer-subscribe {
+      margin: 16px auto 0;
+      max-width: 320px;
+    }
+
+    .footer-subscribe-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .footer-sub-form {
+      display: flex;
+      gap: 8px;
+    }
+
+    .footer-sub-form input[type="email"] {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .footer-sub-form input[type="email"]:focus {
+      border-color: var(--accent);
+    }
+
+    .footer-sub-form input[type="email"]::placeholder {
+      color: #555;
+    }
+
+    .footer-sub-form button {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .footer-sub-form button:hover {
+      background: var(--accent-light);
+    }
+
+    .footer-sub-success {
+      display: none;
+      font-size: 12px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .footer-sub-success.visible { display: block; }
+    .footer-sub-form.hidden { display: none; }
+
     /* ── Footer ── */
     .landing-footer {
       border-top: 1px solid var(--border);
@@ -831,6 +1021,27 @@
     </div>
   </div>
 
+  <!-- ═══ NEWSLETTER ═══ -->
+  <div class="landing-section newsletter-section">
+    <div class="container">
+      <div class="newsletter-card">
+        <div class="newsletter-label">Stay in the loop</div>
+        <h2 class="newsletter-title">Get notified when new content drops</h2>
+        <p class="newsletter-desc">New data drops, athlete stories, and research — delivered to your inbox when we publish.</p>
+        <form class="newsletter-form" id="newsletter-form" name="newsletter" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+          <p class="newsletter-honey"><input name="bot-field"></p>
+          <input type="email" name="email" placeholder="your@email.com" required>
+          <button type="submit">Subscribe</button>
+        </form>
+        <div class="newsletter-success" id="newsletter-success">
+          <div class="check">&#x2713;</div>
+          <h3>You're in</h3>
+          <p>We'll let you know when something new drops.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ FOOTER ═══ -->
   <div class="landing-footer">
     <div class="container">
@@ -838,6 +1049,15 @@
         <span class="api">API</span><span class="access">ACCESS</span>
       </div>
       <div class="footer-team">Applied Performance Innovation</div>
+      <div class="footer-subscribe">
+        <div class="footer-subscribe-label">Get updates</div>
+        <form class="footer-sub-form" id="footer-sub-form" name="newsletter-footer" method="POST" data-netlify="true" data-netlify-honeypot="bot-field-2">
+          <p class="newsletter-honey"><input name="bot-field-2"></p>
+          <input type="email" name="email" placeholder="your@email.com" required>
+          <button type="submit">&#8594;</button>
+        </form>
+        <div class="footer-sub-success" id="footer-sub-success">Subscribed &#x2713;</div>
+      </div>
       <p class="footer-fine">Questions? Reach out to the API team.</p>
     </div>
   </div>
@@ -866,6 +1086,33 @@ if (sessionStorage.getItem('api-access-auth') === '1') {
   document.getElementById('gate').classList.add('unlocked');
   document.getElementById('page-content').classList.add('visible');
 }
+
+function handleNewsletterSubmit(formEl, successEl) {
+  formEl.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var data = new FormData(formEl);
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString()
+    }).then(function() {
+      formEl.classList.add('hidden');
+      successEl.classList.add('visible');
+    }).catch(function() {
+      formEl.classList.add('hidden');
+      successEl.classList.add('visible');
+    });
+  });
+}
+
+handleNewsletterSubmit(
+  document.getElementById('newsletter-form'),
+  document.getElementById('newsletter-success')
+);
+handleNewsletterSubmit(
+  document.getElementById('footer-sub-form'),
+  document.getElementById('footer-sub-success')
+);
 </script>
 
 </body>
