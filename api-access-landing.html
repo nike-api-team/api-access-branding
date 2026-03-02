@@ -147,8 +147,8 @@
       display: block;
     }
     .featured-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 0 32px var(--accent-glow);
+      border-color: #e8622a;
+      box-shadow: 0 0 32px rgba(232, 98, 42, 0.25);
     }
 
     .featured-banner {
@@ -508,8 +508,8 @@
     }
 
     .tag-story {
-      background: var(--accent-light);
-      color: #0a0a0f;
+      background: #e8622a;
+      color: #fff;
     }
 
     .tag-series {
@@ -677,21 +677,24 @@
     </div>
   </div>
 
-  <!-- ═══ LATEST EDITION ═══ -->
+  <!-- ═══ FEATURED ═══ -->
   <div class="landing-section">
     <div class="container">
       <h2 class="section-title">Featured</h2>
 
-      <a class="featured-card" href="api-access-breaking4-series.html">
-        <div class="featured-banner">
-          <div class="featured-time">3:59.99</div>
-          <div class="featured-subtitle">The barrier no woman has broken</div>
+      <a class="featured-card" href="api-access-acg-camp.html" style="border-color:#e8622a44;">
+        <div class="featured-banner" style="background:linear-gradient(135deg, #1a120a 0%, #12121c 100%); padding:0; position:relative; min-height:200px;">
+          <img src="acg-camp-hero.jpg" alt="ACG athletes on desert ridgeline" style="width:100%; height:200px; object-fit:cover; display:block; opacity:0.45;" />
+          <div style="position:absolute; bottom:0; left:0; right:0; padding:24px 24px 20px; background:linear-gradient(transparent, rgba(10,10,15,0.95));">
+            <div style="font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#e8622a; margin-bottom:6px;">ACG Racing Department</div>
+            <div style="font-size:28px; font-weight:900; line-height:1.15; letter-spacing:-0.5px;">All Conditions Athletes</div>
+          </div>
         </div>
         <div class="featured-body">
-          <div class="featured-edition-label">Breaking4</div>
-          <h3 class="featured-title">What Would It Take?</h3>
-          <p class="featured-desc">A multi-year scientific expedition across four institutions to answer one question. Multiple studies. One thread of oxygen connecting them all.</p>
-          <span class="featured-cta">Explore the series &#8594;</span>
+          <div class="featured-edition-label" style="background:#e8622a;">Athlete Story</div>
+          <h3 class="featured-title">ACG Team Camp: Palm Springs</h3>
+          <p class="featured-desc">25+ professional trail runners from around the world. Five days in the desert with the NSRL. Four research studies, fireside seminars, and product sessions — where science met the mountain.</p>
+          <span class="featured-cta" style="color:#e8622a;">Read the story &#8594;</span>
         </div>
       </a>
     </div>
@@ -704,13 +707,21 @@
       <p class="section-tagline">Our science. Our findings. Direct from the source.</p>
 
       <div class="card-stack">
-        <a class="content-card series-card" href="api-access-breaking4-series.html">
-          <div class="card-tag tag-series">Breaking4</div>
-          <div class="card-tag tag-chapter">5 Studies</div>
-          <h3 class="card-title" style="font-size:19px;">Breaking4: What Would It Take?</h3>
-          <p class="card-desc">A multi-year scientific expedition across four institutions to answer one question: what would it take for a woman to break 4 minutes in the mile? Five studies. One thread of oxygen connecting them all.</p>
-          <div class="card-source">NSRL &bull; Exeter &bull; Oregon &bull; IEEM</div>
-          <span class="card-cta" style="color:var(--fuchsia);">Explore the series &#8594;</span>
+        <a class="content-card series-card" href="api-access-breaking4-series.html" style="padding:0; overflow:hidden;">
+          <div style="position:relative; min-height:180px;">
+            <img src="breaking4-hero.jpg" alt="Breaking4" style="width:100%; height:180px; object-fit:cover; object-position:center top; display:block; opacity:0.55;" />
+            <div style="position:absolute; bottom:0; left:0; right:0; padding:24px 20px 16px; background:linear-gradient(transparent, rgba(10,10,15,0.95));">
+              <div style="font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--fuchsia); margin-bottom:6px;">Breaking4 Series</div>
+              <div style="font-size:24px; font-weight:900; line-height:1.15; letter-spacing:-0.5px;">What Would It Take?</div>
+            </div>
+          </div>
+          <div style="padding:20px;">
+            <div class="card-tag tag-series">Breaking4</div>
+            <div class="card-tag tag-chapter">5 Studies</div>
+            <p class="card-desc">A multi-year scientific expedition across four institutions to answer one question: what would it take for a woman to break 4 minutes in the mile? Five studies. One thread of oxygen connecting them all.</p>
+            <div class="card-source">NSRL &bull; Exeter &bull; Oregon &bull; IEEM</div>
+            <span class="card-cta" style="color:var(--fuchsia);">Explore the series &#8594;</span>
+          </div>
         </a>
       </div>
 
@@ -727,19 +738,21 @@
       <p class="section-tagline">Time spent. Lessons learned.</p>
 
       <div class="card-stack">
-        <div class="content-card placeholder">
+        <a class="content-card" href="api-access-acg-camp.html">
           <div class="card-tag tag-story">Athlete Story</div>
-          <h3 class="card-title">Stories from the field are coming</h3>
-          <p class="card-desc">First-hand accounts from time spent with the athletes who push boundaries every day.</p>
-          <span class="placeholder-label">Coming Soon</span>
-        </div>
+          <h3 class="card-title">All Conditions Athletes: ACG Team Camp</h3>
+          <p class="card-desc">25+ professional trail runners from around the world. Five days in the Palm Springs desert. Four research studies, fireside seminars, and product sessions — where science met the mountain.</p>
+          <div class="card-source">NSRL &times; ACG Racing Department &mdash; Feb 2026</div>
+          <span class="card-cta" style="color:#e8622a;">Read the story &#8594;</span>
+        </a>
 
-        <div class="content-card placeholder">
-          <div class="card-tag tag-story">Athlete Story</div>
-          <h3 class="card-title">More on the way</h3>
-          <p class="card-desc">The lessons we've learned — and the moments that changed how we think about performance.</p>
-          <span class="placeholder-label">Coming Soon</span>
-        </div>
+        <a class="content-card" href="api-access-case-study.html">
+          <div class="card-tag tag-drop">Case Study</div>
+          <h3 class="card-title">Two Weeks. One Athlete. Every Answer.</h3>
+          <p class="card-desc">A world-class miler embeds with the NSRL for an intensive residency of discovery. Fourteen days of concierge-level performance science &mdash; physiology, biomechanics, nutrition, and beyond. One of the deepest profiles we've ever built of a single athlete.</p>
+          <div class="card-source">Applied Performance Innovation &mdash; NSRL &mdash; Feb 2026</div>
+          <span class="card-cta">Read the case study &#8594;</span>
+        </a>
       </div>
 
       <div class="section-footer">

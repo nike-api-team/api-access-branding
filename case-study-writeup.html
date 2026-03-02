@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study — From Symptom to System: A Multi-Domain Physiological Investigation in an Elite Middle-Distance Runner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Oswald:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f7f8fa;
+            --surface-2: #eef0f4;
+            --border: #dde1e8;
+            --text: #1a1a2e;
+            --text-sec: #4a4a5a;
+            --accent: #1a5276;
+            --cyan: #0077b6;
+            --green: #2d8a4e;
+            --purple: #6c3fa0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Barlow', sans-serif;
+            font-size: 17px;
+            line-height: 1.85;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px 80px;
+        }
+
+        /* ====== TYPOGRAPHY ====== */
+        h1 {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 400;
+            font-size: 36px;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        h2 {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 400;
+            font-size: 21px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin: 55px 0 18px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+        }
+        h3 {
+            font-weight: 600;
+            font-size: 17px;
+            color: #2a2a3a;
+            margin: 32px 0 10px;
+            letter-spacing: 0.3px;
+        }
+        p { margin-bottom: 18px; color: var(--text-sec); }
+        strong { color: var(--text); font-weight: 600; }
+
+        .subtitle {
+            font-size: 15px;
+            color: #6a6a7a;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+        .authors {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        /* ====== SECTIONS ====== */
+        .section-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        /* ====== TABLES ====== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 28px;
+            font-size: 15px;
+        }
+        th {
+            text-align: left;
+            padding: 10px 14px;
+            background: var(--surface-2);
+            color: #5a5a6a;
+            font-weight: 600;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border);
+        }
+        td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-sec);
+        }
+        tr.highlight { background: rgba(26,82,118,0.06); }
+        tr.highlight td { color: var(--text); font-weight: 500; }
+
+        /* ====== FIGURES ====== */
+        .figure {
+            margin: 30px 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 20px 14px;
+        }
+        .figure canvas { width: 100% !important; }
+        .figure-caption {
+            font-size: 13px;
+            color: #666;
+            margin-top: 12px;
+            line-height: 1.6;
+        }
+        .figure-caption strong { color: #555; }
+
+        /* ====== KEY METRICS ROW ====== */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin: 24px 0 30px;
+        }
+        .metric-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px 16px;
+            text-align: center;
+        }
+        .metric-val {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 400;
+            font-size: 34px;
+            color: var(--accent);
+        }
+        .metric-unit { font-size: 14px; color: #888; }
+        .metric-label {
+            font-size: 12px;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 4px;
+        }
+
+        /* ====== CALLOUT ====== */
+        .callout {
+            background: rgba(26,82,118,0.04);
+            border-left: 3px solid var(--accent);
+            padding: 18px 22px;
+            margin: 24px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .callout p { margin-bottom: 8px; }
+        .callout p:last-child { margin-bottom: 0; }
+
+        /* ====== PLACEHOLDER ====== */
+        .placeholder {
+            background: #f4f0fa;
+            border: 1px dashed #c4b5d9;
+            border-radius: 6px;
+            padding: 20px 22px;
+            margin: 20px 0;
+            color: #6a5a7a;
+            font-style: italic;
+        }
+
+        /* ====== TAKEAWAYS ====== */
+        .takeaways {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 28px 28px 20px;
+            margin: 30px 0;
+        }
+        .takeaways ul {
+            list-style: none;
+            padding: 0;
+        }
+        .takeaways li {
+            padding: 8px 0;
+            padding-left: 22px;
+            text-indent: -22px;
+            color: var(--text-sec);
+            line-height: 1.7;
+        }
+        .takeaways li::before { content: '▸ '; color: var(--accent); font-weight: 700; }
+
+        /* ====== FOOTER ====== */
+        footer {
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 2px solid var(--border);
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* ====== PRINT ====== */
+        @media print {
+            body { max-width: 100%; padding: 20px 30px; font-size: 11pt; }
+            h2 { font-size: 14pt; page-break-after: avoid; }
+            h3 { page-break-after: avoid; }
+            .figure { page-break-inside: avoid; }
+            .metric-card { page-break-inside: avoid; }
+            .placeholder { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================
+         1. TITLE
+    ======================================== -->
+    <p class="section-label">Case Study</p>
+    <h1>From Symptom to System: A Multi-Domain Physiological Investigation in an Elite Middle-Distance Runner</h1>
+    <p class="subtitle">A 14-Day Applied Sport Science Investigation</p>
+    <p class="authors">
+        Integrative Physiologist, Strength &amp; Conditioning Specialist, Performance Director<br>
+        Nike Sport Research Lab — Athlete Performance Innovation<br>
+        In collaboration with Oregon Performance Research Lab<br>
+        Beaverton, OR
+    </p>
+
+    <!-- ========================================
+         2. INTRODUCTION
+    ======================================== -->
+    <h2>Introduction</h2>
+    <p>
+        The athlete is an elite female middle-distance runner competing internationally at the 1500m and mile distances. Mid-indoor season, the athlete's performance director reached out to the Nike Sport Research Lab for consultation. An initial call was held to understand the presenting concern and determine whether an in-person assessment was warranted.
+    </p>
+
+    <h3>Presenting Concern</h3>
+    <p>
+        The athlete reported a dissociation between race performance and training: a physiological response during competition that was absent during practice. Near the finale of recent major competitions — including a Diamond League final and a World Championships final over 1500m — the first noticeable sensation was an overwhelming bilateral quadriceps heaviness and "pinching." This had not been historically present but had emerged in recent seasons. Onset typically occurred in the final 200m of a 1500m or the final 600m of a 3000m race.
+    </p>
+    <p>
+        The sensation escalated from localized leg heaviness to a global loss of power, followed by lightheadedness, narrowing of awareness, and a perceived risk of syncope. At its most severe, the athlete required conscious effort to remain upright and continue running. Post-race, she reported a prolonged dissociative state — diminished awareness, impaired short-term memory recall, and persistent lightheadedness — lasting 15–20 minutes or more.
+    </p>
+    <p>
+        Critically, these symptoms were <strong>not replicated in training</strong>. However, true race-length maximal efforts (1000m–2000m) had not been performed in training; all-out efforts were typically limited to 200–400m. Post-race blood lactate following a recent indoor competition was measured at &gt;20 mmol/L. The athlete did not use exogenous bicarbonate supplementation.
+    </p>
+
+    <h3>Investigative Framework</h3>
+    <p>
+        The central question was whether these symptoms represented normal — if extreme — physiology under race-specific demands, or whether a discrete limitation could be identified. The investigative framework was organized around the <strong>O₂ transport cascade</strong>: ventilation delivers O₂ to the lungs → pulmonary gas exchange oxygenates arterial blood → cardiac output distributes blood to working muscle → muscle extracts O₂ → deoxygenated venous blood returns to the heart and lungs for reoxygenation. Each step in this cascade was targeted for assessment.
+    </p>
+    <p>
+        An additional consideration was the athlete's bioenergetic profile. Prior critical speed modeling from competition results placed this athlete at a relatively even split between aerobic and anaerobic contributions, but those estimates were not recent and lacked a representative 5000m performance from which to derive the aerobic asymptote.
+    </p>
+    <p>
+        Beyond exercise physiology, the athlete's race-day routine — including warm-up protocol, call room timing, and the interval between the last preparatory activity and race start — was identified as an additional area for investigation.
+    </p>
+    <p>
+        The objectives of this visit were to (1) map the O₂ transport cascade from central delivery through peripheral extraction, (2) characterize the physiological response across the full intensity spectrum from easy running through supramaximal effort, (3) identify the primary limiters of performance at key intensities, and (4) develop actionable, evidence-based recommendations for training and competition.
+    </p>
+
+    <!-- ========================================
+         3. METHODS
+    ======================================== -->
+    <h2>Methods</h2>
+
+    <h3>Camp Structure</h3>
+    <p>
+        Testing was conducted over a 14-day period at Nike World Headquarters (Beaverton, OR). The athlete arrived immediately following an indoor competition and was embedded within a full training block designed by the coach and managed on-site by the performance director. Sessions spanned the full intensity spectrum — from easy aerobic runs through maximal graded exercise testing — to build a comprehensive physiological profile. A gym-based strength and conditioning routine was performed every other day, with force plate assessments integrated where possible.
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th>Session</th>
+                <th>Key Measures</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0</td>
+                <td>Arrival</td>
+                <td>—</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>General Discussion &amp; Planning</td>
+                <td>Schedule, goals, baseline</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Mile Repeats (4×mile + 5×300m at race pace)</td>
+                <td>Bilateral SmO₂, tHb, HR, GPS (time, distance, speed), lactate, M' balance</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Easy + Plyos/Strides; Force Plate Assessment</td>
+                <td>Bilateral SmO₂, tHb, HR, GPS, CMJ, single-leg CMJ, 10-5 hop</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Track All-Outs (400m, 200m, 300m, 120m)</td>
+                <td>Bilateral SmO₂, tHb, HR, GPS (time, distance, speed), lactate, M' balance, kinetics</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Threshold (24 min continuous + hills)</td>
+                <td>Bilateral SmO₂, tHb, HR, GPS (time, distance, speed), lactate, M' balance</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Double Easy (AM + PM)</td>
+                <td>Bilateral SmO₂, tHb, HR, GPS (time, distance, speed)</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>600m Reps — Race-Pace Session</td>
+                <td>Bilateral SmO₂, tHb, HR, GPS (time, distance, speed), lactate, M' balance</td>
+            </tr>
+            <tr class="highlight">
+                <td>8</td>
+                <td>GXT + TTE + Hb Mass + Gait Assessment</td>
+                <td>VO₂, lactate, bilateral SmO₂, tHb, SpO₂, HR, VE, Rf, Hb mass, kinematics</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>1500m-Focused Speed (300m / 200m / 400m sets)</td>
+                <td>Bilateral SmO₂, tHb, HR, GPS (time, distance, speed), lactate, M' balance</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>Long Run</td>
+                <td>Bilateral SmO₂, tHb, HR, GPS (time, distance, speed)</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>800m-Focused Speed (300 / 300 / 200 sets)</td>
+                <td>Bilateral SmO₂, tHb, HR, GPS (time, distance, speed), lactate, M' balance</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>Double Easy (AM + PM)</td>
+                <td>Bilateral SmO₂, tHb, HR, GPS (time, distance, speed)</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>Travel / Departure</td>
+                <td>—</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Equipment & Instrumentation</h3>
+    <p>
+        <strong>Muscle oxygenation:</strong> Moxy NIRS sensors placed bilaterally on the rectus femoris. SmO₂ (%) and total hemoglobin (tHb, g/dL) recorded continuously at 1 Hz across all field-based sessions.<br>
+        <strong>Metabolic:</strong> Cosmed K5 portable metabolic analyzer (breath-by-breath, 10-second averaged) for VO₂, VCO₂, VE, Rf during the graded exercise test and TTE.<br>
+        <strong>Lactate:</strong> Venous blood lactate measured at each stage of the graded test and opportunistically during training sessions.<br>
+        <strong>Heart rate:</strong> Continuous HR via chest strap across all sessions.<br>
+        <strong>Hemoglobin mass:</strong> CO-rebreathing method for assessment of Hb mass, blood volume, plasma volume, and RBC volume.<br>
+        <strong>Pulse oximetry:</strong> Non-invasive SpO₂ measured at each GXT stage and continuously during TTE.<br>
+        <strong>Muscle oxidative capacity:</strong> NIRS-cuffing method for estimation of recovery rate constant (k) as a proxy for mitochondrial oxidative capacity.<br>
+        <strong>Neuromuscular:</strong> Force plate assessment — countermovement jump (CMJ), single-leg CMJ, 10-5 reactive hop test (bilateral and single-leg). Force-velocity loop analysis for bilateral comparison.<br>
+        <strong>Gait assessment:</strong> Full biomechanical running analysis performed on Day 8 (data collection complete; processing pending).<br>
+        <strong>Spirometry:</strong> Planned but not performed during this visit due to time constraints; scheduled for follow-up assessment.
+    </p>
+
+    <!-- ========================================
+         4. RESULTS
+    ======================================== -->
+    <h2>Results</h2>
+
+    <!-- 4a. Aerobic Capacity -->
+    <h3>Aerobic Capacity & Lactate Profile</h3>
+
+    <div class="metrics-row">
+        <div class="metric-card">
+            <div class="metric-val">63 <span class="metric-unit">mL/kg/min</span></div>
+            <div class="metric-label">VO₂ Peak</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-val">3.58 <span class="metric-unit">L/min</span></div>
+            <div class="metric-label">VO₂ Peak (abs)</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-val">189 <span class="metric-unit">bpm</span></div>
+            <div class="metric-label">HR Max</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-val">2.009 <span class="metric-unit">min⁻¹</span></div>
+            <div class="metric-label">Recovery k</div>
+        </div>
+    </div>
+
+    <p>
+        The 9-stage graded exercise test (13.0–19.5 kph) revealed a VO₂ peak of 63 mL/kg/min (3.58 L/min absolute) with a maximum heart rate of 189 bpm. Lactate threshold 1 (LT1) was identified at 16.0 kph (6:02 min/mile) and lactate threshold 2 (LT2) at 18.0 kph (5:22 min/mile).
+    </p>
+    <p>
+        Notably, LT1 occurred at <strong>84% HRmax</strong> (158 bpm) and LT2 at <strong>94% HRmax</strong> (177 bpm), indicating a high fraction of cardiac capacity is required to sustain threshold-intensity running. This narrow HR headroom between LT2 and maximum constrains the range of sustainable intensities above threshold. The relatively low speed at LT1 and LT2 relative to race pace suggests a lower aerobic contribution to exercise capacity than might be expected, and may represent an avenue for training-driven improvement.
+    </p>
+
+    <div class="figure">
+        <div style="height: 340px;"><canvas id="lactateChart"></canvas></div>
+        <p class="figure-caption"><strong>Figure 1.</strong> Lactate response across the 9-stage graded exercise test. LT1 identified at 16.0 kph (blue) and LT2 at 18.0 kph (orange). Heart rate (right axis) demonstrates the progressive cardiac demand, reaching 100% HRmax by Stage 8.</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr><th>Stage</th><th>Speed (kph)</th><th>Pace (min/mi)</th><th>HR</th><th>%HRmax</th><th>Lactate</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>13.0</td><td>7:26</td><td>121</td><td>64%</td><td>1.25</td></tr>
+            <tr><td>2</td><td>14.0</td><td>6:54</td><td>134</td><td>71%</td><td>0.90</td></tr>
+            <tr><td>3</td><td>15.0</td><td>6:26</td><td>150</td><td>79%</td><td>0.85</td></tr>
+            <tr class="highlight"><td>4 (LT1)</td><td>16.0</td><td>6:02</td><td>158</td><td>84%</td><td>1.10</td></tr>
+            <tr><td>5</td><td>17.0</td><td>5:41</td><td>170</td><td>90%</td><td>2.30</td></tr>
+            <tr class="highlight"><td>6 (LT2)</td><td>18.0</td><td>5:22</td><td>177</td><td>94%</td><td>3.60</td></tr>
+            <tr><td>7</td><td>18.5</td><td>5:13</td><td>183</td><td>97%</td><td>5.20</td></tr>
+            <tr><td>8</td><td>19.0</td><td>5:05</td><td>189</td><td>100%</td><td>7.90</td></tr>
+            <tr><td>9</td><td>19.5</td><td>4:57</td><td>189</td><td>100%</td><td>10.60</td></tr>
+        </tbody>
+    </table>
+
+    <!-- 4b. Hemoglobin Mass -->
+    <h3>Hemoglobin Mass & Blood Volume</h3>
+    <p>
+        Hemoglobin mass and blood volume were assessed via the CO-rebreathing method. All values were above sex- and body-mass-adjusted reference ranges, indicating a robust O₂-carrying capacity that is not a current bottleneck.
+    </p>
+
+    <table>
+        <thead><tr><th>Measure</th><th>Value</th><th>Above Reference</th></tr></thead>
+        <tbody>
+            <tr><td>Hb Mass</td><td>747 g (13.2 g/kg)</td><td>+33%</td></tr>
+            <tr><td>RBC Volume</td><td>2.24 L</td><td>+32%</td></tr>
+            <tr><td>Plasma Volume</td><td>3.18 L</td><td>+16%</td></tr>
+            <tr><td>Blood Volume</td><td>5.42 L</td><td>+22%</td></tr>
+            <tr><td>Hematocrit</td><td>41.3%</td><td>—</td></tr>
+            <tr><td>Hb Concentration</td><td>13.8 g/dL</td><td>—</td></tr>
+        </tbody>
+    </table>
+
+    <!-- 4c. Ventilatory Response & EIAH -->
+    <h3>Ventilatory Response & Exercise-Induced Arterial Hypoxemia</h3>
+    <p>
+        Ventilation (VE), respiratory frequency (Rf), and VO₂ were recorded breath-by-breath during both the graded exercise test (stages 1–6, 13–18 kph) and the time-to-exhaustion test at 20.4 kph. SpO₂ was measured at each stage via pulse oximetry.
+    </p>
+    <p>
+        During the staged test, VE rose progressively from ~15 L/min at rest to >100 L/min at 18 kph, driven by increases in both tidal volume and respiratory frequency (Rf reaching ~49 breaths/min). SpO₂ remained at 98% through Stage 5 and declined to <strong>96% at Stages 7–9</strong>.
+    </p>
+    <p>
+        During the TTE, VE peaked at 132 L/min with Rf reaching 62 breaths/min. SpO₂ dropped from 98% at onset to <strong>92% at exhaustion</strong> — a 6-percentage-point decline consistent with <strong>exercise-induced arterial hypoxemia (EIAH)</strong>. EIAH is a recognized phenomenon during severe intensity/maximal efforts — precisely the race window duration (~4 minutes) relevant to this athlete's competitive events.
+    </p>
+
+    <div class="callout">
+        <p>
+            <strong>Clinical significance:</strong> Below ~95% SpO₂, the flat portion of the oxyhemoglobin dissociation curve is lost. Further reductions in PaO₂ meaningfully reduce arterial O₂ content and therefore O₂ delivery to working muscle — even with robust cardiac output and hemoglobin mass. This effect would compound at altitude.
+        </p>
+    </div>
+
+    <div class="callout">
+        <p>
+            <strong>Sex-specific considerations:</strong> Women have narrower airways than men, and the work of breathing during exercise is higher for a given ventilation. Respiratory muscle O₂ uptake as a fraction of whole-body VO₂max is greater in women, particularly at high ventilatory rates. Whether this effect is exacerbated in this athlete is unknown, but it represents a potential contributor to the observed EIAH. Whether respiratory muscle training could improve ventilatory efficiency at maximal effort remains an open question.
+        </p>
+    </div>
+
+    <div class="figure">
+        <div style="height: 320px;"><canvas id="ventTteChart"></canvas></div>
+        <p class="figure-caption"><strong>Figure 2.</strong> Ventilatory response during the time-to-exhaustion test at 20.4 kph. Exercise portion only (time 0 = exercise onset). SpO₂ declined from 98% to 92% at exhaustion.</p>
+    </div>
+
+    <!-- 4d. Spirometry -->
+    <h3>Spirometry &amp; Lung Function</h3>
+    <p>
+        Spirometry was planned to assess forced vital capacity (FVC), forced expiratory volume (FEV₁), FEV₁/FVC ratio, and flow-volume loop characteristics. However, due to time constraints during the visit, spirometry was <strong>not performed</strong>. This assessment has been scheduled as a follow-up to be completed within the coming month. Findings will be important for determining whether any mechanical ventilatory limitation or reduced inspiratory/expiratory muscle strength contributes to the observed EIAH and the high work of breathing at maximal intensities.
+    </p>
+
+    <!-- 4e. Muscle Oxygenation Across Intensities -->
+    <h3>Muscle Oxygenation Across the Intensity Spectrum</h3>
+    <p>
+        Bilateral NIRS monitoring across 7 training sessions and the graded exercise test provided a comprehensive map of muscle oxygenation dynamics from easy aerobic running through maximal effort. SmO₂ was recorded from the right and left rectus femoris at 1 Hz, with total hemoglobin (tHb) as a proxy for local blood volume changes.
+    </p>
+
+    <div class="figure">
+        <div style="height: 340px;"><canvas id="intensityChart"></canvas></div>
+        <p class="figure-caption"><strong>Figure 3.</strong> SmO₂ operating range (start → end %) by session type. Bars represent the bilateral average SmO₂ at the start and end of efforts at each intensity. Note that Long Run end values exceed start values (net positive trend), while higher intensities show progressively deeper desaturation. The Day 2 session is split into its mile rep and 400m rep components to distinguish cardiac-limited from peripherally-limited effort profiles.</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr><th>Intensity</th><th>Session</th><th>SmO₂ Range (R / L)</th><th>Peak HR (%max)</th><th>Primary Limiter</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Easy</td>
+                <td>Days 3, 6</td>
+                <td>49–81% / 49–72%</td>
+                <td>~140 (71%)</td>
+                <td>None — within capacity</td>
+            </tr>
+            <tr>
+                <td>Long Run</td>
+                <td>Day 10</td>
+                <td>67→80% / 64→83%</td>
+                <td>—</td>
+                <td>None — within capacity</td>
+            </tr>
+            <tr>
+                <td>Threshold</td>
+                <td>Day 5</td>
+                <td>Drift −3% / −2%</td>
+                <td>188 (96%)</td>
+                <td>Cardiac output ceiling</td>
+            </tr>
+            <tr>
+                <td>Mile Reps</td>
+                <td>Day 2</td>
+                <td>72→16% / 78→12%</td>
+                <td>194 (99%)</td>
+                <td>Cardiac output ceiling</td>
+            </tr>
+            <tr>
+                <td>600m Reps</td>
+                <td>Day 7</td>
+                <td>48→15% / 75→13%</td>
+                <td>181 (92%)</td>
+                <td>Aerobic / approaching ceiling</td>
+            </tr>
+            <tr>
+                <td>400m Reps</td>
+                <td>Day 2</td>
+                <td>59→18% / 61→14%</td>
+                <td>174 (89%)</td>
+                <td>Peripheral / intramuscular</td>
+            </tr>
+            <tr>
+                <td>All-Out Sprints</td>
+                <td>Day 4</td>
+                <td>Avg Δ48% / Δ59%</td>
+                <td>169 (86%)</td>
+                <td>Neuromuscular power</td>
+            </tr>
+            <tr>
+                <td>GXT / TTE</td>
+                <td>Day 8</td>
+                <td>Progressive desat</td>
+                <td>189 (100%)</td>
+                <td>Cardiac + EIAH</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Key NIRS Observations</h3>
+    <p>
+        <strong>Easy running (Days 3, 6):</strong> SmO₂ trended positive during runs (+0.25 %/min), indicating supply comfortably exceeded demand. M' utilization was 29–40%, confirming these sessions sat well within aerobic capacity.
+    </p>
+    <p>
+        <strong>Long run (Day 10):</strong> Over 86 minutes (including 4×8 min at easy threshold pace), SmO₂ rose from 67→80% (Right RF) and 64→83% (Left RF) — a net positive trend confirming supply exceeded demand throughout. Even during the embedded threshold bouts, desaturation was transient and fully reversible within recovery jogs, consistent with a session well within aerobic capacity.
+    </p>
+    <p>
+        <strong>Threshold (Day 5):</strong> SmO₂ held near-steady with drift of only −0.1 to −0.3 %/min — consistent with running at or near the critical rate. HR reached 188 bpm (96% max), placing this effort at the cardiac ceiling. Supply ≈ demand; oxidative capacity is robust at this intensity.
+    </p>
+    <p>
+        <strong>Mile reps (Day 2):</strong> Deep progressive desaturation averaging 72→16% (Right RF) and 78→12% (Left RF) across ~5-minute efforts. Peak HR 194 bpm (99% max). Desaturation rates of −10 to −15 %/min. The M' balance model predicted TTE of 4:36–5:24 per rep, consistent with observed effort durations. HR at cardiac ceiling — performance limited by O₂ supply, not muscle extraction capacity.
+    </p>
+    <p>
+        <strong>400m reps (Day 2):</strong> Within the same session, the subsequent 400m reps showed SmO₂ drops from 59→18% (Right RF) and 61→14% (Left RF). Peak HR reached only 174 bpm (89% max) due to the short rep duration (~70 s), but tHb slopes turned negative on reps 2–4, indicating intramuscular pressure exceeded perfusion pressure. The primary limiter shifted from cardiac to peripheral at this intensity and duration.
+    </p>
+    <p>
+        <strong>All-out sprints (Day 4):</strong> Large SmO₂ drops but HR only reached 169 bpm (86% max). Efforts ended before the cardiovascular system was fully taxed. Primary limiter: neuromuscular power and speed, not aerobic capacity.
+    </p>
+    <p>
+        <strong>Bilateral asymmetry:</strong> The left RF consistently showed greater extraction range than the right (Day 2: Δ11.4%; Day 4: Δ11%; Day 7: Δ8.6%), though both legs showed concordant CV patterns on the majority of reps. The right RF demonstrated stronger tHb vasodilation. These asymmetries may reflect differences in muscle fiber composition, vascular architecture, or habitual loading patterns — and are corroborated by force plate findings indicating a right-leg motor coordination deficit (see Neuromuscular Assessment below).
+    </p>
+    <p>
+        <strong>Warm-up priming:</strong> NIRS monitoring during warm-up routines confirmed that the athlete's drill sequence elevated muscle oxygenation and enhanced muscle activation, as evidenced by shifts in both SmO₂ and tHb dynamics prior to the main session.
+    </p>
+    <p>
+        <strong>Blood flow dynamics at speed:</strong> During high-speed running, the NIRS signal suggested momentary blood flow occlusions — transient compressions of the local vascular bed during the stance phase of each stride. These oscillations were more pronounced at higher velocities and may exacerbate any O₂ delivery limitations during maximal-intensity racing, where stride frequency and ground contact forces are at their peak.
+    </p>
+
+    <!-- M' Balance -->
+    <h3>M' Balance & Rate-Duration Modeling</h3>
+    <p>
+        The M' balance model (rate of SmO₂ desaturation vs. predicted time to exhaustion) was applied across all sessions. The athlete's M' values were estimated at <strong>70% (Right RF)</strong> and <strong>84% (Left RF)</strong>, with the left leg possessing a ~19% larger metabolic reserve. Across intensities — from easy runs (rates near 0 %/min) to all-out sprints (rates exceeding −40 %/min) — observed rep durations aligned closely with model predictions, supporting the validity of the SmO₂ rate-duration framework for this athlete.
+    </p>
+
+    <!-- 4f. Neuromuscular -->
+    <h3>Neuromuscular Assessment</h3>
+    <p>
+        Force plate testing was conducted on Day 3, including countermovement jump (CMJ), single-leg CMJ, and 10-5 reactive hop test. The athlete also performed her regular gym-based S&C routine every other day throughout the visit, with observation and cueing from the S&C specialist and remote input from the performance director.
+    </p>
+
+    <table>
+        <thead>
+            <tr><th>Test</th><th>Metric</th><th>Left</th><th>Right</th><th>Asymmetry</th></tr>
+        </thead>
+        <tbody>
+            <tr><td rowspan="2">CMJ (bilateral)</td><td>Jump Height</td><td colspan="2" style="text-align:center;">23.5 cm</td><td>—</td></tr>
+            <tr><td>Peak Force</td><td>877 N</td><td>916 N</td><td>4.3% R-dominant</td></tr>
+            <tr><td rowspan="2">SL CMJ — Trial 1 (uncued)</td><td>Jump Height</td><td>11.5 cm</td><td>12.2 cm</td><td>5.9% R</td></tr>
+            <tr><td>Peak Force</td><td>1040 N</td><td>1122 N</td><td>7.4% R-dominant</td></tr>
+            <tr><td rowspan="2">SL CMJ — Trial 3 (cued)</td><td>Jump Height</td><td>14.8 cm</td><td>12.6 cm</td><td>16.0% L</td></tr>
+            <tr><td>Peak Force</td><td>1090 N</td><td>969 N</td><td>11.0% L-dominant</td></tr>
+            <tr><td rowspan="2">10-5 Hop (single leg)</td><td>RSI</td><td>0.26</td><td>0.27</td><td>3.0% R</td></tr>
+            <tr><td>Contact Time</td><td>237 ms</td><td>245 ms</td><td>3.3% R longer</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+        The bilateral CMJ showed a well-shaped force-velocity loop with balanced force application across deceleration and propulsive phases. When analyzed by limb, the right leg produced slightly more force during the braking phase to achieve similar takeoff velocity.
+    </p>
+    <p>
+        The most revealing finding emerged from the single-leg CMJ comparison. In Trial 1 (uncued), the right leg performed slightly better than the left. When cued to increase knee drive height in Trial 3, the left leg responded with a substantial improvement (+3.3 cm jump height, +50 N peak force), while the right leg showed <strong>minimal height gain and a decrease in force production</strong> (−153 N). The asymmetry reversed from 7.4% right-dominant to 11.0% left-dominant, indicating that right-leg motor coordination <strong>degraded under cueing demands</strong>.
+    </p>
+    <p>
+        In the single-leg 10-5 hop test, right-side contact time was 3.3% longer than the left, with the asymmetry most pronounced during the first 4–5 repetitions before equalizing. This pattern paralleled the CMJ finding: the right leg required several repetitions to establish an efficient motor program, converging with left-side performance only after repeated exposure.
+    </p>
+
+    <div class="callout">
+        <p>
+            <strong>Interpretation:</strong> The combined evidence indicates a <strong>motor coordination deficit on the right side rather than a strength deficit</strong>. The right leg generated equal or greater force but required more time and repetitions to organize an efficient movement pattern. The performance director identified a global coordinative pattern: right leg drive, right forward arm swing, and contralateral torso rotation are linked within the same phase of the gait cycle — each showing signs of delayed or inefficient coordination. This is consistent with the bilateral SmO₂ asymmetries observed across NIRS sessions, where the right RF exhibited a different extraction profile than the left. Single-leg coordinative and speed exercises had dropped from the athlete's self-managed S&C program, likely contributing to this pattern.
+        </p>
+    </div>
+
+    <!-- 4g. Gait Assessment -->
+    <h3>Gait Assessment</h3>
+    <p>
+        A full biomechanical running gait analysis was conducted on Day 8. Data collection is complete; processing is pending at the time of this report. Preliminary observations corroborated a bilateral difference in running mechanics. A supplementary movement assessment (split-leg pallof press) revealed that the athlete required 4–5 repetitions on one side before perceiving engagement of the targeted musculature, compared with immediate engagement on the contralateral side — further supporting the coordinative asymmetry finding.
+    </p>
+
+    <!-- ========================================
+         5. DISCUSSION
+    ======================================== -->
+    <h2>Discussion</h2>
+
+    <h3>The O₂ Transport Cascade — Where Is the Ceiling?</h3>
+    <p>
+        The athlete presented with bilateral quadriceps heaviness, progressive loss of power, and profound post-race neurocognitive symptoms at the end of maximal-intensity races. Integrating findings across 14 days of testing enables a systematic evaluation of the O₂ transport cascade to identify where performance is constrained and whether the presenting symptoms are explained by the observed physiology.
+    </p>
+    <p>
+        <strong>Atmosphere → Lungs:</strong> At sea level, inspired O₂ is not a limiter. However, the observed EIAH (SpO₂ 92% at exhaustion) indicates that pulmonary gas exchange became a constraint at maximal intensity — arterial O₂ loading at the lung was incomplete. Women have narrower airways and a higher work of breathing than men at equivalent ventilatory rates, with respiratory muscle O₂ consumption representing a disproportionately large fraction of whole-body VO₂max in female athletes. This may contribute to the severity of EIAH observed. Spirometry follow-up will clarify whether a mechanical ventilatory limitation is present.
+    </p>
+    <p>
+        <strong>Heart (cardiac output):</strong> Cardiac output emerged as the primary ceiling at sustained intensities. At threshold, HR reached 96% of maximum; during mile repeats, 99%. The narrow headroom between LT2 (94% HRmax) and HRmax leaves very little cardiac reserve above threshold. Increasing stroke volume — the only mechanism to raise cardiac output without raising HR — would directly elevate this ceiling.
+    </p>
+    <p>
+        <strong>Hemoglobin &amp; blood flow:</strong> Hb mass (747 g, +33% above reference) and blood volume (5.42 L, +22%) were robust; O₂-carrying capacity was not a bottleneck. However, tHb oscillations during high-speed running suggested momentary blood flow occlusions during the stance phase — a mechanical compression effect that may transiently limit O₂ delivery at race velocities.
+    </p>
+    <p>
+        <strong>Muscle extraction:</strong> SmO₂ demonstrated a wide extraction range — from 82–89% at rest to 5–13% at maximal effort — indicating high O₂ extraction capacity. The recovery rate constant (k = 2.009 min⁻¹) confirmed robust mitochondrial oxidative capacity. The rate constant fell slightly above the value predicted from VO₂max alone, suggesting a <strong>greater contribution of peripheral muscle utilization to maximal O₂ consumption relative to cardiac output</strong>. This is consistent with the high %HRmax observed at submaximal intensities and the wide SmO₂ extraction range. At threshold, SmO₂ held steady, confirming that oxidative capacity was not limiting at sustainable intensities.
+    </p>
+    <p>
+        <strong>Neuromuscular power:</strong> During short all-out sprints (Day 4), efforts terminated before cardiovascular or metabolic systems were fully taxed. HR remained well below maximum (86%). At these intensities, the primary limiter was neuromuscular — the capacity to generate and sustain peak mechanical power.
+    </p>
+
+    <div class="callout">
+        <p>
+            <strong>Synthesis:</strong> At sustained race-relevant intensities (1500m, mile), the primary limiter was cardiac output — compounded by EIAH, which further constrained O₂ delivery. Muscle oxidative capacity and O₂-carrying capacity were robust and non-limiting. At explosive speeds, neuromuscular power was the constraint. The presenting symptoms — bilateral quadriceps heaviness, progressive power loss, and post-race neurocognitive impairment — are consistent with this profile: O₂ delivery to working muscle reaches a hard ceiling, metabolic demand exceeds supply, and the resulting crisis produces both local (muscular) and systemic (cerebral) effects.
+        </p>
+    </div>
+
+    <h3>Neuromuscular Coordination</h3>
+    <p>
+        Force plate assessment revealed a right-side motor coordination deficit distinct from the O₂ transport findings but potentially compounding them. The right leg generated equal or greater force than the left but degraded under cueing demands and required more repetitions to organize efficient movement patterns. The performance director identified this as a global coordinative issue linking right leg drive, contralateral arm swing, and torso rotation within the same phase of the gait cycle.
+    </p>
+    <p>
+        This finding was corroborated by bilateral NIRS asymmetries: the right RF consistently exhibited a different extraction profile than the left across multiple sessions. Whether the coordination deficit drives the oxygenation asymmetry via altered loading patterns, or vice versa, remains unclear. However, the convergence of evidence from independent measurement systems strengthens the finding. Reintroduction of single-leg coordinative and speed exercises to the S&C program — elements that had dropped from the athlete's self-managed routine — is recommended.
+    </p>
+
+    <!-- ========================================
+         6. PRACTICAL RECOMMENDATIONS
+    ======================================== -->
+    <h2>Practical Recommendations</h2>
+
+    <h3>Warm-Up Priming</h3>
+    <p>
+        The athlete's current warm-up protocol consists of approximately 12–15 minutes of easy jogging, 2 × 30 seconds at threshold intensity, 15 minutes of drills and mobility, and 4 strides — all completed approximately 20 minutes before race start due to call room timing requirements. No further exercise is performed between the end of warm-up and the jog out to the start line. NIRS monitoring during warm-up routines confirmed that the drill sequence effectively elevated muscle oxygenation and enhanced activation.
+    </p>
+    <p>
+        <strong>Recommendation:</strong> Consider incorporating an aerobic priming bout at threshold intensity — a short effort (e.g., 4–5 minutes near LT2/LTP pace) designed to activate the VO₂ response, increase critical speed, and prime the metabolic pathways required during racing. The objective is to arrive at the start line with accelerated VO₂ kinetics and an expanded O₂ extraction range, thereby reducing the early anaerobic contribution and delaying the onset of the metabolic crisis described in the presenting concern.
+    </p>
+
+    <h3>Call Room Management</h3>
+    <p>
+        The call room presents a distinct challenge for elite middle-distance runners: a mandatory holding period of approximately 20 minutes between warm-up completion and race start, during which athletes typically sit with minimal activity. Physiological priming achieved during warm-up — elevated cardiac output, vasodilation, accelerated VO₂ kinetics, muscle temperature — may partially decay during this interval.
+    </p>
+    <p>
+        For an athlete whose primary limiter is O₂ delivery and who exhibits EIAH at maximal effort, maintaining physiological readiness through this window is critical. Strategies discussed included:
+    </p>
+    <p>
+        <strong>Breath-hold maneuvers:</strong> Emerging evidence suggests that specific breath-hold protocols acutely augment hemoglobin mass and O₂-carrying capacity. Whether this represents a feasible pre-race strategy — performed seated in the call room without exercise — warrants further investigation as a potential low-cost method to partially offset the EIAH-related reduction in O₂ delivery.<br>
+        <strong>Isometric activation:</strong> Light isometric contractions (e.g., calf raises, quadriceps contractions) to maintain muscle temperature and blood flow without requiring space or equipment.<br>
+        <strong>Mental rehearsal:</strong> Structured visualization to sustain psychological readiness during the holding period.
+    </p>
+    <p>
+        There is an opportunity for the development of <strong>performance products and tools</strong> specifically designed for use in the call-room environment — portable devices or protocols that help athletes maintain physiological readiness during enforced inactivity.
+    </p>
+
+    <h3>Training Priorities</h3>
+    <p>
+        Based on the identified ceiling at cardiac output and the supporting findings, the following training priorities are recommended:
+    </p>
+    <p>
+        <strong>Aerobic capacity development:</strong> The relatively low LT1 and lactate turnpoint indicate room for aerobic base development. Increased emphasis on sustained moderate-intensity work and aerobic volume may elevate the lactate thresholds as a fraction of VO₂max and HRmax, expanding the sustainable intensity range and reducing reliance on anaerobic capacity at race-relevant speeds.
+    </p>
+    <p>
+        <strong>Stroke volume development:</strong> Aerobic volume and sustained moderate-intensity work also drive eccentric cardiac hypertrophy and increase stroke volume. This is the most direct lever to raise the cardiac output ceiling without further increasing HR.
+    </p>
+    <p>
+        <strong>Heat and altitude acclimation:</strong> Heat stress drives plasma volume expansion and cardiovascular adaptations that increase stroke volume — directly targeting the identified limiter. Extended heat acclimation (5+ weeks) or altitude training may further augment Hb mass and O₂-carrying capacity, which would partially offset the reduction in arterial O₂ content caused by EIAH.
+    </p>
+    <p>
+        <strong>Altitude considerations:</strong> Given the EIAH signal at sea level (SpO₂ 92% at TTE), the effect will compound at altitude. Racing or training at elevation should account for an additional reduction in arterial O₂ content. SpO₂ monitoring during altitude camps or pre-competition at elevation is recommended.
+    </p>
+    <p>
+        <strong>Single-leg coordinative exercises:</strong> Reintroduce complex single-leg coordinative and speed components to the S&C program — exercises integrating hip extension strength, power, and speed into movement patterns closely resembling running mechanics (e.g., banded box drives, tall-to-short transitions with concentric hop). These exercises had dropped from the athlete's self-managed routine, and their absence likely contributed to the observed right-side coordination deficit. Emphasis should be placed on improving amortization phase efficiency and introducing novel motor programming challenges to enhance bilateral coordination.
+    </p>
+    <p>
+        <strong>Right-left motor coordination:</strong> Targeted attention to the right-left asymmetry in coordination, movement quality, and mobility. The convergence of force plate findings, NIRS asymmetries, and preliminary gait observations consistently identified the right side as the area requiring intervention.
+    </p>
+
+    <h3>Monitoring &amp; Follow-Up</h3>
+    <p>
+        <strong>Spirometry / lung function:</strong> Scheduled follow-up to assess FVC, FEV₁, and flow-volume loop characteristics. Results will clarify whether a mechanical ventilatory limitation contributes to the observed EIAH.<br>
+        <strong>Gait assessment:</strong> Processing of the biomechanical data collected on Day 8 is pending and will provide the third part of the equation — how the motor coordination deficit manifests in actual running mechanics, plantar force distribution, and kinematics.<br>
+        <strong>SpO₂ tracking:</strong> Monitor during high-intensity sessions and racing to characterize the severity and reproducibility of EIAH across conditions.<br>
+        <strong>Repeat testing:</strong> Follow-up testing to track whether thresholds, VO₂ peak, and SpO₂ response shift with training interventions.<br>
+        <strong>Bilateral monitoring:</strong> Continue bilateral NIRS to track whether the right-left extraction asymmetry evolves with targeted S&C and coordinative training.
+    </p>
+
+    <!-- ========================================
+         7. KEY TAKEAWAYS
+    ======================================== -->
+    <h2>Key Takeaways</h2>
+    <div class="takeaways">
+        <ul>
+            <li><strong>Presenting concern explained:</strong> Bilateral quadriceps heaviness, loss of power, and post-race lightheadedness are consistent with an O₂ delivery ceiling — cardiac output at maximum, compounded by exercise-induced arterial hypoxemia — producing both local muscle and systemic cerebral symptoms at race-relevant intensities</li>
+            <li><strong>VO₂ peak of 63 mL/kg/min</strong> with a well-developed O₂ transport chain — hemoglobin mass +33% above reference, blood volume +22%. O₂-carrying capacity is not a bottleneck</li>
+            <li><strong>Lactate thresholds at 84% and 94% HRmax</strong> leave narrow cardiac headroom above LT2 — the heart is near its ceiling at race-relevant intensities. Lower LT1 and lactate turnpoint suggest room for aerobic capacity development</li>
+            <li><strong>Muscle oxidative capacity is robust</strong> — SmO₂ holds steady at threshold (k = 2.009 min⁻¹) and extraction range reaches 5–13% at maximal effort. Rate constant slightly above predicted from VO₂max, suggesting greater peripheral utilization than central output</li>
+            <li><strong>EIAH confirmed:</strong> SpO₂ declined to 92% during TTE — a 6-point drop consistent with EIAH at ~4-minute maximal effort. Sex-specific respiratory physiology may be a contributing factor</li>
+            <li><strong>Right-side motor coordination deficit:</strong> Force plate assessment revealed a coordination, not strength, asymmetry — right leg degrades under cueing demands and requires more repetitions to organize movement patterns. Corroborated by bilateral NIRS asymmetries and preliminary gait analysis</li>
+            <li><strong>Call room management</strong> is a critical race-day challenge — 20 minutes of enforced inactivity may erode warm-up priming. Breath-hold maneuvers and isometric strategies warrant investigation</li>
+            <li><strong>Priority interventions:</strong> Aerobic capacity development, stroke volume development (volume, heat acclimation), reintroduction of single-leg coordinative S&amp;C exercises, warm-up protocol adaptation for call-room timing, SpO₂ monitoring at altitude</li>
+        </ul>
+    </div>
+
+    <!-- ========================================
+         8. FOLLOW-UP
+    ======================================== -->
+    <h2>Outstanding Follow-Up Items</h2>
+    <p>
+        The following assessments and actions remain pending at the conclusion of this visit:
+    </p>
+    <table>
+        <thead>
+            <tr><th>Item</th><th>Status</th><th>Expected Timeline</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Spirometry / lung function assessment</td><td>Scheduled</td><td>Within 1 month</td></tr>
+            <tr><td>Gait assessment data processing</td><td>Data collected, processing pending</td><td>2–4 weeks</td></tr>
+            <tr><td>Breath-hold protocol investigation</td><td>Literature review &amp; feasibility</td><td>Ongoing</td></tr>
+            <tr><td>Call-room performance product development</td><td>Concept stage</td><td>Ongoing</td></tr>
+            <tr><td>Repeat physiological testing</td><td>To be scheduled</td><td>Next training block or pre-competition</td></tr>
+            <tr><td>Continued bilateral NIRS monitoring</td><td>Recommended</td><td>Ongoing with training</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ========================================
+         9. FOOTER
+    ======================================== -->
+    <footer>
+        <p style="font-weight: 600; font-size: 16px; color: #555;">Nike Sport Research Lab — Athlete Performance Innovation</p>
+        <p>In collaboration with Oregon Performance Research Lab</p>
+        <p style="margin-top: 14px; font-size: 12px; color: #aaa;">
+            Near-Infrared Spectroscopy (NIRS) · Moxy Sensors · SmO₂ &amp; tHb · Bilateral Rectus Femoris · Cosmed K5 · CO-Rebreathing · M' Balance Model · Force Plate · NIRS-Cuffing
+        </p>
+    </footer>
+
+    <!-- ========================================
+         CHARTS
+    ======================================== -->
+    <script>
+        Chart.defaults.color = '#777';
+        Chart.defaults.font.family = "'Barlow', sans-serif";
+        Chart.defaults.borderColor = 'rgba(0,0,0,0.06)';
+
+        // ---- LACTATE CHART (Figure 1) ----
+        const lactateSpeed = [13, 14, 15, 16, 17, 18, 18.5, 19, 19.5];
+        const lactateValues = [1.25, 0.9, 0.85, 1.1, 2.3, 3.6, 5.2, 7.9, 10.6];
+        const lactateHR = [121, 134, 150, 158, 170, 177, 183, 189, 189];
+
+        new Chart(document.getElementById('lactateChart'), {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: 'Lactate (mmol/L)',
+                        data: lactateSpeed.map((s,i) => ({x: s, y: lactateValues[i]})),
+                        borderColor: '#c0392b',
+                        backgroundColor: 'rgba(192,57,43,0.06)',
+                        borderWidth: 3, fill: true, tension: 0.3,
+                        pointRadius: 5, pointBackgroundColor: '#c0392b',
+                        pointBorderColor: '#fff', pointBorderWidth: 2,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'HR (bpm)',
+                        data: lactateSpeed.map((s,i) => ({x: s, y: lactateHR[i]})),
+                        borderColor: '#888',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2, borderDash: [6,3], tension: 0.3,
+                        pointRadius: 3, pointBackgroundColor: '#888',
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { mode: 'nearest', axis: 'x', intersect: false },
+                plugins: {
+                    legend: { labels: { usePointStyle: true, padding: 16 } },
+                    annotation: {
+                        annotations: {
+                            lt1: { type: 'line', xMin: 16, xMax: 16, borderColor: 'rgba(26,82,118,0.4)', borderWidth: 2, borderDash: [6,3],
+                                label: { display: true, content: 'LT1', position: 'start', color: '#1a5276', font: { size: 11, weight: 600 } } },
+                            lt2: { type: 'line', xMin: 18, xMax: 18, borderColor: 'rgba(192,57,43,0.4)', borderWidth: 2, borderDash: [6,3],
+                                label: { display: true, content: 'LT2', position: 'start', color: '#c0392b', font: { size: 11, weight: 600 } } }
+                        }
+                    }
+                },
+                scales: {
+                    x: { type: 'linear', min: 13, max: 20,
+                        title: { display: true, text: 'Speed (kph)', color: '#777' },
+                        ticks: { color: '#888', stepSize: 1 },
+                        grid: { color: 'rgba(0,0,0,0.06)' } },
+                    y: { position: 'left', min: 0, max: 12,
+                        title: { display: true, text: 'Lactate (mmol/L)', color: '#c0392b' },
+                        ticks: { color: '#c0392b', stepSize: 2 } },
+                    y1: { position: 'right', min: 100, max: 200,
+                        title: { display: true, text: 'HR (bpm)', color: '#888' },
+                        ticks: { color: '#888', stepSize: 20 },
+                        grid: { drawOnChartArea: false } }
+                }
+            }
+        });
+
+        // ---- VENTILATORY CHART (Figure 2) ----
+        const k5TteRaw = [{"t":2.5,"VE":17.3,"Rf":15.7,"VO2kg":9.48},{"t":2.6667,"VE":26.2,"Rf":37.3,"VO2kg":15.72},{"t":2.8333,"VE":35.3,"Rf":45.7,"VO2kg":22.54},{"t":3,"VE":51,"Rf":49.3,"VO2kg":33.8},{"t":3.1667,"VE":66.6,"Rf":45.1,"VO2kg":44.6},{"t":3.3333,"VE":77.2,"Rf":49.6,"VO2kg":51.11},{"t":3.5,"VE":90.7,"Rf":52.9,"VO2kg":58.92},{"t":3.6667,"VE":100,"Rf":51.2,"VO2kg":62.38},{"t":3.8333,"VE":105.3,"Rf":50.5,"VO2kg":62.7},{"t":4,"VE":104.7,"Rf":50.2,"VO2kg":59.79},{"t":4.1667,"VE":104.3,"Rf":49,"VO2kg":58.46},{"t":4.3333,"VE":107.5,"Rf":48.2,"VO2kg":59.74},{"t":4.5,"VE":109.8,"Rf":48.4,"VO2kg":60.69},{"t":4.6667,"VE":110.8,"Rf":48.4,"VO2kg":60.92},{"t":4.8333,"VE":112,"Rf":48.3,"VO2kg":61.41},{"t":5,"VE":112.2,"Rf":48.5,"VO2kg":61.51},{"t":5.1667,"VE":112.7,"Rf":48.5,"VO2kg":61.33},{"t":5.3333,"VE":114.4,"Rf":49.7,"VO2kg":61.68},{"t":5.5,"VE":127.4,"Rf":55.9,"VO2kg":67.45},{"t":5.6667,"VE":130.8,"Rf":58.9,"VO2kg":68.16},{"t":5.8333,"VE":132.3,"Rf":61.1,"VO2kg":67.71},{"t":6,"VE":125.8,"Rf":59.6,"VO2kg":63.61},{"t":6.1667,"VE":126.3,"Rf":60.5,"VO2kg":63.05},{"t":6.3333,"VE":126.8,"Rf":61.4,"VO2kg":62.84},{"t":6.5,"VE":124.9,"Rf":61,"VO2kg":61.8},{"t":6.6667,"VE":124.9,"Rf":62.5,"VO2kg":61.75},{"t":6.8333,"VE":121,"Rf":61.9,"VO2kg":59.61}];
+        const k5TteData = k5TteRaw.map(d => ({...d, t: +(d.t - 2.5).toFixed(4)}));
+
+        function smooth(arr, key, w) {
+            const half = Math.floor(w / 2);
+            return arr.map((d, i) => {
+                const lo = Math.max(0, i - half), hi = Math.min(arr.length - 1, i + half);
+                let sum = 0, n = 0;
+                for (let j = lo; j <= hi; j++) { sum += arr[j][key]; n++; }
+                return {x: d.t, y: +(sum / n).toFixed(2)};
+            });
+        }
+
+        const spo2LabelPlugin = {
+            id: 'spo2Labels',
+            afterDatasetsDraw(chart) {
+                const ds = chart.data.datasets.find(d => d.label && d.label.includes('SpO'));
+                if (!ds) return;
+                const dsIdx = chart.data.datasets.indexOf(ds);
+                const meta = chart.getDatasetMeta(dsIdx);
+                if (!meta.visible) return;
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.font = "600 11px 'Barlow', sans-serif";
+                ctx.fillStyle = 'rgba(108,63,160,0.9)';
+                ctx.textAlign = 'center';
+                meta.data.forEach((pt, i) => { ctx.fillText(ds.data[i].y + '%', pt.x, pt.y - 12); });
+                ctx.restore();
+            }
+        };
+
+        function createVentChart(id, data, spo2, maxX) {
+            const w = 5;
+            new Chart(document.getElementById(id), {
+                type: 'line',
+                plugins: [spo2LabelPlugin],
+                data: { datasets: [
+                    { label: 'VE (L/min)', data: smooth(data,'VE',w), borderColor: '#0077b6', backgroundColor: 'rgba(0,119,182,0.06)',
+                      borderWidth: 2.5, fill: true, tension: 0.3, pointRadius: 0, pointHoverRadius: 4, yAxisID: 'yVE' },
+                    { label: 'Rf (b/min)', data: smooth(data,'Rf',w), borderColor: '#c0392b', backgroundColor: 'transparent',
+                      borderWidth: 2, tension: 0.3, pointRadius: 0, pointHoverRadius: 4, yAxisID: 'yRf' },
+                    { label: 'VO₂/kg', data: smooth(data,'VO2kg',w), borderColor: '#2d8a4e', backgroundColor: 'transparent',
+                      borderWidth: 1.5, borderDash: [6,3], tension: 0.3, pointRadius: 0, pointHoverRadius: 3, yAxisID: 'yVO2' },
+                    { label: 'SpO₂ (%)', data: spo2, borderColor: 'rgba(108,63,160,0.35)', backgroundColor: 'transparent',
+                      borderWidth: 2, borderDash: [6,4], showLine: true, pointRadius: 7, pointHoverRadius: 10,
+                      pointBackgroundColor: 'rgba(108,63,160,0.9)', pointBorderColor: '#fff', pointBorderWidth: 2,
+                      spanGaps: true, yAxisID: 'ySpo2' }
+                ]},
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    interaction: { mode: 'nearest', axis: 'x', intersect: false },
+                    layout: { padding: { top: 25 } },
+                    plugins: { legend: { labels: { usePointStyle: true, padding: 14, font: { size: 11 } } },
+                        tooltip: { backgroundColor: 'rgba(30,30,50,0.92)', borderColor: 'rgba(0,0,0,0.1)', borderWidth: 1,
+                            titleColor: '#fff', bodyColor: '#ddd' } },
+                    scales: {
+                        x: { type: 'linear', min: 0, max: maxX, title: { display: true, text: 'Time (min)', color: '#777' },
+                             ticks: { color: '#888' }, grid: { color: 'rgba(0,0,0,0.06)' } },
+                        yVE: { position: 'left', min: 0, max: Math.ceil(Math.max(...data.map(d=>d.VE))/20)*20+20,
+                               title: { display: true, text: 'VE (L/min)', color: '#0077b6' }, ticks: { color: '#0077b6', stepSize: 20 },
+                               grid: { color: 'rgba(0,0,0,0.05)' } },
+                        yRf: { position: 'right', min: 0, max: Math.ceil(Math.max(...data.map(d=>d.Rf))/10)*10+10,
+                               title: { display: true, text: 'Rf (b/min)', color: '#c0392b' }, ticks: { color: '#c0392b', stepSize: 10 },
+                               grid: { drawOnChartArea: false } },
+                        yVO2: { position: 'right', min: 0, max: 80, display: true,
+                                title: { display: true, text: 'VO₂/kg', color: '#2d8a4e', font: { size: 11 } },
+                                ticks: { color: '#2d8a4e', stepSize: 10, font: { size: 10 } }, grid: { drawOnChartArea: false } },
+                        ySpo2: { position: 'right', min: 85, max: 100, display: false, grid: { drawOnChartArea: false } }
+                    }
+                }
+            });
+        }
+
+        createVentChart('ventTteChart', k5TteData,
+            [{x:0,y:98},{x:4.17,y:92}], 5);
+
+        // ---- INTENSITY CHART (Figure 3) ----
+        new Chart(document.getElementById('intensityChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Easy', 'Long Run', 'Threshold', 'Mile Reps', '600m Reps', '400m Reps', 'All-Out', 'GXT/TTE'],
+                datasets: [
+                    { label: 'SmO₂ Start (%)', data: [65, 66, 80, 75, 62, 60, 60, 82],
+                      backgroundColor: 'rgba(26,82,118,0.55)', borderRadius: 4 },
+                    { label: 'SmO₂ End (%)', data: [81, 82, 77, 14, 15, 16, 12, 5],
+                      backgroundColor: 'rgba(192,57,43,0.55)', borderRadius: 4 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { labels: { usePointStyle: true, padding: 14 } } },
+                scales: {
+                    y: { min: 0, max: 100, title: { display: true, text: 'SmO₂ (%)', color: '#777' },
+                         ticks: { stepSize: 20 }, grid: { color: 'rgba(0,0,0,0.06)' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

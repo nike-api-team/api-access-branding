@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: From Symptom to System — Case Study</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --steel: #4a8db7;
+      --steel-light: #6db3d9;
+      --steel-glow: rgba(74, 141, 183, 0.2);
+      --steel-deep: #1a5276;
+      --red: #e05252;
+      --green: #4ecb71;
+      --amber: #e0a832;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Header ── */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.92);
+    }
+
+    .brand-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: baseline;
+      text-decoration: none;
+    }
+
+    .brand-logo .api {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .brand-logo .access {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .brand-edition {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .edition-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--steel);
+    }
+
+    .edition-date {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 48px 0 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--steel-glow) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--steel);
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      padding: 0 16px;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .hero-sub strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── Intro ── */
+    .brand-intro {
+      padding: 8px 0 0;
+      text-align: center;
+    }
+
+    .brand-intro .from-line {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .brand-intro .team-name {
+      font-size: 14px;
+      color: var(--steel-light);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .brand-intro .edition-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .brand-intro .edition-divider .line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .brand-intro .edition-divider .label {
+      font-size: 11px;
+      color: var(--steel);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* ── Section ── */
+    section { padding: 48px 0; }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--steel);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+
+    .section-text {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .section-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 24px;
+      max-width: 432px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── Stat Strip ── */
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin: 28px 0;
+      background: var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .stat-strip.four-col {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .stat-cell {
+      background: var(--surface);
+      padding: 18px 6px;
+      text-align: center;
+    }
+
+    .stat-cell .val {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--steel);
+      line-height: 1;
+    }
+
+    .stat-cell .val .unit {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .stat-cell .label {
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-top: 6px;
+      line-height: 1.3;
+    }
+
+    /* ── O2 Cascade ── */
+    .cascade-wrap {
+      margin: 28px -24px;
+      padding: 24px 20px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cascade-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .cascade-row + .cascade-row {
+      margin-top: 10px;
+    }
+
+    .cascade-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: rgba(18, 18, 28, 0.8);
+      flex-shrink: 0;
+    }
+
+    .cascade-node.ok {
+      border-color: var(--green);
+      background: rgba(78, 203, 113, 0.06);
+    }
+
+    .cascade-node.limit {
+      border-color: var(--red);
+      background: rgba(224, 82, 82, 0.06);
+    }
+
+    .cascade-node.watch {
+      border-color: var(--amber);
+      background: rgba(224, 168, 50, 0.06);
+    }
+
+    .cascade-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .cascade-label {
+      font-size: 7px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-top: 2px;
+    }
+
+    .cascade-status {
+      font-size: 6px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 6px;
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    .cascade-status.ok { background: rgba(78, 203, 113, 0.15); color: var(--green); }
+    .cascade-status.red { background: rgba(224, 82, 82, 0.15); color: var(--red); }
+    .cascade-status.amber { background: rgba(224, 168, 50, 0.15); color: var(--amber); }
+
+    .cascade-arrow {
+      color: #444;
+      font-size: 12px;
+    }
+
+    /* ── Callout ── */
+    .callout {
+      background: var(--steel-glow);
+      border-left: 3px solid var(--steel);
+      border-radius: 0 10px 10px 0;
+      padding: 18px 20px;
+      margin: 28px 0;
+    }
+
+    .callout-text {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .callout-source {
+      font-size: 11px;
+      color: var(--steel-light);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    /* ── Finding Cards ── */
+    .finding-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .finding-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      border-radius: 3px 0 0 3px;
+    }
+
+    .finding-card.red::before { background: var(--red); }
+    .finding-card.green::before { background: var(--green); }
+    .finding-card.amber::before { background: var(--amber); }
+    .finding-card.steel::before { background: var(--steel); }
+
+    .finding-icon {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .finding-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .finding-body {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .finding-body strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .finding-status {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .finding-status.limit { background: rgba(224, 82, 82, 0.15); color: var(--red); }
+    .finding-status.robust { background: rgba(78, 203, 113, 0.15); color: var(--green); }
+    .finding-status.caution { background: rgba(224, 168, 50, 0.15); color: var(--amber); }
+
+    /* ── Intervention Cards ── */
+    .intervention-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+
+    .intervention-num {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--steel);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .intervention-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .intervention-body {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Day Timeline ── */
+    .day-flow {
+      margin: 24px 0;
+      padding-left: 20px;
+      border-left: 2px solid var(--border);
+    }
+
+    .day-item {
+      position: relative;
+      padding: 0 0 16px 20px;
+    }
+
+    .day-item::before {
+      content: '';
+      position: absolute;
+      left: -25px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--steel);
+      border: 2px solid var(--bg);
+    }
+
+    .day-item.highlight::before {
+      background: var(--red);
+    }
+
+    .day-time {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--steel-light);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .day-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 2px;
+    }
+
+    .day-desc strong {
+      color: var(--text);
+    }
+
+    /* ── Deep Dive Cards ── */
+    .dive-card {
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .dive-card:hover {
+      border-color: var(--steel);
+      box-shadow: 0 0 20px var(--steel-glow);
+    }
+
+    .dive-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .dive-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .dive-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .dive-cta {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--steel);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Footer ── */
+    .brand-footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      text-align: center;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer-logo { text-decoration: none; }
+    .footer-logo .api { font-size: 20px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 20px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .footer-team { font-size: 11px; color: var(--steel-light); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+    .footer-desc { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 340px; }
+    .footer-cta { display: inline-block; margin-top: 8px; padding: 12px 32px; background: var(--accent); color: var(--text); border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; }
+    .footer-fine { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Case Study</span>
+        <span class="edition-date">February 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="hero">
+    <div class="container">
+      <div class="hero-tag">Athlete Performance Investigation</div>
+      <h1 class="hero-title">From Symptom to System</h1>
+      <p class="hero-sub">An elite miler reports <strong>bilateral quadriceps heaviness, progressive power loss, and post-race dissociation</strong> during championship finals. The symptoms vanish in training. What's going on?</p>
+    </div>
+  </div>
+
+  <!-- ═══ INTRO ═══ -->
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">From the</div>
+      <div class="team-name">Nike Sport Research Lab &bull; Applied Performance Innovation</div>
+      <div class="edition-divider">
+        <div class="line"></div>
+        <div class="label">14-Day Residency</div>
+        <div class="line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ THE PRESENTING CONCERN ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Symptom</div>
+      <h2 class="section-title">Something is wrong in the final 200 meters</h2>
+      <p class="section-text">An elite female middle-distance runner competing internationally at 1500m and the mile. During the finale of major championships — Diamond League finals, World Championship finals — the same pattern emerges: an overwhelming <strong>bilateral quadriceps heaviness</strong>, a global loss of power, then lightheadedness, narrowed awareness, and a perceived risk of syncope.</p>
+      <p class="section-text">Post-race, she enters a <strong>prolonged dissociative state</strong> — diminished awareness, impaired memory recall, persistent lightheadedness lasting 15&ndash;20 minutes or more. Post-race blood lactate: &gt;20 mmol/L.</p>
+
+      <div class="callout">
+        <div class="callout-text">"At its most severe, the athlete required conscious effort to remain upright and continue running."</div>
+        <div class="callout-source">Presenting Concern</div>
+      </div>
+
+      <p class="section-text">The critical detail: these symptoms were <strong>not replicated in training</strong>. But true race-length maximal efforts had never been performed in practice — all-out efforts were limited to 200&ndash;400m. The question for the investigation: normal physiology under extreme demand, or a discrete limitation hiding somewhere in the system?</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ THE INVESTIGATION ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Investigation</div>
+      <h2 class="section-title">14 days embedded at the NSRL</h2>
+      <p class="section-text">The athlete's performance director reached out to the Nike Sport Research Lab. An embedded <strong>14-day training camp</strong> was designed — the athlete arrived at Nike World Headquarters immediately following an indoor competition and trained on-site while the API team instrumented every session.</p>
+
+      <div class="stat-strip four-col">
+        <div class="stat-cell">
+          <div class="val">14</div>
+          <div class="label">Days</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">8</div>
+          <div class="label">Sessions</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">6</div>
+          <div class="label">Intensity Zones</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">2</div>
+          <div class="label">Legs (Bilateral)</div>
+        </div>
+      </div>
+
+      <p class="section-text">Sessions spanned the full intensity spectrum — from easy aerobic runs through maximal graded exercise testing — to build a comprehensive physiological profile. <strong>Bilateral NIRS sensors</strong> on both quadriceps tracked muscle oxygen dynamics at every intensity. Force plate, CO-rebreathing, metabolic cart, lactate profiling, pulse oximetry, and gait analysis completed the picture.</p>
+
+      <div class="day-flow">
+        <div class="day-item">
+          <div class="day-time">Day 0</div>
+          <div class="day-desc">Arrival.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 1</div>
+          <div class="day-desc">General discussion &amp; planning. Schedule, goals, baseline.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 2</div>
+          <div class="day-desc"><strong>Mile repeats</strong> (4&times;mile + 5&times;300m at race pace). Bilateral SmO&#8322;, tHb, HR, GPS, lactate, M' balance.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 3</div>
+          <div class="day-desc">Easy + plyos/strides. <strong>Force plate assessment</strong> — CMJ, single-leg CMJ, 10-5 hop.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 4</div>
+          <div class="day-desc"><strong>Track all-outs</strong> (400m, 200m, 300m, 120m). Supramaximal profiling.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 5</div>
+          <div class="day-desc"><strong>Threshold</strong> (24 min continuous + hills). Lactate mapping.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 6</div>
+          <div class="day-desc">Double easy (AM + PM). Aerobic baseline profiling.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 7</div>
+          <div class="day-desc"><strong>600m race-pace reps</strong>. The session closest to race-day demands.</div>
+        </div>
+        <div class="day-item highlight">
+          <div class="day-time">Day 8</div>
+          <div class="day-desc"><strong>GXT + Time-to-Exhaustion + Hb Mass + Gait</strong>. The key lab day. VO&#8322;, lactate, SpO&#8322;, ventilation, CO-rebreathing.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 9</div>
+          <div class="day-desc"><strong>1500m-focused speed</strong> (300m / 200m / 400m sets). Bilateral NIRS, lactate, M' balance.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 10</div>
+          <div class="day-desc"><strong>Long run</strong> (86 min). Endurance profile and muscle oxygen steady-state.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 11</div>
+          <div class="day-desc"><strong>800m-focused speed</strong> (300 / 300 / 200 sets). Bilateral NIRS, lactate, M' balance.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 12</div>
+          <div class="day-desc">Double easy (AM + PM). Final aerobic session.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Day 13</div>
+          <div class="day-desc">Travel / departure.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE FRAMEWORK ═══ -->
+  <section style="padding-top:0;">
+    <div class="container">
+      <div class="section-label">The Framework</div>
+      <h2 class="section-title">Tracing oxygen from air to muscle</h2>
+      <p class="section-text">The investigation was organized around the <strong>O&#8322; transport cascade</strong>: oxygen flows from the atmosphere through the lungs, heart, blood, and into the working muscle. At each step, there's a potential bottleneck. The team assessed every link in the chain.</p>
+
+      <div class="cascade-wrap">
+        <div class="cascade-row">
+          <div class="cascade-node ok">
+            <div class="cascade-icon">&#x1F32C;&#xFE0F;</div>
+            <div class="cascade-label">Atmos</div>
+            <div class="cascade-status ok">OK</div>
+          </div>
+          <div class="cascade-arrow">&rarr;</div>
+          <div class="cascade-node limit">
+            <div class="cascade-icon">&#x1FAC1;</div>
+            <div class="cascade-label">Lungs</div>
+            <div class="cascade-status red">EIAH</div>
+          </div>
+          <div class="cascade-arrow">&rarr;</div>
+          <div class="cascade-node limit">
+            <div class="cascade-icon">&#x2764;&#xFE0F;</div>
+            <div class="cascade-label">Heart</div>
+            <div class="cascade-status red">CEILING</div>
+          </div>
+        </div>
+        <div class="cascade-row">
+          <div class="cascade-node ok">
+            <div class="cascade-icon">&#x1FA78;</div>
+            <div class="cascade-label">Hb+Flow</div>
+            <div class="cascade-status ok">ROBUST</div>
+          </div>
+          <div class="cascade-arrow">&rarr;</div>
+          <div class="cascade-node ok">
+            <div class="cascade-icon">&#x1F4AA;</div>
+            <div class="cascade-label">Muscle</div>
+            <div class="cascade-status ok">DEEP</div>
+          </div>
+          <div class="cascade-arrow">&rarr;</div>
+          <div class="cascade-node watch">
+            <div class="cascade-icon">&#x26A1;</div>
+            <div class="cascade-label">Neuro</div>
+            <div class="cascade-status amber">WATCH</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="section-text">Green = robust, no bottleneck. Red = identified ceiling. Amber = area to monitor. The picture that emerged was clear: the limitation lives in the <strong>central delivery system</strong> — the heart and lungs — not in the muscles themselves.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ KEY METRICS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Profile</div>
+      <h2 class="section-title">Who is this athlete, physiologically?</h2>
+
+      <div class="stat-strip">
+        <div class="stat-cell">
+          <div class="val">63 <span class="unit">mL/kg/min</span></div>
+          <div class="label">VO&#8322; Peak</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">189 <span class="unit">bpm</span></div>
+          <div class="label">HR Max</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">+33<span class="unit">%</span></div>
+          <div class="label">Hb Mass vs Ref</div>
+        </div>
+      </div>
+
+      <div class="stat-strip">
+        <div class="stat-cell">
+          <div class="val">94<span class="unit">%</span></div>
+          <div class="label">LT2 %HRmax</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">92<span class="unit">%</span></div>
+          <div class="label">SpO&#8322; Nadir</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">&Delta;16<span class="unit">%</span></div>
+          <div class="label">CMJ Asymmetry</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE FINDINGS ═══ -->
+  <section style="padding-top:0;">
+    <div class="container">
+      <div class="section-label">The Findings</div>
+      <h2 class="section-title">Where the ceiling lives</h2>
+
+      <div class="finding-card red">
+        <div class="finding-status limit">PRIMARY CEILING</div>
+        <div class="finding-title">Cardiac output at maximum</div>
+        <div class="finding-body">LT2 occurs at <strong>94% of max heart rate</strong>, leaving minimal cardiac reserve above threshold. During mile repeats, HR reached 99% of maximum. The system has <strong>more extraction capacity than the heart can feed</strong>. This is the primary bottleneck at sustained race-relevant intensities.</div>
+      </div>
+
+      <div class="finding-card red">
+        <div class="finding-status limit">COMPOUNDS THE CEILING</div>
+        <div class="finding-title">Exercise-induced arterial hypoxemia</div>
+        <div class="finding-body">SpO&#8322; dropped from 98% to <strong>92% at exhaustion</strong> — a 6-point decline. Below ~95%, the flat portion of the oxyhemoglobin dissociation curve is lost. Further reductions in PaO&#8322; meaningfully reduce arterial O&#8322; content, even with robust cardiac output and hemoglobin mass. This effect would <strong>compound at altitude</strong>.</div>
+      </div>
+
+      <div class="finding-card green">
+        <div class="finding-status robust">ROBUST</div>
+        <div class="finding-title">Muscle oxidative capacity is not the bottleneck</div>
+        <div class="finding-body">SmO&#8322; holds steady at threshold. At maximal effort, extraction reaches <strong>5&ndash;13%</strong> — deep desaturation indicating the muscles are fully capable of using every molecule of O&#8322; delivered. Hemoglobin mass is <strong>+33% above reference</strong>. The machinery is all there — it's just not getting all the gas it can handle.</div>
+      </div>
+
+      <div class="finding-card amber">
+        <div class="finding-status caution">WATCH</div>
+        <div class="finding-title">Right-side motor coordination deficit</div>
+        <div class="finding-body">Force plate assessment revealed a <strong>coordination, not strength, asymmetry</strong> on the right side that worsens under cueing demands. This was corroborated by bilateral NIRS showing asymmetric oxygen dynamics between legs. Not the primary limiter, but a contributor to efficiency loss.</div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">"The presenting symptoms — bilateral quadriceps heaviness, progressive power loss, and post-race neurocognitive impairment — are consistent with an O&#8322; delivery ceiling: cardiac output at maximum compounded by EIAH, producing both local and systemic effects at race-relevant intensities."</div>
+        <div class="callout-source">Key Finding</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ THE PATH FORWARD ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Path Forward</div>
+      <h2 class="section-title">Priority interventions</h2>
+      <p class="section-text">With the ceiling identified, the investigation moved to actionable recommendations — targeting the specific limiters found in the cascade.</p>
+
+      <div class="intervention-card">
+        <div class="intervention-num">01</div>
+        <div class="intervention-title">Stroke volume development</div>
+        <div class="intervention-body">The highest-leverage adaptation. Aerobic volume and sustained moderate-intensity work to drive eccentric cardiac hypertrophy — more blood per beat at the same heart rate.</div>
+      </div>
+
+      <div class="intervention-card">
+        <div class="intervention-num">02</div>
+        <div class="intervention-title">Heat &amp; altitude acclimation</div>
+        <div class="intervention-body">Extended heat exposure (5+ weeks) for plasma volume expansion and stroke volume gains. Altitude for Hb mass augmentation to offset EIAH. Both target the central delivery ceiling.</div>
+      </div>
+
+      <div class="intervention-card">
+        <div class="intervention-num">03</div>
+        <div class="intervention-title">Aerobic capacity development</div>
+        <div class="intervention-body">Raise LT1 and LT2 as a fraction of HRmax. Expand the sustainable intensity range so that race pace sits further from the cardiac ceiling.</div>
+      </div>
+
+      <div class="intervention-card">
+        <div class="intervention-num">04</div>
+        <div class="intervention-title">Warm-up priming protocol</div>
+        <div class="intervention-body">A 4&ndash;5 minute bout near LT2/LTP pace to prime VO&#8322; kinetics and elevate critical speed before racing. Addresses the gap between call-room and gun.</div>
+      </div>
+
+      <div class="intervention-card">
+        <div class="intervention-num">05</div>
+        <div class="intervention-title">Single-leg coordinative S&amp;C</div>
+        <div class="intervention-body">Reintroduce complex single-leg exercises targeting the right-side coordination deficit. Not strength — coordination under load and cueing demand.</div>
+      </div>
+
+      <div class="intervention-card">
+        <div class="intervention-num">06</div>
+        <div class="intervention-title">SpO&#8322; monitoring</div>
+        <div class="intervention-body">Track EIAH severity during high-intensity sessions, racing, and at altitude. Establish a longitudinal baseline to measure whether interventions reduce the desaturation.</div>
+      </div>
+
+      <div class="intervention-card">
+        <div class="intervention-num">07</div>
+        <div class="intervention-title">Address the call room situation</div>
+        <div class="intervention-body">The dead time between warm-up and the gun is a physiological cliff. VO&#8322; kinetics slow, priming fades, and the athlete starts cold. Solving the call room gap is as much a competitive edge as any training block.</div>
+      </div>
+
+      <div class="intervention-card">
+        <div class="intervention-num">08</div>
+        <div class="intervention-title">Breath-hold priming protocol</div>
+        <div class="intervention-body">Investigate breath-hold techniques as a tool to maintain elevated VO&#8322; kinetics and blood flow priming through the call room window. A low-logistics intervention that can be performed in place, right up to the start line.</div>
+      </div>
+
+      <div class="intervention-card">
+        <div class="intervention-num">09</div>
+        <div class="intervention-title">Specialized performance product</div>
+        <div class="intervention-body">A great opportunity to develop purpose-built product for exactly this moment — bridging the gap from warm-up to race. Equipment designed to preserve physiological readiness when access to movement is restricted.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ DEEP DIVE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Go Deeper</div>
+      <h2 class="section-title">Three ways to explore the full investigation</h2>
+      <p class="section-text">This story is the front door. Behind it are three deliverables from the investigation — each designed for a different audience and depth of engagement.</p>
+
+      <a class="dive-card" href="case-study-abstract.html" target="_blank">
+        <div class="dive-icon">&#x1F4CB;</div>
+        <div class="dive-title">Graphical Abstract</div>
+        <div class="dive-desc">One-page visual summary of the investigation — key metrics, O&#8322; cascade verdict, primary findings, and priority interventions. Best for a quick reference or sharing.</div>
+        <div class="dive-cta">View the abstract &#8594;</div>
+      </a>
+
+      <a class="dive-card" href="case-study-dashboard.html" target="_blank">
+        <div class="dive-icon">&#x1F50D;</div>
+        <div class="dive-title">Interactive Dashboard</div>
+        <div class="dive-desc">Click through the O&#8322; cascade, drag an intensity slider to see how the system responds at each effort level, and explore "What If" scenarios for each intervention.</div>
+        <div class="dive-cta">Explore the dashboard &#8594;</div>
+      </a>
+
+      <a class="dive-card" href="case-study-writeup.html" target="_blank">
+        <div class="dive-icon">&#x1F4D6;</div>
+        <div class="dive-title">Full Case Study Report</div>
+        <div class="dive-desc">The complete scientific write-up — methods, results with figures and tables, lactate profiles, ventilatory response data, SmO&#8322; intensity maps, discussion, and all recommendations.</div>
+        <div class="dive-cta">Read the full report &#8594;</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Insights from the cutting edge of athlete performance — the problems, the solutions, and what we're learning along the way.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

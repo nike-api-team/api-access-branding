@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: ACG Team Camp — All Conditions Athletes</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --acg: #e8622a;
+      --acg-light: #f0915e;
+      --acg-glow: rgba(232, 98, 42, 0.25);
+      --acg-deep: #c44e1c;
+      --sand: #d4b896;
+      --sand-dim: rgba(212, 184, 150, 0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Branded Header ── */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.92);
+    }
+
+    .brand-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: baseline;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .brand-logo .api {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .brand-logo .access {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .brand-edition {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .edition-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--acg);
+    }
+
+    .edition-date {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-img {
+      width: 100%;
+      display: block;
+      filter: brightness(0.75);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 48px 24px 28px;
+      background: linear-gradient(transparent, rgba(10,10,15,0.85) 40%, var(--bg));
+    }
+
+    .hero-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--acg);
+      margin-bottom: 8px;
+    }
+
+    .hero-title {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .hero-sub strong {
+      color: var(--sand);
+      font-weight: 600;
+    }
+
+    /* ── Intro ── */
+    .brand-intro {
+      padding: 32px 0 0;
+      text-align: center;
+    }
+
+    .brand-intro .from-line {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .brand-intro .team-name {
+      font-size: 14px;
+      color: var(--acg-light);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .brand-intro .edition-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .brand-intro .edition-divider .line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .brand-intro .edition-divider .label {
+      font-size: 11px;
+      color: var(--acg);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* ── Section Common ── */
+    section {
+      padding: 48px 0;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--acg);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+
+    .section-text {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .section-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 24px;
+      max-width: 432px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── Full-width Photos ── */
+    .photo-break {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .photo-break img {
+      width: 100%;
+      display: block;
+    }
+
+    .photo-break .caption {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      padding: 10px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Photo Pair (side by side) ── */
+    .photo-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      margin: 24px 0;
+    }
+
+    .photo-pair img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    /* ── Stat Strip ── */
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin: 28px 0;
+      background: var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .stat-cell {
+      background: var(--surface);
+      padding: 18px 8px;
+      text-align: center;
+    }
+
+    .stat-cell .val {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--acg);
+      line-height: 1;
+    }
+
+    .stat-cell .label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    /* ── Study Cards ── */
+    .study-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .study-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--acg);
+      border-radius: 3px 0 0 3px;
+    }
+
+    .study-icon {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .study-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--acg-light);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .study-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .study-desc strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── Callout Block ── */
+    .callout {
+      background: var(--sand-dim);
+      border-left: 3px solid var(--acg);
+      border-radius: 0 10px 10px 0;
+      padding: 18px 20px;
+      margin: 28px 0;
+    }
+
+    .callout-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    .callout-source {
+      font-size: 11px;
+      color: var(--acg-light);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    /* ── Voice Cards (athlete quotes) ── */
+    .voice-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .voice-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .voice-card::after {
+      content: '\201D';
+      position: absolute;
+      top: 8px;
+      right: 16px;
+      font-size: 48px;
+      color: var(--acg-glow);
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+
+    .voice-quote {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+      font-style: italic;
+      padding-right: 24px;
+    }
+
+    .voice-attr {
+      font-size: 11px;
+      color: var(--acg-light);
+      margin-top: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Day Flow (timeline-style) ── */
+    .day-flow {
+      margin: 24px 0;
+      padding-left: 20px;
+      border-left: 2px solid var(--border);
+    }
+
+    .day-item {
+      position: relative;
+      padding: 0 0 20px 20px;
+    }
+
+    .day-item::before {
+      content: '';
+      position: absolute;
+      left: -25px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--acg);
+      border: 2px solid var(--bg);
+    }
+
+    .day-time {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--acg-light);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .day-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 2px;
+    }
+
+    /* ── Product Grid ── */
+    .product-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .product-tag {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .product-tag.highlight {
+      border-color: var(--acg);
+      color: var(--acg-light);
+      background: var(--acg-glow);
+    }
+
+    /* ── Signal Cards (takeaways) ── */
+    .signal-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .signal-num {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--acg);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .signal-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .signal-body {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Footer ── */
+    .brand-footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      text-align: center;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer-logo {
+      text-decoration: none;
+    }
+
+    .footer-logo .api {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .footer-logo .access {
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .footer-team {
+      font-size: 11px;
+      color: var(--acg-light);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 340px;
+    }
+
+    .footer-cta {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 12px 32px;
+      background: var(--accent);
+      color: var(--text);
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-fine {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── Roster Scroll ── */
+    .roster-wrap {
+      margin: 20px 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .roster-wrap::-webkit-scrollbar { display: none; }
+
+    .roster-strip {
+      display: flex;
+      gap: 10px;
+      padding-bottom: 4px;
+      width: max-content;
+    }
+
+    .roster-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ── Inline Photo w/ Rounded Corners ── */
+    .photo-inset {
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 24px 0;
+    }
+
+    .photo-inset img {
+      width: 100%;
+      display: block;
+    }
+
+    .photo-inset .caption {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      padding: 10px 0 0;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo" style="text-decoration:none;">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Athlete Story</span>
+        <span class="edition-date">February 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="hero">
+    <img class="hero-img" src="acg-camp-hero.jpg" alt="ACG athlete ascending desert ridgeline with mountains behind" />
+    <div class="hero-overlay">
+      <div class="hero-tag">ACG Racing Department</div>
+      <h1 class="hero-title">All Conditions Athletes</h1>
+      <p class="hero-sub">Five days in the desert with <strong>25+ professional trail runners</strong> from around the world — where science met the mountain.</p>
+    </div>
+  </div>
+
+  <!-- ═══ INTRO ═══ -->
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">From the</div>
+      <div class="team-name">Nike Sport Research Lab &times; ACG</div>
+      <div class="edition-divider">
+        <div class="line"></div>
+        <div class="label">Palm Springs &bull; Feb 2026</div>
+        <div class="line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ THE GATHERING ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Gathering</div>
+      <h2 class="section-title">A global team descends on the desert</h2>
+      <p class="section-text">Over 25 professional trail runners from the United States, France, Japan, Korea, and beyond arrived in Palm Springs for the ACG Racing Department's winter performance camp. Rain and shine, they clocked some of their <strong>biggest volume of the year to date</strong> on the rugged desert terrain of the Coachella Valley — surrounded by scientists, designers, and engineers who came to listen, measure, and learn.</p>
+
+      <div class="stat-strip">
+        <div class="stat-cell">
+          <div class="val">25+</div>
+          <div class="label">Athletes</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">5</div>
+          <div class="label">Days</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">10</div>
+          <div class="label">Countries</div>
+        </div>
+      </div>
+
+      <p class="section-text">This year the camp was organized by Nike Innovation in conjunction with Nike Sports Marketing, with the <strong>API team from the NSRL</strong> leading the charge on the performance science agenda. They queried the athletes in advance — finding out exactly where their curiosities and needs lived — and built a week around it.</p>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO: Group Running ═══ -->
+  <div class="photo-break">
+    <img src="acg-camp-group-run.jpg" alt="ACG athletes running together on a desert trail with mountains in the background" />
+    <div class="caption">The squad rolling out for a morning session on the desert trails outside Palm Springs.</div>
+  </div>
+
+  <!-- ═══ A TYPICAL DAY ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Rhythm</div>
+      <h2 class="section-title">A day at camp</h2>
+      <p class="section-text">Each day followed a cadence designed to balance training, testing, learning, and recovery.</p>
+
+      <div class="day-flow">
+        <div class="day-item">
+          <div class="day-time">Morning</div>
+          <div class="day-desc">Mindfulness session — breathwork, sensory grounding, visualization. Led from the "Sunrise Room" by a performance neuroscientist and a clinical psychologist.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Mid-morning</div>
+          <div class="day-desc">Trail run. Desert singletrack, rocky ridgelines, and cactus-lined climbs across the Coachella Valley foothills.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Recovery</div>
+          <div class="day-desc">Nutrition support, NormaTec, Shiftwave, massage — and a first chance to sit with the science team one-on-one.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Afternoon</div>
+          <div class="day-desc">Research testing blocks and product design sessions — athletes rotating through four different science stations and product fairs.</div>
+        </div>
+        <div class="day-item">
+          <div class="day-time">Evening</div>
+          <div class="day-desc">Fireside sport science seminar with expert speakers. Smores, herbal tea, and honey. Off to a good night's rest.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ THE VERTICAL ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Terrain</div>
+      <h2 class="section-title">Vertical is the big word</h2>
+      <p class="section-text">These athletes are unlike other runners. They don't just cover ground — they <strong>climb it</strong>. Specialists ranging from 20-minute vertical kilometer racers to 20-hour ultramarathon runners, the common thread is the mountain itself.</p>
+    </div>
+
+    <div class="photo-break" style="margin: 24px 0;">
+      <img src="acg-camp-climb.jpg" alt="Athletes ascending a steep rocky ridgeline in the Palm Springs desert" />
+      <div class="caption">The team heads up into the rocky terrain above Palm Springs.</div>
+    </div>
+
+    <div class="container">
+      <div class="callout">
+        <div class="callout-text">"One day they ran the Cactus to Clouds trail — 10,000 feet of elevation in 20 miles. They made it 7,000 feet until snow was scraping their shins and decided to turn around and bomb the descent at warp speed."</div>
+        <div class="callout-source">Camp Dispatch</div>
+      </div>
+
+      <p class="section-text">Trail running is <strong>one step closer to human survival</strong> than most other endurance sports. The durations are ultra-long, the terrain is unforgiving, and the cognitive load is relentless — every footstrike on unstable ground is a real-time risk calculation.</p>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO: Athlete Leaping ═══ -->
+  <div class="photo-break">
+    <img src="acg-camp-leap.jpg" alt="Athlete leaping across desert terrain with sun and mountains behind" />
+    <div class="caption">Desert terrain, mountain air, and full commitment.</div>
+  </div>
+
+  <!-- ═══ THE LAB ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Science</div>
+      <h2 class="section-title">Four studies. One question: who is the trail athlete?</h2>
+      <p class="section-text">The API team set up a mobile performance lab at the Ritz Carlton Rancho Mirage and ran four concurrent research protocols throughout the week. The aim wasn't just to test — it was to build a <strong>comprehensive physiological profile</strong> of the trail runner, coupling who they are with what the sport demands.</p>
+
+      <div class="photo-inset">
+        <img src="acg-camp-masks.jpg" alt="Grid of athletes wearing metabolic testing masks" />
+        <div class="caption">Eyes over the mask. Every athlete tested.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-name">Speed &times; Gradient</div>
+        <div class="study-desc">How does <strong>lactate threshold shift</strong> across different inclines? Athletes ran treadmill intervals at -5%, 0%, +5%, and +15% grade while blood lactate, muscle oxygen, and whole-body VO&#8322; were measured. The goal: build gradient-specific pacing maps.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-name">Muscle Oxidative Capacity</div>
+        <div class="study-desc">Near-infrared sensors and blood flow occlusion cuffs measured how quickly the <strong>quads and calves consume and recover oxygen</strong> — before and after runs of varying duration. A window into muscle resilience and fatigue resistance.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-name">Hemoglobin Mass</div>
+        <div class="study-desc">By tagging hemoglobin with trace carbon monoxide, the team mapped <strong>total blood volume, red blood cell volume, and oxygen-carrying capacity</strong>. These values reveal endurance potential and the effects of altitude and heat adaptation.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-name">Cognitive Assessment</div>
+        <div class="study-desc">Through structured one-on-one conversations, a performance neuroscientist explored how each athlete <strong>approaches their race mentally</strong> — how cognitive decline takes shape during dark hours of pain and duration, and what it might take to recover. A keen interest in understanding just how deeply scrambled the brain gets.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO: Treadmill Testing ═══ -->
+  <div class="photo-break">
+    <img src="acg-camp-treadmill.jpg" alt="Athlete running on treadmill during speed-gradient testing, artistic orange glow" />
+    <div class="caption">The Speed &times; Gradient test in action — chasing threshold across inclines.</div>
+  </div>
+
+  <!-- ═══ THE MIND ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Mind</div>
+      <h2 class="section-title">Cognitive demands at the edge of fatigue</h2>
+      <p class="section-text">Trail running isn't just physical. At hour 15, fatigued and deep in the mountains, these athletes are still making <strong>split-second decisions</strong> — will that rock hold my weight? Can I cut this switchback without going over the edge? Should I push this climb and risk paying for it five hours later?</p>
+      <p class="section-text">The camp addressed this head-on: morning mindfulness sessions with a <strong>performance neuroscientist and a clinical psychologist</strong> explored breathwork, sensory grounding, and visualization. Evening seminars around the fire covered topics from altitude adaptation to eccentric muscle loading to overnight fueling strategies.</p>
+
+      <div class="photo-inset">
+        <img src="acg-camp-addie.jpg" alt="Addie Bracy running on desert trail in ACG jacket" />
+      </div>
+
+      <p class="section-text">Rather than wiring athletes with EEG headsets, the performance neuroscientist took a different approach — <strong>sitting with each athlete individually</strong> to explore how they experience cognitive decline during racing, what strategies they use to stay sharp at 3am, and how deeply scrambled their brain feels in the hours and days after a 50K or 100K. Understanding those patterns is a competitive frontier.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ THE PRODUCT ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Product</div>
+      <h2 class="section-title">This athlete dresses in a system</h2>
+      <p class="section-text">One of the week's clearest signals: trail runners think about their gear as a <strong>complete system</strong>. From shoes to vests to shirts to hats — everything must work together across hours of variable terrain, weather, and effort. The product teams from ACG Footwear, Apparel, and Innovation were embedded all week.</p>
+
+      <div class="photo-pair">
+        <img src="acg-camp-soles.jpg" alt="Row of ACG trail shoe soles showing tread patterns" />
+        <img src="acg-camp-vest.jpg" alt="Athlete wearing ACG running vest" />
+      </div>
+
+      <div class="product-tags">
+        <span class="product-tag highlight">Kigerfly</span>
+        <span class="product-tag highlight">Picklejuice</span>
+        <span class="product-tag highlight">Zegama</span>
+        <span class="product-tag highlight">Ultrafly</span>
+        <span class="product-tag">Trail Vests</span>
+        <span class="product-tag">Wind Shells</span>
+        <span class="product-tag">Trail Shorts</span>
+        <span class="product-tag">Running Caps</span>
+        <span class="product-tag">Compression Tights</span>
+      </div>
+
+      <p class="section-text">Athletes rotated through product fairs, wear-testing sessions, and direct conversations with designers and developers. Their feedback — about traction, breathability, storage, durability, and fit — feeds directly back into future ACG product creation.</p>
+
+      <div class="photo-inset">
+        <img src="acg-camp-product.jpg" alt="Athletes examining ACG product prototypes" />
+        <div class="caption">The feedback loop: athletes handling new ACG product firsthand.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO: Trail Pack ═══ -->
+  <div class="photo-break">
+    <img src="acg-camp-trail-pack.jpg" alt="Athletes running single-file on a desert trail with mountains behind" />
+    <div class="caption">Single-file through the Coachella Valley foothills.</div>
+  </div>
+
+  <!-- ═══ ATHLETE VOICES ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Athlete Voices</div>
+      <h2 class="section-title">In their own words</h2>
+      <p class="section-text">Before camp, the athletes were asked what they most wanted from the week. Their answers shaped the entire agenda.</p>
+
+      <div class="voice-grid">
+        <div class="voice-card">
+          <div class="voice-quote">"Your body can't lie, and if you have the proper instructions to master it, nothing can stop you."</div>
+          <div class="voice-attr">ACG Athlete</div>
+        </div>
+        <div class="voice-card">
+          <div class="voice-quote">"3am focus. What can we do to stay fully dialed and engaged when things get weird during the witching hour?"</div>
+          <div class="voice-attr">ACG Athlete</div>
+        </div>
+        <div class="voice-card">
+          <div class="voice-quote">"I'm most interested in digging into the mental performance side of things. I want a big uphill day with the whole squad and some good mental tools for UTMB in August."</div>
+          <div class="voice-attr">ACG Athlete</div>
+        </div>
+        <div class="voice-card">
+          <div class="voice-quote">"It's been a year since I've spent time with the NSRL. I'm excited to exchange what we've all learned — specifically adaptation to uphill and downhill running, and how flat running translates to hill running."</div>
+          <div class="voice-attr">ACG Athlete</div>
+        </div>
+        <div class="voice-card">
+          <div class="voice-quote">"I trust that you guys are going to be informational Gods and will have everything we can ever ask for."</div>
+          <div class="voice-attr">ACG Athlete</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ THE SIGNAL ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Signal</div>
+      <h2 class="section-title">What we learned</h2>
+      <p class="section-text">Five days, four studies, dozens of conversations. The major takeaways from the desert:</p>
+
+      <div class="signal-card">
+        <div class="signal-num">01</div>
+        <div class="signal-title">Vertical changes everything</div>
+        <div class="signal-body">Lactate threshold, pacing strategy, muscle recruitment — the rules shift dramatically with gradient. Flat-ground assumptions don't hold on the mountain. Building gradient-specific metabolic profiles is essential for this athlete.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">02</div>
+        <div class="signal-title">The system is the product</div>
+        <div class="signal-body">Trail athletes think in terms of complete systems — shoe, vest, layer, hat. Product can't be designed in isolation. The interdependencies between footwear, apparel, and gear are what make or break performance across hours of mountain running.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">03</div>
+        <div class="signal-title">Cognition is the invisible limiter</div>
+        <div class="signal-body">The brain fatigues alongside the body. Decision-making quality degrades over hours of effort, and the stakes on technical terrain are real. Understanding the cognitive recovery timeline — and building strategies to extend sharpness — is a competitive frontier.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">04</div>
+        <div class="signal-title">These athletes are one step from survival</div>
+        <div class="signal-body">Ultra-long durations, extreme elevation, unpredictable weather, unstable footing. Trail running pushes closer to the boundary of human survival than most sports. The gear, nutrition, and mental preparation must reflect that reality.</div>
+      </div>
+
+      <div class="callout" style="margin-top: 28px;">
+        <div class="callout-text">"The stoke was high from day one and continued throughout. The athletes signed up for nearly every learning opportunity they could. Safe to say, everyone wanted more."</div>
+        <div class="callout-source">Camp Dispatch</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE ROSTER ═══ -->
+  <section style="padding-top: 0;">
+    <div class="container">
+      <div class="section-label">The Roster</div>
+      <h2 class="section-title">ACG Racing Department 2026</h2>
+      <p class="section-text">From vertical kilometer specialists to 100-mile ultramarathon runners. The global team that came to the desert.</p>
+
+      <div class="roster-wrap">
+        <div class="roster-strip">
+          <span class="roster-chip">Adam Merry</span>
+          <span class="roster-chip">Addie Bracy</span>
+          <span class="roster-chip">Anthony Costales</span>
+          <span class="roster-chip">Bailey Kowalczyk</span>
+          <span class="roster-chip">Baptiste Coatantiec</span>
+          <span class="roster-chip">Caleb Olson</span>
+          <span class="roster-chip">Cesare Maestri</span>
+          <span class="roster-chip">Christian Allen</span>
+          <span class="roster-chip">Daniella Oemus</span>
+          <span class="roster-chip">Drew Holmen</span>
+          <span class="roster-chip">Erin Clark</span>
+          <span class="roster-chip">Gabriella Lasalle</span>
+          <span class="roster-chip">Hiroki Kai</span>
+          <span class="roster-chip">Hyunji Kang</span>
+          <span class="roster-chip">Hyunjin Noh</span>
+          <span class="roster-chip">Jennifer Lichter</span>
+          <span class="roster-chip">Lauren Gregory</span>
+          <span class="roster-chip">Liam Meirow</span>
+          <span class="roster-chip">Marie Nivet</span>
+          <span class="roster-chip">Minchul Ko</span>
+          <span class="roster-chip">Rachel Drake</span>
+          <span class="roster-chip">Rebecca Kohne</span>
+          <span class="roster-chip">Riley Brady</span>
+          <span class="roster-chip">Ross Gollan</span>
+          <span class="roster-chip">Shea Aquilano</span>
+          <span class="roster-chip">Takako Takamura</span>
+          <span class="roster-chip">Tyler Green</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SCIENCE TEAM ═══ -->
+  <section style="padding-top: 0;">
+    <div class="container">
+      <div class="section-label">The Science Team</div>
+      <div class="roster-wrap">
+        <div class="roster-strip">
+          <span class="roster-chip">Brett Kirby, PhD — NSRL</span>
+          <span class="roster-chip">Brad Winn, MS — NSRL</span>
+          <span class="roster-chip">Kat Boere, PhD Cand. — UVic/NSRL</span>
+          <span class="roster-chip">Emily Farina, PhD — NSRL</span>
+          <span class="roster-chip">Laura Hutchinson, PhD — NSRL</span>
+          <span class="roster-chip">Brad Wilkins, PhD — Oregon</span>
+          <span class="roster-chip">Mira Schoeberlein, PhD Cand. — Oregon</span>
+          <span class="roster-chip">Emma Richardson, MS — Oregon</span>
+          <span class="roster-chip">Carsten Lundby, PhD — Copenhagen</span>
+          <span class="roster-chip">Vanessa Zoras, MS, RD — CSI</span>
+          <span class="roster-chip">Tina Bryson, PhD, LCSW — Mental Health</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ EVENING SEMINARS ═══ -->
+  <section style="padding-top: 0;">
+    <div class="container">
+      <div class="section-label">Fireside Seminars</div>
+      <div class="study-card">
+        <div class="study-name">Mon — Adaptations from Physiological Stress</div>
+        <div class="study-desc">Carsten Lundby, PhD — How the body turns environmental stress into a competitive advantage.</div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">Tue — Heat Storage &amp; Cooling Strategies</div>
+        <div class="study-desc">Brad Wilkins, PhD — Managing core temperature when the desert doesn't cooperate.</div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">Wed — Fluid &amp; Fuel for the Trail</div>
+        <div class="study-desc">Vanessa Zoras, RD — Nutrition and hydration frameworks for ultra-distance events.</div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">Thu — Eccentric Muscle Work: Optimize or Adapt?</div>
+        <div class="study-desc">Brett Kirby, PhD — The cost of downhill running, and strategies to prepare for it.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO: Shoe Logo Close-up ═══ -->
+  <div class="photo-break">
+    <img src="acg-camp-shoe-logo.jpg" alt="Close-up of ACG triangle logo on shoe sole" />
+    <div class="caption">All Conditions Gear. Built for what's out there.</div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Insights from the cutting edge of athlete performance — the problems, the solutions, and what we're learning along the way.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — From Symptom to System: A Multi-Domain Physiological Investigation in an Elite Middle-Distance Runner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f7f8fa;
+            --surface-2: #eef0f4;
+            --border: #dde1e8;
+            --text: #1a1a2e;
+            --text-sec: #4a4a5a;
+            --text-muted: #777;
+            --accent: #1a5276;
+            --accent-light: #2980b9;
+            --red: #c0392b;
+            --green: #2d8a4e;
+            --amber: #b8860b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        
+        /* NAV */
+        .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-bottom: 1.5px solid var(--border); padding: 12px 40px; display: flex; align-items: center; gap: 30px; }
+        .nav-logo { font-family: 'Oswald', sans-serif; font-size: 0.75rem; color: var(--accent); font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; }
+        .nav-links { display: flex; gap: 24px; }
+        .nav-links a { color: var(--text-muted); font-size: 0.78rem; text-decoration: none; font-weight: 500; transition: color 0.2s; cursor: pointer; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        
+        /* SECTIONS */
+        .section { min-height: 100vh; padding: 100px 60px 60px 60px; max-width: 1400px; margin: 0 auto; }
+        
+        /* HERO */
+        .hero { display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
+        .hero-badge { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 20px; padding: 6px 20px; border: 1.5px solid rgba(26,82,118,0.25); border-radius: 20px; }
+        .hero h1 { font-family: 'Oswald', sans-serif; font-size: 2.4rem; font-weight: 400; line-height: 1.2; margin-bottom: 16px; letter-spacing: 0.3px; color: var(--text); }
+        .hero-sub { font-size: 1.05rem; color: var(--text-sec); max-width: 700px; line-height: 1.7; margin-bottom: 40px; }
+        .hero-stats { display: flex; gap: 40px; }
+        .hero-stat { text-align: center; }
+        .hero-stat-value { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-weight: 500; color: var(--accent); }
+        .hero-stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+        
+        /* PROFILE CARD */
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 50px; }
+        .profile-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 30px; }
+        .profile-card h3 { font-family: 'Oswald', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 16px; font-weight: 400; }
+        .profile-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+        .profile-row:last-child { border-bottom: none; }
+        .profile-key { color: var(--text-sec); font-size: 0.85rem; }
+        .profile-val { color: var(--text); font-weight: 600; font-size: 0.85rem; }
+        .profile-val.green { color: var(--green); }
+        .profile-val.red { color: var(--red); }
+        .profile-val.yellow { color: var(--amber); }
+        
+        /* CASCADE EXPLORER */
+        .cascade-section h2 { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-weight: 400; text-align: center; margin-bottom: 8px; color: var(--text); }
+        .cascade-subtitle { text-align: center; color: var(--text-sec); font-size: 0.95rem; margin-bottom: 40px; }
+        
+        .cascade-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 30px; flex-wrap: wrap; }
+        .cascade-node { width: 120px; height: 120px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; border: 3px solid var(--border); background: var(--surface); position: relative; }
+        .cascade-node:hover { transform: scale(1.08); }
+        .cascade-node.selected { border-color: var(--accent); box-shadow: 0 0 24px rgba(26,82,118,0.2); }
+        .cascade-node.robust { border-color: var(--green); }
+        .cascade-node.ceiling { border-color: var(--red); }
+        .cascade-node .node-icon { font-size: 2rem; margin-bottom: 4px; }
+        .cascade-node .node-label { font-size: 0.7rem; font-weight: 700; color: var(--text); }
+        .cascade-node .node-status { font-size: 0.55rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-top: 4px; }
+        .cascade-node .node-status.ok { background: rgba(45,138,78,0.12); color: var(--green); }
+        .cascade-node .node-status.limit { background: rgba(192,57,43,0.12); color: var(--red); }
+        .cascade-node .node-status.robust { background: rgba(45,138,78,0.12); color: var(--green); }
+        .cascade-arrow { color: #bbb; font-size: 1.2rem; }
+        
+        /* DETAIL PANEL */
+        .detail-panel { background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 30px 40px; min-height: 200px; transition: all 0.3s; }
+        .detail-panel h3 { font-family: 'Oswald', sans-serif; font-size: 1.2rem; font-weight: 400; margin-bottom: 8px; color: var(--text); }
+        .detail-panel .detail-subtitle { color: var(--text-sec); font-size: 0.85rem; margin-bottom: 20px; }
+        .detail-panel p { color: var(--text-sec); font-size: 0.9rem; line-height: 1.8; margin-bottom: 12px; }
+        .detail-panel .highlight { color: var(--red); font-weight: 700; }
+        .detail-panel .green { color: var(--green); font-weight: 700; }
+        
+        /* INTENSITY EXPLORER */
+        .intensity-section h2 { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-weight: 400; text-align: center; margin-bottom: 8px; color: var(--text); }
+        .intensity-subtitle { text-align: center; color: var(--text-sec); font-size: 0.95rem; margin-bottom: 40px; }
+        
+        .intensity-slider-container { text-align: center; margin-bottom: 40px; }
+        .intensity-slider-container label { font-size: 0.8rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 12px; }
+        .intensity-slider { width: 80%; max-width: 800px; height: 8px; -webkit-appearance: none; appearance: none; border-radius: 4px; outline: none; cursor: pointer; }
+        .intensity-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); border: 3px solid #fff; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+        .intensity-label-row { display: flex; justify-content: space-between; max-width: 800px; margin: 8px auto 0 auto; padding: 0 2%; }
+        .intensity-label-item { font-size: 0.7rem; color: var(--text-muted); text-align: center; }
+        
+        .intensity-display { font-family: 'Oswald', sans-serif; font-size: 1.4rem; font-weight: 500; margin-top: 16px; }
+        
+        .cascade-viz { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 30px; }
+        .viz-card { background: var(--surface); border: 2px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; transition: all 0.4s; }
+        .viz-card.ok { border-color: rgba(45,138,78,0.4); background: rgba(45,138,78,0.04); }
+        .viz-card.stressed { border-color: rgba(184,134,11,0.4); background: rgba(184,134,11,0.04); }
+        .viz-card.ceiling { border-color: rgba(192,57,43,0.4); background: rgba(192,57,43,0.05); }
+        .viz-card.na { border-color: var(--border); background: var(--surface-2); opacity: 0.5; }
+        .viz-icon { font-size: 1.8rem; margin-bottom: 6px; }
+        .viz-name { font-size: 0.75rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .viz-metric { font-family: 'Oswald', sans-serif; font-size: 1.1rem; font-weight: 500; margin-bottom: 2px; }
+        .viz-metric.green { color: var(--green); }
+        .viz-metric.yellow { color: var(--amber); }
+        .viz-metric.red { color: var(--red); }
+        .viz-detail { font-size: 0.65rem; color: var(--text-muted); }
+        
+        .intensity-finding { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 24px 30px; }
+        .intensity-finding h4 { color: var(--accent); font-size: 0.9rem; margin-bottom: 8px; }
+        .intensity-finding p { color: var(--text-sec); font-size: 0.9rem; line-height: 1.7; }
+        .intensity-finding .limiter-tag { display: inline-block; padding: 3px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; margin-left: 8px; }
+        .intensity-finding .limiter-tag.cardiac { background: rgba(192,57,43,0.1); color: var(--red); }
+        .intensity-finding .limiter-tag.neuro { background: rgba(184,134,11,0.1); color: var(--amber); }
+        .intensity-finding .limiter-tag.none { background: rgba(45,138,78,0.1); color: var(--green); }
+        
+        /* WHAT-IF */
+        .whatif-section h2 { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-weight: 400; text-align: center; margin-bottom: 8px; color: var(--text); }
+        .whatif-subtitle { text-align: center; color: var(--text-sec); font-size: 0.95rem; margin-bottom: 40px; }
+        .whatif-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .whatif-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 24px; cursor: pointer; transition: all 0.3s; }
+        .whatif-card:hover { border-color: rgba(26,82,118,0.4); transform: translateY(-4px); box-shadow: 0 4px 16px rgba(26,82,118,0.08); }
+        .whatif-card.active { border-color: var(--accent); box-shadow: 0 4px 20px rgba(26,82,118,0.15); }
+        .whatif-card .card-icon { font-size: 2rem; margin-bottom: 12px; }
+        .whatif-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+        .whatif-card p { font-size: 0.8rem; color: var(--text-sec); line-height: 1.6; }
+        .whatif-card .impact { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 0.8rem; font-weight: 600; }
+        .whatif-card .impact.positive { color: var(--green); }
+        .whatif-card .impact.neutral { color: var(--amber); }
+        .whatif-card .impact.negative { color: var(--red); }
+        
+        .whatif-result { margin-top: 30px; background: rgba(26,82,118,0.04); border: 1.5px solid rgba(26,82,118,0.2); border-radius: 16px; padding: 30px; display: none; }
+        .whatif-result.visible { display: block; }
+        .whatif-result h4 { color: var(--accent); font-size: 1rem; margin-bottom: 12px; }
+        .whatif-result p { color: var(--text-sec); font-size: 0.9rem; line-height: 1.8; }
+        
+        /* KEY FINDING */
+        .finding-section { text-align: center; }
+        .finding-section h2 { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-weight: 400; margin-bottom: 30px; color: var(--text); }
+        .finding-box { max-width: 900px; margin: 0 auto; background: rgba(26,82,118,0.03); border: 2px solid rgba(26,82,118,0.15); border-radius: 20px; padding: 40px 50px; }
+        .finding-box p { font-size: 1.05rem; color: var(--text-sec); line-height: 1.9; text-align: left; }
+        .finding-box strong { color: var(--text); }
+        .finding-box .hl { color: var(--accent); font-weight: 700; }
+        
+        .footer { text-align: center; padding: 40px; font-size: 0.7rem; color: #999; border-top: 1.5px solid var(--border); margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-logo">FROM SYMPTOM TO SYSTEM</div>
+        <div class="nav-links">
+            <a onclick="scrollTo('#hero')" class="active">Profile</a>
+            <a onclick="scrollTo('#cascade')">O₂ Cascade</a>
+            <a onclick="scrollTo('#intensity')">Intensity Explorer</a>
+            <a onclick="scrollTo('#whatif')">What If?</a>
+            <a onclick="scrollTo('#finding')">Key Finding</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="section hero" id="hero">
+        <div class="hero-badge">Athlete Performance Optimization — Case Study</div>
+        <h1>From Symptom to System:<br>A Multi-Domain Physiological Investigation<br>in an Elite Middle-Distance Runner</h1>
+        <div class="hero-sub">
+            A 14-day multi-domain physiological investigation using NIRS, force plate, CO-rebreathing, GXT/TTE, and lactate profiling to map the O₂ transport cascade and identify performance limiters across the full intensity spectrum.
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat"><div class="hero-stat-value">8</div><div class="hero-stat-label">Sessions Analyzed</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">14</div><div class="hero-stat-label">Day Camp</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">6</div><div class="hero-stat-label">Intensity Zones</div></div>
+            <div class="hero-stat"><div class="hero-stat-value">2</div><div class="hero-stat-label">Legs (Bilateral)</div></div>
+        </div>
+        
+        <div class="profile-grid">
+            <div class="profile-card">
+                <h3>Athlete Profile</h3>
+                <div class="profile-row"><span class="profile-key">Athlete</span><span class="profile-val">Elite Female Middle-Distance</span></div>
+                <div class="profile-row"><span class="profile-key">Events</span><span class="profile-val">800m – 5000m</span></div>
+                <div class="profile-row"><span class="profile-key">Level</span><span class="profile-val">International / Olympic</span></div>
+            </div>
+            <div class="profile-card">
+                <h3>Testing Protocol</h3>
+                <div class="profile-row"><span class="profile-key">Duration</span><span class="profile-val">14-day embedded camp</span></div>
+                <div class="profile-row"><span class="profile-key">Sensors</span><span class="profile-val">Moxy NIRS × 2, Force Plate, K5</span></div>
+                <div class="profile-row"><span class="profile-key">Measures</span><span class="profile-val">SmO₂, tHb, HR, Lactate, SpO₂, VO₂, Hb mass (CO-Rebreathing)</span></div>
+                <div class="profile-row"><span class="profile-key">Sessions</span><span class="profile-val">Easy, Long, Threshold, Miles, Intervals, GXT/TTE</span></div>
+                <div class="profile-row"><span class="profile-key">Models</span><span class="profile-val">M' Balance</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CASCADE EXPLORER -->
+    <div class="section cascade-section" id="cascade">
+        <h2>The O₂ Transport Cascade</h2>
+        <div class="cascade-subtitle">Click each step to explore its role. Oxygen flows from atmosphere to mitochondria — where is the ceiling?</div>
+        
+        <div class="cascade-row">
+            <div class="cascade-node" onclick="selectNode(0)" id="node0">
+                <div class="node-icon">🌬️</div>
+                <div class="node-label">Atmosphere</div>
+            </div>
+            <div class="cascade-arrow">→</div>
+            <div class="cascade-node ceiling" onclick="selectNode(1)" id="node1">
+                <div class="node-icon">🫁</div>
+                <div class="node-label">Lungs</div>
+                <div class="node-status limit">EIAH</div>
+            </div>
+            <div class="cascade-arrow">→</div>
+            <div class="cascade-node ceiling" onclick="selectNode(2)" id="node2">
+                <div class="node-icon">❤️</div>
+                <div class="node-label">Heart</div>
+                <div class="node-status limit">CEILING</div>
+            </div>
+            <div class="cascade-arrow">→</div>
+            <div class="cascade-node robust" onclick="selectNode(3)" id="node3">
+                <div class="node-icon">🩸</div>
+                <div class="node-label">Hb + Flow</div>
+                <div class="node-status robust">ROBUST</div>
+            </div>
+            <div class="cascade-arrow">→</div>
+            <div class="cascade-node" onclick="selectNode(4)" id="node4">
+                <div class="node-icon">💪</div>
+                <div class="node-label">Extraction</div>
+                <div class="node-status ok">DEEP RANGE</div>
+            </div>
+            <div class="cascade-arrow">→</div>
+            <div class="cascade-node robust" onclick="selectNode(5)" id="node5">
+                <div class="node-icon">🔬</div>
+                <div class="node-label">Mitochondria</div>
+                <div class="node-status robust">ROBUST</div>
+            </div>
+            <div class="cascade-arrow">→</div>
+            <div class="cascade-node" onclick="selectNode(6)" id="node6">
+                <div class="node-icon">🏃‍♀️</div>
+                <div class="node-label">Performance</div>
+            </div>
+        </div>
+        
+        <div class="detail-panel" id="cascadeDetail">
+            <h3>Click a step in the cascade above</h3>
+            <div class="detail-subtitle">Explore how each link in the O₂ chain contributes — or limits — performance</div>
+            <p>Oxygen travels from the atmosphere through a series of steps before it can be used by the muscle to produce energy. At each step, there's a potential bottleneck. Click any step to see what we found for this athlete.</p>
+        </div>
+    </div>
+
+    <!-- INTENSITY EXPLORER -->
+    <div class="section intensity-section" id="intensity">
+        <h2>Across the Intensity Spectrum</h2>
+        <div class="intensity-subtitle">Drag the slider to see how the O₂ system responds at different effort levels</div>
+        
+        <div class="intensity-slider-container">
+            <label>Effort Intensity</label>
+            <input type="range" class="intensity-slider" id="intensitySlider" min="0" max="5" step="1" value="0" oninput="updateIntensity(this.value)">
+            <div class="intensity-label-row">
+                <div class="intensity-label-item">Easy /<br>Long Run</div>
+                <div class="intensity-label-item">Threshold<br>96% HR</div>
+                <div class="intensity-label-item">Mile Reps<br>99% HR</div>
+                <div class="intensity-label-item">600m Reps<br>92% HR</div>
+                <div class="intensity-label-item">400m / All-Out<br>86–89% HR</div>
+                <div class="intensity-label-item">GXT / TTE<br>100% HR</div>
+            </div>
+            <div class="intensity-display" id="intensityName">Easy Running</div>
+        </div>
+        
+        <div class="cascade-viz" id="cascadeViz"></div>
+        
+        <div class="intensity-finding" id="intensityFinding"></div>
+    </div>
+
+    <!-- WHAT IF -->
+    <div class="section whatif-section" id="whatif">
+        <h2>What If We Changed Something?</h2>
+        <div class="whatif-subtitle">Click a scenario to explore how it would shift the limitation profile</div>
+        
+        <div class="whatif-grid">
+            <div class="whatif-card" onclick="selectWhatIf(0)">
+                <div class="card-icon">❤️</div>
+                <h4>Increase Stroke Volume</h4>
+                <p>What if the heart pumped more blood per beat — higher cardiac output at the same heart rate?</p>
+                <div class="impact positive">↑ Highest-leverage adaptation</div>
+            </div>
+            <div class="whatif-card" onclick="selectWhatIf(1)">
+                <div class="card-icon">🏔️</div>
+                <h4>Offset EIAH via Hb Mass</h4>
+                <p>What if Hb mass increased via altitude, heat, or breath-hold training to offset EIAH?</p>
+                <div class="impact positive">↑ Offsets SpO₂ 92% nadir</div>
+            </div>
+            <div class="whatif-card" onclick="selectWhatIf(2)">
+                <div class="card-icon">🔬</div>
+                <h4>Raise LT1 / LT2</h4>
+                <p>What if aerobic capacity improved — thresholds at a higher fraction of HRmax?</p>
+                <div class="impact positive">↑ Expands sustainable range</div>
+            </div>
+            <div class="whatif-card" onclick="selectWhatIf(3)">
+                <div class="card-icon">🔥</div>
+                <h4>Warm-Up Priming</h4>
+                <p>What if a 4–5 min LT2 bout primed VO₂ kinetics before racing?</p>
+                <div class="impact positive">↑ Race-day performance</div>
+            </div>
+            <div class="whatif-card" onclick="selectWhatIf(4)">
+                <div class="card-icon">🌡️</div>
+                <h4>Heat Acclimation (5+ wks)</h4>
+                <p>What if extended heat exposure expanded plasma volume and stroke volume?</p>
+                <div class="impact positive">↑ Targets the ceiling</div>
+            </div>
+            <div class="whatif-card" onclick="selectWhatIf(5)">
+                <div class="card-icon">🦵</div>
+                <h4>Single-Leg Coordinative S&C</h4>
+                <p>What if the right-side coordination deficit was addressed through targeted exercises?</p>
+                <div class="impact positive">↑ Bilateral symmetry</div>
+            </div>
+        </div>
+        
+        <div class="whatif-result" id="whatifResult"></div>
+    </div>
+
+    <!-- KEY FINDING -->
+    <div class="section finding-section" id="finding">
+        <h2>The Key Finding</h2>
+        <div class="finding-box">
+            <p>
+                The presenting symptoms — bilateral quadriceps heaviness, progressive power loss, and post-race neurocognitive impairment — are consistent with an <span class="hl">O₂ delivery ceiling</span>: cardiac output at maximum compounded by EIAH, producing both local (muscular) and systemic (cerebral) effects at race-relevant intensities.
+            </p>
+            <p>
+                At sustained race-pace intensities, <span class="hl">cardiac output is assumed to be a primary limiter</span>. LT2 at 94% HRmax leaves minimal cardiac reserve above threshold. During mile repeats, HR reached 99% of maximum. The system has <strong>more extraction capacity than the heart can feed</strong>. EIAH (SpO₂ 92% at exhaustion) further constrains O₂ delivery — below 95%, further reductions in PaO₂ meaningfully reduce arterial O₂ content.
+            </p>
+            <p>
+                Muscle oxidative capacity is <span class="hl">robust</span>, and O₂-carrying capacity is not a bottleneck — however, O₂-carrying capacity could be augmented via suggested strategies to overcome other limitations. A right-side <span class="hl">motor coordination deficit</span> was identified — a coordination, not strength, asymmetry corroborated by bilateral NIRS and preliminary gait analysis.
+            </p>
+            <p>
+                <strong>Priority interventions:</strong> Aerobic capacity development to raise LT1/LT2, <span class="hl">stroke volume development</span> via aerobic volume and heat acclimation (5+ weeks), warm-up priming (4–5 min at LT2/LTP), reintroduction of single-leg coordinative S&C, and SpO₂ monitoring at altitude.
+            </p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        Nike Sport Research Lab · Athlete Performance Innovation · 14-Day Camp · NIRS · Force Plate · CO-Rebreathing · GXT/TTE · February 2026
+    </div>
+
+    <script>
+        // NAV
+        function scrollTo(id) {
+            document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        
+        // CASCADE DETAIL
+        const cascadeData = [
+            { title: 'Atmosphere → Inspired O₂', subtitle: 'The starting point', text: '<p>At sea level, the partial pressure of oxygen is constant (~159 mmHg). All testing was conducted at low altitude.</p><p><span class="green">Not a limiter.</span> However, given the EIAH signal at sea level (SpO₂ 92%), the effect will compound at altitude. Racing or training at elevation should account for additional reduction in arterial O₂ content.</p>' },
+            { title: 'Lungs → EIAH Confirmed', subtitle: 'Arterial O₂ loading incomplete at maximal effort', text: '<p>During the time-to-exhaustion test at 20.4 kph, SpO₂ dropped from 98% to <span class="highlight">92% at exhaustion</span> — a 6-percentage-point decline consistent with <strong>exercise-induced arterial hypoxemia (EIAH)</strong>. VE peaked at 132 L/min with Rf at 62 breaths/min.</p><p>EIAH is a recognized phenomenon during severe intensity/maximal efforts — precisely the race window duration (~4 minutes) relevant to this athlete\'s competitive events. Below ~95% SpO₂, further reductions in PaO₂ meaningfully reduce arterial O₂ content — even with robust cardiac output and hemoglobin mass.</p><p>Women have narrower airways and higher work of breathing at equivalent ventilatory rates, which may contribute to EIAH severity. <span class="highlight">Spirometry follow-up is pending.</span></p>' },
+            { title: 'Heart → Cardiac Output', subtitle: 'Assumed primary ceiling at race-relevant intensities', text: '<p>Cardiac output is the product of heart rate and stroke volume. LT2 occurred at <span class="highlight">94% HRmax (177 bpm)</span>, leaving minimal cardiac reserve above threshold. During mile repeats, HR reached <span class="highlight">99% of maximum (194 bpm)</span>.</p><p>This narrow headroom between LT2 and HRmax constrains the range of sustainable intensities above threshold. The only mechanism to raise cardiac output further is to <span class="highlight">increase stroke volume</span>.</p><p>This is <span class="highlight">assumed to be the primary ceiling at sustained race-relevant intensities</span>.</p>' },
+            { title: 'Hemoglobin Mass + Blood Flow → O₂ Carrying & Delivery', subtitle: 'Robust — not a bottleneck', text: '<p>Hb mass was measured at <span class="green">747 g (13.2 g/kg)</span> via CO-rebreathing — <span class="green">+33% above sex-adjusted reference</span>. Blood volume 5.42 L (+22%), RBC volume +32%.</p><p>tHb (via NIRS) showed responsive vasodilation during exercise. The right RF demonstrated stronger tHb vasodilation than the left across sessions.</p><p>O₂-carrying capacity is <span class="green">not a bottleneck</span> — however, O₂-carrying capacity could be augmented via suggested strategies to overcome other limitations. Heat acclimation (5+ weeks), altitude training, or breath-hold/respiratory training could further augment Hb mass and partially offset the EIAH-related reduction in arterial O₂ content.</p>' },
+            { title: 'Muscle O₂ Extraction → SmO₂', subtitle: 'Deep extraction range — not the limiter', text: '<p>Bilateral NIRS across 8 sessions mapped SmO₂ from easy running through maximal effort. Extraction range reaches <span class="green">5–13% at maximal effort</span> (from starting values of 65–82%).</p><p>At threshold, SmO₂ held steady with drift of only −0.1 to −0.3 %/min — supply ≈ demand. During mile reps, deep progressive desaturation from 75% → 14%. The system has <strong>more extraction capacity than the heart can feed</strong>.</p><p>Bilateral asymmetry: the left RF consistently showed greater extraction range than the right (Day 2: Δ11.4%; Day 4: Δ11%; Day 7: Δ8.6%), corroborated by force plate findings.</p>' },
+            { title: 'Mitochondria → Oxidative Capacity', subtitle: 'Robust — keeping pace with demand', text: '<p>SmO₂ stability at threshold confirms the oxidative machinery sustains metabolic load aerobically — supply meets demand without progressive desaturation.</p><p>M\' values: <strong>70% (Right RF)</strong> and <strong>84% (Left RF)</strong>, with the left leg possessing a ~19% larger metabolic reserve. Observed rep durations aligned closely with M\' balance model predictions across all intensities.</p><p>The system reaches its limit not because of oxidative capacity, but because <span class="highlight">cardiac output is assumed to be unable to deliver more</span>.</p>' },
+            { title: 'Performance → Where the Cascade Breaks', subtitle: 'Limiter shifts with intensity', text: '<p>Where the cascade "breaks" determines what limits performance:</p><p>• <strong>Easy / Long Run:</strong> <span class="green">No limiter</span> — SmO₂ trends positive, supply exceeds demand<br>• <strong>Threshold:</strong> <span class="green">Equilibrium</span> — supply ≈ demand at 96% HRmax<br>• <strong>Mile Reps:</strong> <span class="highlight">Cardiac output ceiling</span> — 99% HRmax, deep desaturation<br>• <strong>600m Reps:</strong> <span class="highlight">Approaching ceiling</span> — SmO₂ to 15%, 92% HRmax<br>• <strong>400m Reps:</strong> <span class="highlight">Peripheral limitation</span> — intramuscular pressure exceeds perfusion<br>• <strong>All-Out Sprints:</strong> <span class="highlight">Neuromuscular power</span> — HR has headroom (86% max)<br>• <strong>GXT/TTE:</strong> <span class="highlight">Cardiac + EIAH</span> — SpO₂ 92%, progressive desaturation</p>' }
+        ];
+        
+        function selectNode(idx) {
+            document.querySelectorAll('.cascade-node').forEach(n => n.classList.remove('selected'));
+            document.getElementById('node' + idx).classList.add('selected');
+            const d = cascadeData[idx];
+            document.getElementById('cascadeDetail').innerHTML = '<h3>' + d.title + '</h3><div class="detail-subtitle">' + d.subtitle + '</div>' + d.text;
+        }
+        
+        // INTENSITY EXPLORER
+        const intensityData = [
+            {
+                name: 'Easy / Long Run (71% HRmax)',
+                color: '#4ade80',
+                cards: [
+                    { icon: '❤️', name: 'Heart', metric: '~71%', metricClass: 'green', detail: '~140 bpm', state: 'ok' },
+                    { icon: '🩸', name: 'Blood Flow', metric: '↑', metricClass: 'green', detail: 'Vasodilating', state: 'ok' },
+                    { icon: '💪', name: 'Extraction', metric: '+trend', metricClass: 'green', detail: 'SmO₂ 65→82%', state: 'ok' },
+                    { icon: '🔬', name: 'Mito', metric: '✓', metricClass: 'green', detail: 'Within capacity', state: 'ok' },
+                    { icon: '⚡', name: 'Neuro', metric: '—', metricClass: 'green', detail: 'Low demand', state: 'ok' }
+                ],
+                finding: 'All systems below capacity. SmO₂ <strong>trends positive</strong> (+0.25 %/min on easy runs; 67→80% R / 64→83% L over 86-min long run). M\' utilization 29–40%. Supply comfortably exceeds demand.',
+                limiter: 'No limiter', limiterClass: 'none'
+            },
+            {
+                name: 'Threshold (96% HRmax)',
+                color: '#a855f7',
+                cards: [
+                    { icon: '❤️', name: 'Heart', metric: '96%', metricClass: 'yellow', detail: '188 bpm', state: 'stressed' },
+                    { icon: '🩸', name: 'Blood Flow', metric: '↑↑', metricClass: 'green', detail: 'Responsive', state: 'ok' },
+                    { icon: '💪', name: 'Extraction', metric: 'Steady', metricClass: 'green', detail: 'Drift −0.1–0.3%/min', state: 'ok' },
+                    { icon: '🔬', name: 'Mito', metric: '✓', metricClass: 'green', detail: 'Stable at threshold', state: 'ok' },
+                    { icon: '⚡', name: 'Neuro', metric: '—', metricClass: 'green', detail: 'Sustainable', state: 'ok' }
+                ],
+                finding: 'SmO₂ holds near-steady — <strong>supply ≈ demand</strong>. This is the critical rate boundary. HR at 188 bpm (96% max) places this at the cardiac ceiling. LT2 at 18.0 kph / 94% HRmax leaves narrow headroom.',
+                limiter: 'Cardiac ceiling approached', limiterClass: 'cardiac'
+            },
+            {
+                name: 'Mile Repeats (99% HRmax)',
+                color: '#ef4444',
+                cards: [
+                    { icon: '❤️', name: 'Heart', metric: '99%', metricClass: 'red', detail: '194 bpm', state: 'ceiling' },
+                    { icon: '🩸', name: 'Blood Flow', metric: '↑→', metricClass: 'yellow', detail: 'Compensating', state: 'stressed' },
+                    { icon: '💪', name: 'Extraction', metric: '75→14%', metricClass: 'red', detail: '−10 to −15 %/min', state: 'ceiling' },
+                    { icon: '🔬', name: 'Mito', metric: '✓', metricClass: 'green', detail: 'Processing', state: 'ok' },
+                    { icon: '⚡', name: 'Neuro', metric: '—', metricClass: 'green', detail: 'Sustained', state: 'ok' }
+                ],
+                finding: 'Cardiac output at ceiling — <strong>assumed to be the primary limiter</strong>. SmO₂ drops from 72→16% (R) / 78→12% (L). Desaturation rates −10 to −15 %/min. M\' balance model predicted TTE of 4:36–5:24 per rep — consistent with observed durations. Performance limited by O₂ supply, not extraction.',
+                limiter: 'Cardiac output ceiling', limiterClass: 'cardiac'
+            },
+            {
+                name: '600m Repeats (92% HRmax)',
+                color: '#f97316',
+                cards: [
+                    { icon: '❤️', name: 'Heart', metric: '92%', metricClass: 'yellow', detail: '181 bpm', state: 'stressed' },
+                    { icon: '🩸', name: 'Blood Flow', metric: '↑', metricClass: 'green', detail: 'Responsive', state: 'ok' },
+                    { icon: '💪', name: 'Extraction', metric: '62→15%', metricClass: 'red', detail: 'Deep desat', state: 'ceiling' },
+                    { icon: '🔬', name: 'Mito', metric: '✓', metricClass: 'green', detail: 'Processing', state: 'ok' },
+                    { icon: '⚡', name: 'Neuro', metric: '—', metricClass: 'green', detail: 'Sustained', state: 'ok' }
+                ],
+                finding: 'SmO₂ drops to ~15% (bilateral avg) across first 4 reps. HR approaches but doesn\'t reach ceiling (92% max). <strong>Approaching the cardiac output ceiling</strong> — deep extraction compensates for constrained delivery. Bilateral asymmetry: R 48→15% vs L 75→13%.',
+                limiter: 'Approaching ceiling', limiterClass: 'cardiac'
+            },
+            {
+                name: '400m Reps / All-Out (86–89% HRmax)',
+                color: '#fbbf24',
+                cards: [
+                    { icon: '❤️', name: 'Heart', metric: '86–89%', metricClass: 'green', detail: 'Headroom', state: 'ok' },
+                    { icon: '🩸', name: 'Blood Flow', metric: '↓', metricClass: 'red', detail: 'tHb dropping', state: 'ceiling' },
+                    { icon: '💪', name: 'Extraction', metric: 'Rapid', metricClass: 'yellow', detail: '60→16% (400m)', state: 'stressed' },
+                    { icon: '🔬', name: 'Mito', metric: '—', metricClass: 'green', detail: 'Short duration', state: 'na' },
+                    { icon: '⚡', name: 'Neuro', metric: 'MAX', metricClass: 'red', detail: 'LIMITER', state: 'ceiling' }
+                ],
+                finding: '400m: tHb slopes turned negative (reps 2–4) — <strong>intramuscular pressure exceeded perfusion</strong>. Primary limiter shifts to peripheral. All-out sprints: HR only 169 bpm (86% max) — effort ends before cardiovascular system is fully taxed. <strong>Neuromuscular power</strong> is the constraint.',
+                limiter: 'Peripheral / neuromuscular', limiterClass: 'neuro'
+            },
+            {
+                name: 'GXT / TTE (100% HRmax)',
+                color: '#dc2626',
+                cards: [
+                    { icon: '❤️', name: 'Heart', metric: '100%', metricClass: 'red', detail: '189 bpm', state: 'ceiling' },
+                    { icon: '🫁', name: 'Lungs', metric: 'SpO₂ 92%', metricClass: 'red', detail: 'EIAH confirmed', state: 'ceiling' },
+                    { icon: '💪', name: 'Extraction', metric: 'Max', metricClass: 'red', detail: 'Progressive desat', state: 'ceiling' },
+                    { icon: '🔬', name: 'Mito', metric: '63', metricClass: 'green', detail: 'mL/kg/min VO₂', state: 'ok' },
+                    { icon: '⚡', name: 'Neuro', metric: '—', metricClass: 'green', detail: 'Sustained pace', state: 'ok' }
+                ],
+                finding: 'VO₂ peak 63 mL/kg/min. SpO₂ dropped to <strong>92% at exhaustion</strong> (−6 pts) confirming EIAH. VE peaked at 132 L/min, Rf 62 b/min. <strong>Cardiac output + EIAH</strong> together constrain O₂ delivery at maximal effort — the presenting symptoms are explained.',
+                limiter: 'Cardiac + EIAH', limiterClass: 'cardiac'
+            }
+        ];
+        
+        function updateIntensity(val) {
+            const d = intensityData[val];
+            document.getElementById('intensityName').textContent = d.name;
+            document.getElementById('intensityName').style.color = d.color;
+            
+            document.getElementById('intensitySlider').style.background = `linear-gradient(90deg, #4ade80 0%, #a855f7 20%, #ef4444 40%, #f97316 60%, #fbbf24 80%, #dc2626 100%)`;
+            
+            // Cards
+            let html = '';
+            d.cards.forEach(c => {
+                html += `<div class="viz-card ${c.state}">
+                    <div class="viz-icon">${c.icon}</div>
+                    <div class="viz-name">${c.name}</div>
+                    <div class="viz-metric ${c.metricClass}">${c.metric}</div>
+                    <div class="viz-detail">${c.detail}</div>
+                </div>`;
+            });
+            document.getElementById('cascadeViz').innerHTML = html;
+            
+            // Finding
+            document.getElementById('intensityFinding').innerHTML = `
+                <h4>What's happening? <span class="limiter-tag ${d.limiterClass}">${d.limiter}</span></h4>
+                <p>${d.finding}</p>
+            `;
+        }
+        
+        // WHAT IF
+        const whatIfData = [
+            { title: '↑ Stroke Volume → More O₂ Delivered Per Beat', text: '<p>Increasing stroke volume is the <strong>highest-leverage adaptation</strong> for this athlete. With more blood pumped per beat, cardiac output increases without requiring a higher heart rate.</p><p><strong>The effect:</strong> At the same HR, more O₂ reaches the muscles. The current threshold speed becomes sub-threshold. The critical rate boundary shifts higher — meaning faster sustainable paces.</p><p><strong>How:</strong> Aerobic volume and sustained moderate-intensity work drive eccentric cardiac hypertrophy. This is the most direct lever to raise the cardiac output ceiling without further increasing HR.</p>' },
+            { title: '↑ Hb Mass + Offset EIAH', text: '<p>Given the confirmed EIAH (SpO₂ 92% at exhaustion), augmenting Hb mass could partially offset the reduction in arterial O₂ content. Three strategies can address this:</p><p><strong>(1) Altitude training:</strong> Hypoxic exposure stimulates erythropoiesis, increasing Hb mass and O₂-carrying capacity. Particularly important given that EIAH will compound at elevation.</p><p><strong>(2) Heat training:</strong> Extended heat acclimation (5+ weeks) drives plasma volume expansion and may further augment total hemoglobin.</p><p><strong>(3) Breath-hold / respiratory training:</strong> Apneic and hypercapnic training may improve tolerance to desaturation, ventilatory efficiency, and splenic contraction — a complementary strategy to offset EIAH effects.</p><p><strong>Caution:</strong> SpO₂ monitoring during altitude camps is essential. Racing or training at elevation should account for additional reduction in arterial O₂ content.</p>' },
+            { title: '↑ Aerobic Capacity → Raise LT1/LT2', text: '<p>LT1 at 84% HRmax and LT2 at 94% HRmax suggest room for aerobic base development. The relatively low speed at LT1 relative to race pace indicates a <strong>lower aerobic contribution than expected</strong>.</p><p><strong>The effect:</strong> Raising the lactate thresholds as a fraction of VO₂max/HRmax expands the sustainable intensity range and reduces reliance on anaerobic capacity at race-relevant speeds.</p><p><strong>How:</strong> Increased emphasis on sustained moderate-intensity work and aerobic volume.</p>' },
+            { title: '🔥 Warm-Up Priming → Accelerate VO₂ Kinetics', text: '<p>The current warm-up ends ~20 min before race start due to call room timing. NIRS confirmed the drill sequence elevates SmO₂ and muscle activation — but this priming may decay during the holding period.</p><p><strong>Recommendation:</strong> Incorporate an aerobic priming bout — <strong>4–5 minutes near LT2/LTP pace</strong> — to activate the VO₂ response, increase critical speed, and prime the metabolic pathways required during racing.</p><p><strong>Call room strategies:</strong> Breath-hold maneuvers (potential pre-race O₂ boost), isometric activation (calf raises, quad contractions), mental rehearsal to sustain readiness through the 20-min holding period.</p>' },
+            { title: '🌡️ Heat Acclimation (5+ weeks)', text: '<p>Heat stress drives plasma volume expansion and cardiovascular adaptations that increase stroke volume — <strong>directly targeting the identified limiter</strong>.</p><p><strong>The effect:</strong> Greater stroke volume → higher cardiac output at the same HR → more O₂ delivered → higher sustainable speed. Extended heat acclimation (5+ weeks) or altitude training may further augment Hb mass and O₂-carrying capacity, partially offsetting EIAH.</p><p>This targets both the cardiac output ceiling and the EIAH simultaneously — plasma volume expansion improves cardiac filling while additional Hb compensates for incomplete arterial O₂ loading.</p>' },
+            { title: '🦵 Single-Leg Coordinative S&C', text: '<p>Force plate assessment revealed a <strong>coordination, not strength, asymmetry</strong> — the right leg degrades under cueing demands and requires more repetitions to organize movement patterns. CMJ asymmetry flipped from 5.9% R-dominant (uncued) to 16.0% L-dominant (cued).</p><p><strong>How:</strong> Reintroduce complex single-leg coordinative and speed exercises — banded box drives, tall-to-short transitions with concentric hop. These had dropped from the athlete\'s self-managed routine.</p><p>Emphasis on amortization phase efficiency and novel motor programming challenges. Corroborated by bilateral NIRS asymmetries and preliminary gait analysis.</p>' }
+        ];
+        
+        function selectWhatIf(idx) {
+            document.querySelectorAll('.whatif-card').forEach(c => c.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            const d = whatIfData[idx];
+            const el = document.getElementById('whatifResult');
+            el.innerHTML = '<h4>' + d.title + '</h4>' + d.text;
+            el.classList.add('visible');
+        }
+        
+        // Init
+        updateIntensity(0);
+        document.getElementById('intensitySlider').style.background = 'linear-gradient(90deg, #4ade80 0%, #a855f7 20%, #ef4444 40%, #f97316 60%, #fbbf24 80%, #dc2626 100%)';
+    </script>
+</body>
+</html>
