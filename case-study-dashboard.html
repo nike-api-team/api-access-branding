@@ -259,10 +259,10 @@
                 <div class="node-label">Atmosphere</div>
             </div>
             <div class="cascade-arrow">→</div>
-            <div class="cascade-node ceiling" onclick="selectNode(1)" id="node1">
+            <div class="cascade-node robust" onclick="selectNode(1)" id="node1">
                 <div class="node-icon">🫁</div>
                 <div class="node-label">Lungs</div>
-                <div class="node-status limit">EIAH</div>
+                <div class="node-status robust">SUPER</div>
             </div>
             <div class="cascade-arrow">→</div>
             <div class="cascade-node ceiling" onclick="selectNode(2)" id="node2">
@@ -378,22 +378,25 @@
         <h2>The Key Finding</h2>
         <div class="finding-box">
             <p>
-                The presenting symptoms — bilateral quadriceps heaviness, progressive power loss, and post-race neurocognitive impairment — are consistent with an <span class="hl">O₂ delivery ceiling</span>: cardiac output at maximum compounded by EIAH, producing both local (muscular) and systemic (cerebral) effects at race-relevant intensities.
+                The presenting symptoms — bilateral quadriceps heaviness, progressive power loss, and post-race neurocognitive impairment — are consistent with an <span class="hl">O₂ delivery ceiling</span>: cardiac output of fully oxygenated blood at maximum, compounded by EIAH, producing both local (muscular) and systemic (cerebral) effects at race-relevant intensities.
             </p>
             <p>
-                At sustained race-pace intensities, <span class="hl">cardiac output is assumed to be a primary limiter</span>. LT2 at 94% HRmax leaves minimal cardiac reserve above threshold. During mile repeats, HR reached 99% of maximum. The system has <strong>more extraction capacity than the heart can feed</strong>. EIAH (SpO₂ 92% at exhaustion) further constrains O₂ delivery — below 95%, further reductions in PaO₂ meaningfully reduce arterial O₂ content.
+                Post-visit spirometry at the University of Newcastle confirmed <span class="hl">supernormal lung function</span> — FEV1 129% predicted, FVC 118%, MVV 147 L/min, and supernormal respiratory muscle strength. <strong>The lungs are not the limiter.</strong> EIAH (SpO₂ 92% at exhaustion) still occurs despite robust lungs — a transit-time phenomenon at high cardiac output that further constrains O₂ delivery.
+            </p>
+            <p>
+                At sustained race-pace intensities, <span class="hl">cardiac output is the primary ceiling</span>. LT2 at 94% HRmax leaves minimal cardiac reserve above threshold. During mile repeats, HR reached 99% of maximum. The system has <strong>more extraction capacity than the heart can feed</strong>.
             </p>
             <p>
                 Muscle oxidative capacity is <span class="hl">robust</span>, and O₂-carrying capacity is not a bottleneck — however, O₂-carrying capacity could be augmented via suggested strategies to overcome other limitations. A right-side <span class="hl">motor coordination deficit</span> was identified — a coordination, not strength, asymmetry corroborated by bilateral NIRS and preliminary gait analysis.
             </p>
             <p>
-                <strong>Priority interventions:</strong> Aerobic capacity development to raise LT1/LT2, <span class="hl">stroke volume development</span> via aerobic volume and heat acclimation (5+ weeks), warm-up priming (4–5 min at LT2/LTP), reintroduction of single-leg coordinative S&C, and SpO₂ monitoring at altitude.
+                <strong>Priority interventions:</strong> Aerobic capacity development to raise LT1/LT2, <span class="hl">stroke volume development</span> via aerobic volume and heat acclimation (5+ weeks), warm-up priming (4–5 min at LT2/LTP), reintroduction of single-leg coordinative S&C, respiratory muscle training, operating lung volume assessment, FiO₂ time trial, and SpO₂ monitoring at altitude.
             </p>
         </div>
     </div>
     
     <div class="footer">
-        Nike Sport Research Lab · Athlete Performance Innovation · 14-Day Camp · NIRS · Force Plate · CO-Rebreathing · GXT/TTE · February 2026
+        Nike Sport Research Lab · Athlete Performance Innovation · In collaboration with University of Newcastle · 14-Day Camp · NIRS · Force Plate · CO-Rebreathing · GXT/TTE · Spirometry · February–March 2026
     </div>
 
     <script>
@@ -407,7 +410,7 @@
         // CASCADE DETAIL
         const cascadeData = [
             { title: 'Atmosphere → Inspired O₂', subtitle: 'The starting point', text: '<p>At sea level, the partial pressure of oxygen is constant (~159 mmHg). All testing was conducted at low altitude.</p><p><span class="green">Not a limiter.</span> However, given the EIAH signal at sea level (SpO₂ 92%), the effect will compound at altitude. Racing or training at elevation should account for additional reduction in arterial O₂ content.</p>' },
-            { title: 'Lungs → EIAH Confirmed', subtitle: 'Arterial O₂ loading incomplete at maximal effort', text: '<p>During the time-to-exhaustion test at 20.4 kph, SpO₂ dropped from 98% to <span class="highlight">92% at exhaustion</span> — a 6-percentage-point decline consistent with <strong>exercise-induced arterial hypoxemia (EIAH)</strong>. VE peaked at 132 L/min with Rf at 62 breaths/min.</p><p>EIAH is a recognized phenomenon during severe intensity/maximal efforts — precisely the race window duration (~4 minutes) relevant to this athlete\'s competitive events. Below ~95% SpO₂, further reductions in PaO₂ meaningfully reduce arterial O₂ content — even with robust cardiac output and hemoglobin mass.</p><p>Women have narrower airways and higher work of breathing at equivalent ventilatory rates, which may contribute to EIAH severity. <span class="highlight">Spirometry follow-up is pending.</span></p>' },
+            { title: 'Lungs → Supernormal Function, EIAH Still Present', subtitle: 'Lung capacity and strength are not the limiter', text: '<p>Post-visit spirometry at the University of Newcastle confirmed <span class="green">supernormal lung function</span> across all measures: FEV1 <strong>129% predicted</strong>, FVC <strong>118% predicted</strong>, MVV <strong>147 L/min</strong>, DLCO <strong>110% predicted</strong>, TLC <strong>109% predicted</strong>, and <span class="green">supernormal inspiratory muscle strength (MIPs)</span>.</p><p>Despite this, EIAH was observed: SpO₂ dropped from 98% to <span class="highlight">92% at exhaustion</span> — a 6-percentage-point decline. VE peaked at 132 L/min with Rf at 62 breaths/min. The lungs themselves are robust — EIAH is likely driven by pulmonary transit-time limitation at very high cardiac outputs, not a structural respiratory deficiency.</p><p>Further investigation via the Newcastle collaboration includes assessment of operating lung volumes during exercise and a FiO₂ time trial to directly test the EIAH contribution.</p>' },
             { title: 'Heart → Cardiac Output', subtitle: 'Assumed primary ceiling at race-relevant intensities', text: '<p>Cardiac output is the product of heart rate and stroke volume. LT2 occurred at <span class="highlight">94% HRmax (177 bpm)</span>, leaving minimal cardiac reserve above threshold. During mile repeats, HR reached <span class="highlight">99% of maximum (194 bpm)</span>.</p><p>This narrow headroom between LT2 and HRmax constrains the range of sustainable intensities above threshold. The only mechanism to raise cardiac output further is to <span class="highlight">increase stroke volume</span>.</p><p>This is <span class="highlight">assumed to be the primary ceiling at sustained race-relevant intensities</span>.</p>' },
             { title: 'Hemoglobin Mass + Blood Flow → O₂ Carrying & Delivery', subtitle: 'Robust — not a bottleneck', text: '<p>Hb mass was measured at <span class="green">747 g (13.2 g/kg)</span> via CO-rebreathing — <span class="green">+33% above sex-adjusted reference</span>. Blood volume 5.42 L (+22%), RBC volume +32%.</p><p>tHb (via NIRS) showed responsive vasodilation during exercise. The right RF demonstrated stronger tHb vasodilation than the left across sessions.</p><p>O₂-carrying capacity is <span class="green">not a bottleneck</span> — however, O₂-carrying capacity could be augmented via suggested strategies to overcome other limitations. Heat acclimation (5+ weeks), altitude training, or breath-hold/respiratory training could further augment Hb mass and partially offset the EIAH-related reduction in arterial O₂ content.</p>' },
             { title: 'Muscle O₂ Extraction → SmO₂', subtitle: 'Deep extraction range — not the limiter', text: '<p>Bilateral NIRS across 8 sessions mapped SmO₂ from easy running through maximal effort. Extraction range reaches <span class="green">5–13% at maximal effort</span> (from starting values of 65–82%).</p><p>At threshold, SmO₂ held steady with drift of only −0.1 to −0.3 %/min — supply ≈ demand. During mile reps, deep progressive desaturation from 75% → 14%. The system has <strong>more extraction capacity than the heart can feed</strong>.</p><p>Bilateral asymmetry: the left RF consistently showed greater extraction range than the right (Day 2: Δ11.4%; Day 4: Δ11%; Day 7: Δ8.6%), corroborated by force plate findings.</p>' },
