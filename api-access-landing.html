@@ -1021,11 +1021,13 @@
 function handleNewsletterSubmit(formEl, successEl) {
   formEl.addEventListener('submit', function(e) {
     e.preventDefault();
-    var data = new FormData(formEl);
-    fetch('/', {
+    var email = formEl.querySelector('input[type="email"]').value;
+
+    // Send to beehiiv via Netlify Function bridge
+    fetch('/.netlify/functions/newsletter-signup', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(data).toString()
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
     }).then(function() {
       formEl.classList.add('hidden');
       successEl.classList.add('visible');
@@ -1033,6 +1035,14 @@ function handleNewsletterSubmit(formEl, successEl) {
       formEl.classList.add('hidden');
       successEl.classList.add('visible');
     });
+
+    // Also submit to Netlify Forms as backup
+    var data = new FormData(formEl);
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString()
+    }).catch(function() {});
   });
 }
 
