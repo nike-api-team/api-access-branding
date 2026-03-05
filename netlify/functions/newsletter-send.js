@@ -120,6 +120,16 @@ exports.handler = async (event) => {
 
   try {
     const { featured, others } = await getLatestStory();
+
+    const storyDate = new Date(featured.date);
+    const now = new Date();
+    const daysSincePublish = (now - storyDate) / (1000 * 60 * 60 * 24);
+
+    if (daysSincePublish > 10) {
+      console.log(`Newest story "${featured.title}" is ${Math.floor(daysSincePublish)} days old — no new content, skipping send`);
+      return { statusCode: 200, body: 'No new content to send' };
+    }
+
     const contacts = await getContacts(RESEND_API_KEY, RESEND_AUDIENCE_ID);
 
     if (contacts.length === 0) {
