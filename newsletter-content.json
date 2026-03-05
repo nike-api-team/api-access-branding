@@ -1,6 +1,15 @@
 {
   "stories": [
     {
+      "title": "Don't just sit there at halftime: a 3-minute re-warm-up changes the second half",
+      "teaser": "22 professional women's soccer players. Randomized controlled trial. A brief protocol combining FIFA 11+ exercises and a small-sided game improved sprint performance and attenuated jump decline compared to passive rest.",
+      "url": "https://api-access.netlify.app/api-access-abreu-rewarmup.html",
+      "date": "2026-02-27",
+      "category": "Publication",
+      "image": null,
+      "source": "Abreu et al. — Int J Sports Physiol Perform, 2026"
+    },
+    {
       "title": "ACG Team Camp: Palm Springs",
       "teaser": "25+ professional trail runners from around the world. Five days in the Palm Springs desert. Four research studies, fireside seminars, and product sessions — where science met the mountain.",
       "url": "https://api-access.netlify.app/api-access-acg-camp.html",

@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Half-Time Re-Warm-Up in Women's Soccer</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --red: #e63946;
+      --green: #22c55e;
+      --soccer: #22c55e;
+      --soccer-light: #6ee7a0;
+      --soccer-glow: rgba(34, 197, 94, 0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Branded Header ── */
+    .brand-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.9);
+    }
+
+    .brand-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: baseline;
+      user-select: none;
+    }
+
+    .brand-logo .api {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .brand-logo .access {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .brand-edition {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .edition-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .edition-sub {
+      font-size: 9px;
+      color: var(--soccer);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .edition-date {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .brand-intro {
+      padding: 32px 0 0;
+      text-align: center;
+    }
+
+    .brand-intro .from-line {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .brand-intro .team-name {
+      font-size: 14px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .brand-intro .edition-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--soccer);
+      margin: 0 auto;
+    }
+
+    /* ── Content Sections ── */
+    section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 48px 0;
+    }
+
+    .hero-headline {
+      font-size: 40px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--soccer) 0%, var(--soccer-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .hero-sub {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.3;
+      max-width: 380px;
+    }
+
+    .hero-detail {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 360px;
+      line-height: 1.7;
+    }
+
+    .hero-paper-title {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: 24px;
+      max-width: 360px;
+      line-height: 1.5;
+      opacity: 0.7;
+    }
+
+    .scroll-hint {
+      margin-top: 48px;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--soccer);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    /* ── Why This Matters ── */
+    .matters-text {
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .matters-text em {
+      color: var(--soccer-light);
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    /* ── Stats ── */
+    .stat-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--soccer);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-number .unit {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--soccer-light);
+      margin-bottom: 6px;
+    }
+
+    .stat-explain {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Stat comparison row ── */
+    .stat-compare {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .compare-card {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 12px;
+      text-align: center;
+    }
+
+    .compare-card.highlight {
+      border-color: var(--soccer);
+      background: linear-gradient(180deg, rgba(34,197,94,0.08) 0%, var(--surface) 100%);
+    }
+
+    .compare-group {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .compare-card:not(.highlight) .compare-group { color: var(--muted); }
+    .compare-card.highlight .compare-group { color: var(--soccer); }
+
+    .compare-value {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .compare-card:not(.highlight) .compare-value { color: var(--muted); }
+    .compare-card.highlight .compare-value { color: var(--soccer); }
+
+    .compare-unit {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .compare-desc {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4;
+      opacity: 0.8;
+    }
+
+    /* ── Protocol visualization ── */
+    .protocol-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .protocol-header {
+      background: linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(34,197,94,0.05) 100%);
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .protocol-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--soccer);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .protocol-header-text h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .protocol-header-text span {
+      font-size: 11px;
+      color: var(--soccer-light);
+      font-weight: 600;
+    }
+
+    .protocol-body {
+      padding: 20px;
+    }
+
+    .protocol-phase {
+      margin-bottom: 20px;
+    }
+    .protocol-phase:last-child { margin-bottom: 0; }
+
+    .phase-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--soccer);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .phase-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .exercise-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .exercise-chip {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .exercise-chip .ex-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .ssg-card {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ssg-card .ssg-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .ssg-card .ssg-text {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .ssg-card .ssg-text strong {
+      color: var(--soccer-light);
+    }
+
+    /* ── Callout cards ── */
+    .callout-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .callout {
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .callout h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-light);
+      margin-bottom: 4px;
+    }
+
+    .callout p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .callout.red { border-left-color: var(--red); }
+    .callout.red h3 { color: #ff8fa3; }
+    .callout.green { border-left-color: var(--soccer); }
+    .callout.green h3 { color: var(--soccer-light); }
+
+    .divider {
+      width: 40px;
+      height: 3px;
+      background: var(--soccer);
+      border-radius: 2px;
+      margin: 24px 0;
+    }
+
+    /* ── Temperature strip ── */
+    .temp-strip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .temp-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--soccer) 50%, var(--red) 100%);
+      margin: 16px 0 12px;
+      position: relative;
+    }
+
+    .temp-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .temp-fact {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+      margin-top: 16px;
+    }
+
+    .temp-fact strong {
+      color: var(--soccer-light);
+    }
+
+    /* ── Study design cards ── */
+    .design-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .design-card {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 12px;
+      text-align: center;
+    }
+
+    .design-card .dc-num {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--soccer);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .design-card .dc-label {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    /* ── Takeaway / Close ── */
+    .close-section {
+      text-align: center;
+      padding: 80px 0;
+    }
+
+    .close-statement {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, var(--soccer), var(--soccer-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .close-body {
+      font-size: 15px;
+      color: #c8c8e0;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+
+    /* ── CTA Button ── */
+    .paper-cta {
+      display: inline-block;
+      padding: 14px 36px;
+      border: 2px solid var(--soccer);
+      border-radius: 8px;
+      color: var(--soccer);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+    .paper-cta:hover {
+      background: var(--soccer);
+      color: #fff;
+    }
+
+    /* ── Citation Block ── */
+    .citation-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 24px;
+    }
+
+    .citation-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--soccer);
+      margin-bottom: 8px;
+    }
+
+    .citation-text {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* ── Branded Footer ── */
+    .brand-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+
+    .footer-inner {
+      text-align: center;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: baseline;
+      margin-bottom: 16px;
+      user-select: none;
+    }
+
+    .footer-logo .api {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .footer-logo .access {
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .footer-team {
+      font-size: 13px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 360px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    .footer-cta {
+      display: inline-block;
+      padding: 12px 32px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    .footer-cta:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .footer-fine {
+      margin-top: 32px;
+      font-size: 11px;
+      color: #555;
+    }
+
+    /* ── Injury context card ── */
+    .context-card {
+      background: linear-gradient(135deg, rgba(230,57,70,0.1) 0%, var(--surface) 100%);
+      border: 1px solid rgba(230,57,70,0.25);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .context-card .ctx-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .context-card .ctx-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ff8fa3;
+      margin-bottom: 6px;
+    }
+
+    .context-card .ctx-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Effect-size badge ── */
+    .effect-badge {
+      display: inline-block;
+      background: rgba(34,197,94,0.15);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--soccer-light);
+      letter-spacing: 1px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ BRANDED HEADER ═══ -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo" style="text-decoration:none;">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Beyond Our Walls</span>
+        <span class="edition-sub">Women's Soccer · Half-Time Performance</span>
+        <span class="edition-date">March 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">From</div>
+      <div class="team-name">Applied Performance Innovation</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="hero-headline">Don't just sit there at halftime.</div>
+      <p class="hero-sub">A 3-minute priming protocol changes how professional women's soccer players start the second half.</p>
+      <p class="hero-detail">22 professional female players. Randomized controlled trial. Sprint and jump testing before and after halftime. Three minutes of targeted movement was enough to prime the neuromuscular system — and the data showed it.</p>
+      <p class="hero-paper-title">Abreu et al. (2026) — International Journal of Sports Physiology and Performance</p>
+      <div class="scroll-hint">Scroll &#8595;</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE QUESTION ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The question</div>
+      <h2 class="section-title">What happens to performance during halftime — and can you fight it?</h2>
+
+      <p class="matters-text">
+        Halftime is a <em>performance cliff</em>. Players sit for 15 minutes, muscle temperature drops 1.5–2.0°C, and the neuromuscular system downshifts. When the whistle blows for the second half, athletes are asked to produce maximal efforts with a body that has already started cooling down.
+      </p>
+      <p class="matters-text">
+        This study asked a simple question: can a <em>brief, structured re-warm-up</em> during halftime reverse that decline — specifically in professional women's soccer?
+      </p>
+
+      <div class="temp-strip">
+        <div style="font-size:13px;color:var(--soccer-light);font-weight:700;letter-spacing:1px;text-transform:uppercase;">Muscle Temperature at Halftime</div>
+        <div class="temp-bar"></div>
+        <div class="temp-labels">
+          <span>&#x2744; −2.0°C drop</span>
+          <span>Baseline</span>
+          <span>&#x1F525; Rewarmed</span>
+        </div>
+        <p class="temp-fact">Every <strong>1°C increase</strong> in muscle temperature yields a <strong>2–5% improvement</strong> in muscle power output.</p>
+      </div>
+
+      <div class="context-card">
+        <div class="ctx-icon">&#9888;</div>
+        <div class="ctx-title">The Second-Half Problem</div>
+        <p class="ctx-text">The opening minutes of the second half see the highest rates of both high-intensity actions and injury. Players are cold, stiff, and immediately asked to sprint.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ STUDY DESIGN ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Study design</div>
+      <h2 class="section-title">22 players. Two groups. One question.</h2>
+
+      <div class="design-row">
+        <div class="design-card">
+          <div class="dc-num">22</div>
+          <div class="dc-label">Professional female players</div>
+        </div>
+        <div class="design-card">
+          <div class="dc-num">1st/2nd</div>
+          <div class="dc-label">Portuguese Division</div>
+        </div>
+      </div>
+
+      <div class="design-row">
+        <div class="design-card" style="border-color:var(--muted);">
+          <div class="dc-num" style="color:var(--muted);">G1</div>
+          <div class="dc-label">Passive rest<br>(control)</div>
+        </div>
+        <div class="design-card" style="border-color:var(--soccer);">
+          <div class="dc-num" style="color:var(--soccer);">G2</div>
+          <div class="dc-label">3-min re-warm-up<br>(experimental)</div>
+        </div>
+      </div>
+
+      <div class="protocol-wrap">
+        <div class="protocol-header">
+          <div class="protocol-icon">&#9889;</div>
+          <div class="protocol-header-text">
+            <h3>IRW-Soccer Protocol</h3>
+            <span>3 minutes total</span>
+          </div>
+        </div>
+        <div class="protocol-body">
+          <div class="protocol-phase">
+            <div class="phase-label">Phase 1 — FIFA 11+ Power Exercises</div>
+            <div class="exercise-grid">
+              <div class="exercise-chip">
+                <span class="ex-icon">&#x1F9CE;</span>
+                Squats with toe raise
+              </div>
+              <div class="exercise-chip">
+                <span class="ex-icon">&#x1F6B6;</span>
+                Walking lunges
+              </div>
+              <div class="exercise-chip">
+                <span class="ex-icon">&#x1F4A5;</span>
+                One-leg squat jumps
+              </div>
+              <div class="exercise-chip">
+                <span class="ex-icon">&#x2B06;</span>
+                Vertical jumps
+              </div>
+              <div class="exercise-chip">
+                <span class="ex-icon">&#x2194;</span>
+                Lateral jumps
+              </div>
+              <div class="exercise-chip">
+                <span class="ex-icon">&#x1F4E6;</span>
+                Box jumps
+              </div>
+            </div>
+          </div>
+          <div class="protocol-phase">
+            <div class="phase-label">Phase 2 — Small-Sided Game</div>
+            <div class="ssg-card">
+              <span class="ssg-icon">&#x26BD;</span>
+              <div class="ssg-text"><strong>5v5 small-sided game</strong> with a 2-touch restriction — enough to re-engage match-specific movement patterns and raise muscle temperature.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size:13px;color:var(--muted);line-height:1.5;">
+        Both groups completed 20m sprint and countermovement jump (CMJ) testing post-warm-up and again post-halftime. The only difference: what they did in between.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ KEY RESULTS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Key results</div>
+      <h2 class="section-title">The re-warm-up group came out faster.</h2>
+
+      <div class="stat-stack">
+        <div class="stat-card" style="border-color:var(--soccer);">
+          <div class="stat-label">20m Sprint</div>
+          <div class="stat-number" style="font-size:36px;">Sprint improved more</div>
+          <p class="stat-explain" style="margin-top:12px;">Both groups got faster post-halftime, but the re-warm-up group improved significantly more. Significant interaction effect with a large effect size.</p>
+          <span class="effect-badge">P = .019 · η²p = .27 (large)</span>
+        </div>
+      </div>
+
+      <div class="stat-compare">
+        <div class="compare-card">
+          <div class="compare-group">Passive Rest</div>
+          <div class="compare-value">−0.25<span style="font-size:16px;">s</span></div>
+          <div class="compare-desc">Sprint improvement</div>
+        </div>
+        <div class="compare-card highlight">
+          <div class="compare-group">Re-Warm-Up</div>
+          <div class="compare-value">−0.40<span style="font-size:16px;">s</span></div>
+          <div class="compare-desc">Sprint improvement</div>
+        </div>
+      </div>
+
+      <div style="height:32px;"></div>
+
+      <div class="stat-stack">
+        <div class="stat-card">
+          <div class="stat-label">Countermovement Jump</div>
+          <div class="stat-number" style="font-size:32px;">Less jump decline</div>
+          <p class="stat-explain" style="margin-top:12px;">Both groups lost jump height after halftime — but the re-warm-up group lost less. The main time effect was significant, and the trend favored the intervention.</p>
+          <span class="effect-badge" style="background:rgba(58,109,245,0.15);border-color:rgba(58,109,245,0.3);color:var(--accent-light);">Time effect P = .005</span>
+        </div>
+      </div>
+
+      <div class="stat-compare">
+        <div class="compare-card">
+          <div class="compare-group">Passive Rest</div>
+          <div class="compare-value">−2.85<span style="font-size:16px;">cm</span></div>
+          <div class="compare-desc">Jump height loss</div>
+        </div>
+        <div class="compare-card highlight">
+          <div class="compare-group">Re-Warm-Up</div>
+          <div class="compare-value">−1.82<span style="font-size:16px;">cm</span></div>
+          <div class="compare-desc">Jump height loss</div>
+        </div>
+      </div>
+
+      <div class="temp-strip" style="margin-top:32px;">
+        <p class="temp-fact" style="margin-top:0;">Passive halftime rest causes a <strong>1.5–2.0°C drop</strong> in muscle temperature — enough to reduce muscle power by <strong>2–5%</strong>. Three minutes of targeted activity can counteract this decline.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WHY IT MATTERS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Why it matters</div>
+      <h2 class="section-title">This is practical, female-specific, and immediately applicable.</h2>
+
+      <div class="callout-stack">
+        <div class="callout green">
+          <h3>Designed for real halftime constraints</h3>
+          <p>Only 3 minutes. No specialized equipment. FIFA 11+ exercises that teams already know. This isn't a lab protocol — it fits the actual time window coaches have to work with.</p>
+        </div>
+
+        <div class="callout green">
+          <h3>Female athlete-specific evidence</h3>
+          <p>The study used professional women's soccer players exclusively — an underrepresented population in re-warm-up research. Most existing evidence comes from male cohorts. This fills a critical gap.</p>
+        </div>
+
+        <div class="callout">
+          <h3>Post-activation performance enhancement</h3>
+          <p>The protocol leverages PAPE — priming the neuromuscular system with high-intensity movements to enhance subsequent power output. The plyometric exercises and small-sided game provide exactly this stimulus.</p>
+        </div>
+
+        <div class="callout red">
+          <h3>Injury prevention angle</h3>
+          <p>The second half opens with the highest injury rates in soccer. Cold muscles, reduced neural drive, and immediate high-intensity demands create a vulnerability window. Re-warm-up protocols directly address this risk.</p>
+        </div>
+
+        <div class="callout green">
+          <h3>Direct relevance to Nike team sport athletes</h3>
+          <p>Any team sport with a halftime break — soccer, basketball, football — faces the same thermoregulatory and neuromuscular challenge. A validated, time-efficient solution has broad application across Nike's athlete roster.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE TAKEAWAY ═══ -->
+  <section class="close-section">
+    <div class="container">
+      <div class="section-label">The takeaway</div>
+      <p class="close-statement">Three minutes. Six exercises. One small-sided game. A measurably better second half.</p>
+      <p class="close-body">
+        Sitting through halftime is a performance decision — and it's the wrong one. A brief, structured re-warm-up combining FIFA 11+ plyometric exercises with a small-sided game meaningfully improved sprint performance and attenuated jump power decline in professional women's soccer players.
+      </p>
+      <p class="close-body">
+        The protocol is time-efficient, evidence-based, requires no equipment, and was designed specifically for female athletes. For any team navigating the second-half performance drop, the message is clear: don't let your players cool down.
+      </p>
+
+      <div class="divider" style="margin:32px auto;"></div>
+
+      <a class="paper-cta" href="https://doi.org/10.1123/ijspp.2025-0560" target="_blank" rel="noopener">Read the full paper &#8599;</a>
+
+      <div class="citation-block">
+        <div class="citation-label">Citation</div>
+        <p class="citation-text">Abreu M, Nakamura FY, Carvalho T, Silva D, Afonso J. Should soccer players re-warm-up at half-time? An exploratory randomized controlled trial in a professional women's team. Int J Sports Physiol Perform. 2026. Ahead of Print. doi:10.1123/ijspp.2025-0560</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BRANDED FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo" style="text-decoration:none;">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Curated science from beyond our walls — the research shaping how we understand athlete performance.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
