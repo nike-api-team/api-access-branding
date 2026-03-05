@@ -1,0 +1,153 @@
+function generateEmailHtml(story, otherStories) {
+  var h = '';
+
+  h += '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>';
+  h += '<body style="margin:0; padding:0; background:#0a0a0f; font-family:Segoe UI, system-ui, -apple-system, Helvetica, Arial, sans-serif;">';
+  h += '<div style="max-width:600px; margin:0 auto; background:#0a0a0f;">';
+
+  h += '<div style="padding:32px 32px 24px; text-align:center;">';
+  h += '<span style="font-size:18px; font-weight:900; color:#f0f0f8; letter-spacing:-0.5px;">API</span>';
+  h += '<span style="font-size:18px; font-weight:300; color:#3a6df5; letter-spacing:2px; margin-left:4px;">ACCESS</span>';
+  h += '</div>';
+
+  if (story.image) {
+    h += '<div style="padding:0 24px;">';
+    h += '<img src="https://api-access.netlify.app/' + story.image + '" alt="" style="width:100%; height:auto; max-height:240px; object-fit:cover; border-radius:8px; display:block;" />';
+    h += '</div>';
+  }
+
+  h += '<div style="padding:28px 32px 20px;">';
+  h += '<div style="margin-bottom:12px;">';
+  h += '<span style="font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#3a6df5;">' + story.category + '</span>';
+  h += '<span style="font-size:10px; color:#555; margin-left:12px;">' + story.source + '</span>';
+  h += '</div>';
+
+  h += '<div style="font-size:26px; font-weight:900; color:#f0f0f8; line-height:1.2; margin-bottom:14px; letter-spacing:-0.5px;">' + story.title + '</div>';
+  h += '<div style="font-size:15px; color:#9999b8; line-height:1.7; margin-bottom:24px;">' + story.teaser + '</div>';
+
+  h += '<div style="margin-bottom:8px;">';
+  h += '<a href="' + story.url + '" style="display:inline-block; padding:14px 36px; background:#3a6df5; color:#ffffff; text-decoration:none; font-size:14px; font-weight:700; border-radius:8px; letter-spacing:0.5px;">Read the story &#8594;</a>';
+  h += '</div>';
+  h += '</div>';
+
+  h += '<div style="padding:0 32px; margin:20px 0 0;"><div style="border-top:1px solid #2a2a45;"></div></div>';
+
+  if (otherStories && otherStories.length > 0) {
+    h += '<div style="padding:20px 32px 8px;">';
+    h += '<div style="font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#555; margin-bottom:14px;">Also on API Access</div>';
+    otherStories.forEach(function(s) {
+      h += '<div style="margin-bottom:12px;">';
+      h += '<a href="' + s.url + '" style="color:#7a9dff; text-decoration:none; font-size:13px; font-weight:600;">' + s.title + '</a>';
+      h += '<span style="font-size:11px; color:#555; margin-left:8px;">' + s.category + '</span>';
+      h += '</div>';
+    });
+    h += '</div>';
+  }
+
+  h += '<div style="margin:8px 32px 0; padding:14px 16px; background:#12121c; border-radius:6px;">';
+  h += '<div style="font-size:12px; color:#777; line-height:1.6;">First time visiting API Access? You\'ll be asked to set a password on your first click &#8212; check your inbox for the invite.</div>';
+  h += '</div>';
+
+  h += '<div style="padding:28px 32px; text-align:center;">';
+  h += '<div style="font-size:12px; color:#555; line-height:1.6;">';
+  h += 'Applied Performance Innovation &#8212; Nike Sport Research Lab<br>';
+  h += '<a href="https://api-access.netlify.app" style="color:#7a9dff; text-decoration:none;">api-access.netlify.app</a>';
+  h += '</div>';
+  h += '</div>';
+
+  h += '</div></body></html>';
+
+  return h;
+}
+
+async function getContacts(apiKey, audienceId) {
+  const response = await fetch(
+    `https://api.resend.com/audiences/${audienceId}/contacts`,
+    { headers: { Authorization: `Bearer ${apiKey}` } }
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch contacts: ' + response.status);
+  }
+
+  const data = await response.json();
+  return data.data.filter(c => !c.unsubscribed).map(c => c.email);
+}
+
+async function sendEmail(apiKey, to, subject, html) {
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Applied Performance Innovation <onboarding@resend.dev>',
+      to,
+      subject,
+      html,
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error('Send failed: ' + response.status + ' ' + err);
+  }
+
+  return response.json();
+}
+
+async function getLatestStory() {
+  const response = await fetch('https://api-access.netlify.app/newsletter-content.json?v=' + Date.now());
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch newsletter content');
+  }
+
+  const data = await response.json();
+  const sorted = data.stories.sort((a, b) => new Date(b.date) - new Date(a.date));
+  return { featured: sorted[0], others: sorted.slice(1, 4) };
+}
+
+exports.handler = async (event) => {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  const RESEND_AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID;
+
+  if (!RESEND_API_KEY || !RESEND_AUDIENCE_ID) {
+    console.error('Missing RESEND_API_KEY or RESEND_AUDIENCE_ID');
+    return { statusCode: 500, body: 'Missing configuration' };
+  }
+
+  try {
+    const { featured, others } = await getLatestStory();
+    const contacts = await getContacts(RESEND_API_KEY, RESEND_AUDIENCE_ID);
+
+    if (contacts.length === 0) {
+      console.log('No active subscribers, skipping send');
+      return { statusCode: 200, body: 'No subscribers' };
+    }
+
+    const html = generateEmailHtml(featured, others);
+    const subject = featured.title + ' \u2014 API Access';
+
+    let sent = 0;
+    for (const email of contacts) {
+      try {
+        await sendEmail(RESEND_API_KEY, email, subject, html);
+        sent++;
+        console.log('Sent to:', email);
+      } catch (err) {
+        console.error('Failed to send to', email, err.message);
+      }
+    }
+
+    console.log(`Newsletter sent: ${sent}/${contacts.length} recipients`);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ sent, total: contacts.length, story: featured.title }),
+    };
+  } catch (err) {
+    console.error('Newsletter send error:', err);
+    return { statusCode: 500, body: err.message };
+  }
+};

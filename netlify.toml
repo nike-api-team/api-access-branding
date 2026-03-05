@@ -1,2 +1,5 @@
 [build]
   functions = "netlify/functions"
+
+[functions."newsletter-send"]
+  schedule = "0 14 * * 1"

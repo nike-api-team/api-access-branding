@@ -1023,7 +1023,7 @@ function handleNewsletterSubmit(formEl, successEl) {
     e.preventDefault();
     var email = formEl.querySelector('input[type="email"]').value;
 
-    // Send to beehiiv via Netlify Function bridge
+    // Send to Resend via Netlify Function
     fetch('/.netlify/functions/newsletter-signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

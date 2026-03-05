@@ -13,7 +13,6 @@
       --border: #2a2a45;
       --accent: #3a6df5;
       --accent-light: #7a9dff;
-      --accent-glow: rgba(58, 109, 245, 0.25);
       --text: #f0f0f8;
       --muted: #9999b8;
     }
@@ -34,13 +33,22 @@
       padding: 40px 24px 80px;
     }
 
+    .back-link {
+      display: inline-block;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 24px;
+    }
+    .back-link:hover { color: var(--text); }
+
     /* ── Toolbar ── */
     .toolbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
       padding: 16px 20px;
       background: var(--surface);
       border: 1px solid var(--border);
@@ -73,9 +81,74 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
-
     .btn-copy:hover { background: #4a7dff; transform: translateY(-1px); }
     .btn-copy.copied { background: #22c55e; }
+
+    /* ── Story Picker ── */
+    .picker {
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .picker label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 10px;
+    }
+
+    .picker select {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .picker select:focus { outline: none; border-color: var(--accent); }
+
+    /* ── Optional note ── */
+    .lab-editor {
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .lab-editor label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 8px;
+    }
+
+    .lab-editor textarea {
+      width: 100%;
+      min-height: 60px;
+      padding: 12px;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.6;
+      resize: vertical;
+    }
+    .lab-editor textarea:focus { outline: none; border-color: var(--accent); }
 
     /* ── Email Preview Frame ── */
     .email-frame {
@@ -107,11 +180,10 @@
       margin-left: 8px;
     }
 
-    /* ── Email Content (light theme for actual email rendering) ── */
+    /* ── Email Content ── */
     .email-content {
-      background: #ffffff;
-      color: #1a1a2e;
-      padding: 0;
+      background: #0a0a0f;
+      color: #f0f0f8;
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       line-height: 1.6;
     }
@@ -120,235 +192,6 @@
       max-width: 600px;
       margin: 0 auto;
     }
-
-    .email-header {
-      background: #0a0a0f;
-      padding: 32px 32px 28px;
-      text-align: center;
-    }
-
-    .email-logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-
-    .email-logo-box {
-      width: 28px;
-      height: 28px;
-      background: #3a6df5;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 900;
-      color: #fff;
-      letter-spacing: -0.5px;
-    }
-
-    .email-logo-text {
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: #f0f0f8;
-    }
-
-    .email-body {
-      padding: 36px 32px;
-    }
-
-    .email-greeting {
-      font-size: 22px;
-      font-weight: 800;
-      color: #0a0a0f;
-      margin-bottom: 12px;
-      line-height: 1.3;
-    }
-
-    .email-intro {
-      font-size: 15px;
-      color: #555;
-      margin-bottom: 32px;
-      line-height: 1.7;
-    }
-
-    .email-section-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #3a6df5;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #eee;
-    }
-
-    .email-story {
-      margin-bottom: 28px;
-      padding-bottom: 28px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .email-story:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
-    .email-story-cat {
-      display: inline-block;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 4px;
-      margin-bottom: 8px;
-    }
-
-    .cat-athlete { background: #e8f4fd; color: #2980b9; }
-    .cat-case { background: #ede8fd; color: #6c3dc9; }
-    .cat-data { background: #fde8f4; color: #c93d8e; }
-    .cat-pub { background: #e8fdf2; color: #27ae60; }
-
-    .email-story-title {
-      font-size: 17px;
-      font-weight: 700;
-      color: #0a0a0f;
-      margin-bottom: 6px;
-      line-height: 1.3;
-    }
-
-    .email-story-teaser {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 10px;
-      line-height: 1.6;
-    }
-
-    .email-story-source {
-      font-size: 11px;
-      color: #999;
-      margin-bottom: 10px;
-    }
-
-    .email-story-link {
-      display: inline-block;
-      font-size: 13px;
-      font-weight: 700;
-      color: #3a6df5;
-      text-decoration: none;
-    }
-
-    .email-story-link:hover { text-decoration: underline; }
-
-    .email-new-badge {
-      display: inline-block;
-      font-size: 8px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      background: #3a6df5;
-      color: #fff;
-      padding: 2px 6px;
-      border-radius: 3px;
-      margin-left: 8px;
-      vertical-align: middle;
-    }
-
-    /* ── From the Lab section ── */
-    .email-lab-section {
-      margin-top: 32px;
-      padding: 24px;
-      background: #f7f7fc;
-      border-radius: 8px;
-      border-left: 3px solid #3a6df5;
-    }
-
-    .email-lab-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #0a0a0f;
-      margin-bottom: 8px;
-    }
-
-    .email-lab-text {
-      font-size: 14px;
-      color: #555;
-      line-height: 1.7;
-    }
-
-    /* ── Editable textarea (page-side only) ── */
-    .lab-editor {
-      margin-top: 16px;
-      padding: 16px 20px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-
-    .lab-editor label {
-      display: block;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--accent-light);
-      margin-bottom: 8px;
-    }
-
-    .lab-editor textarea {
-      width: 100%;
-      min-height: 80px;
-      padding: 12px;
-      background: var(--bg);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 14px;
-      line-height: 1.6;
-      resize: vertical;
-    }
-
-    .lab-editor textarea:focus { outline: none; border-color: var(--accent); }
-
-    /* ── Email Footer ── */
-    .email-footer {
-      padding: 24px 32px;
-      background: #0a0a0f;
-      text-align: center;
-    }
-
-    .email-footer-text {
-      font-size: 12px;
-      color: #777;
-      line-height: 1.6;
-    }
-
-    .email-footer-text a {
-      color: #7a9dff;
-      text-decoration: none;
-    }
-
-    /* ── Archive section ── */
-    .archive-divider {
-      margin-top: 36px;
-      padding-top: 8px;
-    }
-
-    .archive-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #999;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #eee;
-    }
-
-    .archive-story .email-story-title { color: #666; }
-    .archive-story .email-story-teaser { color: #888; }
 
     /* ── Toast ── */
     .toast {
@@ -366,29 +209,13 @@
       transition: all 0.3s;
       z-index: 100;
     }
-
     .toast.show {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
 
-    /* ── Back link ── */
-    .back-link {
-      display: inline-block;
-      font-size: 13px;
-      color: var(--muted);
-      text-decoration: none;
-      margin-bottom: 24px;
-    }
-
-    .back-link:hover { color: var(--text); }
-
-    /* ── Responsive ── */
     @media (max-width: 520px) {
       .toolbar { flex-direction: column; text-align: center; }
-      .email-body { padding: 24px 20px; }
-      .email-header { padding: 24px 20px; }
-      .email-footer { padding: 20px; }
     }
   </style>
 </head>
@@ -404,12 +231,15 @@
       <button class="btn-copy" id="copyBtn" onclick="copyNewsletter()">Copy Newsletter</button>
     </div>
 
-    <div class="lab-editor">
-      <label>From the Lab — custom note (optional)</label>
-      <textarea id="labNote" placeholder="Add a personal note, behind-the-scenes update, or upcoming project teaser here. Leave blank to skip this section in the newsletter."></textarea>
+    <div class="picker">
+      <label>Featured Story</label>
+      <select id="storyPicker" onchange="renderEmail()"></select>
     </div>
 
-    <div style="height: 24px;"></div>
+    <div class="lab-editor">
+      <label>Personal note (optional)</label>
+      <textarea id="labNote" placeholder="A quick behind-the-scenes line or teaser for what's coming next. Keep it to 1-2 sentences."></textarea>
+    </div>
 
     <div class="email-frame">
       <div class="email-frame-header">
@@ -420,25 +250,8 @@
       </div>
 
       <div class="email-content" id="emailContent">
-        <div class="email-inner">
-          <div class="email-header">
-            <div class="email-logo">
-              <div class="email-logo-box">API</div>
-              <div class="email-logo-text">ACCESS</div>
-            </div>
-          </div>
-
-          <div class="email-body" id="emailBody">
-            <!-- Populated by JS -->
-          </div>
-
-          <div class="email-footer">
-            <div class="email-footer-text">
-              Applied Performance Innovation &mdash; Nike Sport Research Lab<br>
-              <a href="https://api-access.netlify.app">api-access.netlify.app</a><br><br>
-              <span style="color:#555;">You're receiving this because you subscribed to API Access.</span>
-            </div>
-          </div>
+        <div class="email-inner" id="emailInner">
+          <!-- Populated by JS -->
         </div>
       </div>
     </div>
@@ -449,113 +262,124 @@
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
   netlifyIdentity.on('init', function(user) {
-    if (!user) {
-      window.location.href = '/api-access-gate.html';
-    }
+    if (!user) window.location.href = '/api-access-gate.html';
   });
-
   netlifyIdentity.on('logout', function() {
     window.location.href = '/api-access-gate.html';
   });
 
-  var DAYS_NEW = 30;
+  var stories = [];
 
-  function getCatClass(cat) {
-    if (cat === 'Athlete Story') return 'cat-athlete';
-    if (cat === 'Case Study') return 'cat-case';
-    if (cat === 'Data Drop') return 'cat-data';
-    if (cat === 'Publication') return 'cat-pub';
-    return 'cat-pub';
-  }
-
-  function loadNewsletter() {
+  function loadStories() {
     fetch('newsletter-content.json?v=' + Date.now())
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        var now = new Date();
-        var cutoff = new Date(now.getTime() - DAYS_NEW * 24 * 60 * 60 * 1000);
-        var stories = data.stories.sort(function(a, b) {
+        stories = data.stories.sort(function(a, b) {
           return new Date(b.date) - new Date(a.date);
         });
 
-        var newStories = [];
-        var archiveStories = [];
-
-        stories.forEach(function(s) {
-          if (new Date(s.date) >= cutoff) {
-            newStories.push(s);
-          } else {
-            archiveStories.push(s);
-          }
+        var picker = document.getElementById('storyPicker');
+        stories.forEach(function(s, i) {
+          var opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = s.title + '  (' + s.category + ')';
+          picker.appendChild(opt);
         });
 
-        var html = '';
+        renderEmail();
 
-        html += '<h1 class="email-greeting">Here\'s what\'s new on API Access</h1>';
-        html += '<p class="email-intro">The latest from the Applied Performance Innovation team — the science, the stories, and the solutions — from inside and outside the NSRL.</p>';
-        html += '<p style="font-size:13px; color:#888; background:#f0f0f5; padding:12px 16px; border-radius:6px; margin-bottom:28px; line-height:1.6;">First time visiting API Access? You\'ll be asked to set a password on your first click — check your inbox for the invite.</p>';
-
-        if (newStories.length > 0) {
-          html += '<div class="email-section-label">New This Month</div>';
-          newStories.forEach(function(s) {
-            html += renderStory(s, true);
-          });
-        }
-
-        html += '<div id="labBlock"></div>';
-
-        if (archiveStories.length > 0) {
-          html += '<div class="archive-divider">';
-          html += '<div class="archive-label">From the Archive</div>';
-          archiveStories.forEach(function(s) {
-            html += renderStory(s, false);
-          });
-          html += '</div>';
-        }
-
-        document.getElementById('emailBody').innerHTML = html;
-        updateLabBlock();
-
-        var dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-        document.getElementById('draft-date').textContent = 'Generated ' + dateStr + ' · ' + newStories.length + ' new, ' + archiveStories.length + ' archive';
-      })
-      .catch(function(err) {
-        document.getElementById('emailBody').innerHTML = '<p style="color:red;">Error loading content: ' + err.message + '</p>';
+        var dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        document.getElementById('draft-date').textContent = 'Generated ' + dateStr;
       });
   }
 
-  function renderStory(story, isNew) {
-    var catClass = getCatClass(story.category);
-    var storyClass = isNew ? 'email-story' : 'email-story archive-story';
+  function renderEmail() {
+    var idx = parseInt(document.getElementById('storyPicker').value) || 0;
+    var story = stories[idx];
+    if (!story) return;
 
-    var h = '<div class="' + storyClass + '">';
-    h += '<span class="email-story-cat ' + catClass + '">' + story.category + '</span>';
-    if (isNew) h += '<span class="email-new-badge">New</span>';
-    h += '<div class="email-story-title">' + story.title + '</div>';
-    h += '<div class="email-story-teaser">' + story.teaser + '</div>';
-    h += '<div class="email-story-source">' + story.source + '</div>';
-    h += '<a class="email-story-link" href="' + story.url + '">Read it &rarr;</a>';
-    h += '</div>';
-    return h;
-  }
-
-  function updateLabBlock() {
     var note = document.getElementById('labNote').value.trim();
-    var block = document.getElementById('labBlock');
-    if (!block) return;
 
-    if (note) {
-      block.innerHTML =
-        '<div class="email-lab-section">' +
-        '<div class="email-lab-title">From the Lab</div>' +
-        '<div class="email-lab-text">' + note.replace(/\n/g, '<br>') + '</div>' +
-        '</div>';
-    } else {
-      block.innerHTML = '';
+    var otherStories = stories.filter(function(s, i) { return i !== idx; }).slice(0, 3);
+
+    var h = '';
+
+    // Logo header
+    h += '<div style="padding:32px 32px 24px; text-align:center;">';
+    h += '<span style="font-size:18px; font-weight:900; color:#f0f0f8; letter-spacing:-0.5px;">API</span>';
+    h += '<span style="font-size:18px; font-weight:300; color:#3a6df5; letter-spacing:2px; margin-left:4px;">ACCESS</span>';
+    h += '</div>';
+
+    // Hero image
+    if (story.image) {
+      h += '<div style="padding:0 24px;">';
+      h += '<img src="' + story.image + '" alt="" style="width:100%; height:240px; object-fit:cover; border-radius:8px; display:block;" />';
+      h += '</div>';
     }
+
+    // Story content
+    h += '<div style="padding:28px 32px 20px;">';
+
+    // Category tag
+    h += '<div style="margin-bottom:12px;">';
+    h += '<span style="font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#3a6df5;">' + story.category + '</span>';
+    h += '<span style="font-size:10px; color:#555; margin-left:12px;">' + story.source + '</span>';
+    h += '</div>';
+
+    // Title
+    h += '<div style="font-size:26px; font-weight:900; color:#f0f0f8; line-height:1.2; margin-bottom:14px; letter-spacing:-0.5px;">' + story.title + '</div>';
+
+    // Teaser
+    h += '<div style="font-size:15px; color:#9999b8; line-height:1.7; margin-bottom:24px;">' + story.teaser + '</div>';
+
+    // CTA button
+    h += '<div style="margin-bottom:8px;">';
+    h += '<a href="' + story.url + '" style="display:inline-block; padding:14px 36px; background:#3a6df5; color:#ffffff; text-decoration:none; font-size:14px; font-weight:700; border-radius:8px; letter-spacing:0.5px;">Read the story &rarr;</a>';
+    h += '</div>';
+
+    h += '</div>';
+
+    // Optional personal note
+    if (note) {
+      h += '<div style="margin:0 32px 0; padding:20px 24px; background:#12121c; border-radius:8px; border-left:3px solid #3a6df5;">';
+      h += '<div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#3a6df5; margin-bottom:8px;">From the Lab</div>';
+      h += '<div style="font-size:14px; color:#9999b8; line-height:1.7;">' + note.replace(/\n/g, '<br>') + '</div>';
+      h += '</div>';
+    }
+
+    // Divider
+    h += '<div style="padding:0 32px; margin:28px 0 0;"><div style="border-top:1px solid #2a2a45;"></div></div>';
+
+    // Also on API Access — small text links
+    if (otherStories.length > 0) {
+      h += '<div style="padding:20px 32px 8px;">';
+      h += '<div style="font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#555; margin-bottom:14px;">Also on API Access</div>';
+      otherStories.forEach(function(s) {
+        h += '<div style="margin-bottom:12px;">';
+        h += '<a href="' + s.url + '" style="color:#7a9dff; text-decoration:none; font-size:13px; font-weight:600;">' + s.title + '</a>';
+        h += '<span style="font-size:11px; color:#555; margin-left:8px;">' + s.category + '</span>';
+        h += '</div>';
+      });
+      h += '</div>';
+    }
+
+    // First-time note
+    h += '<div style="margin:8px 32px 0; padding:14px 16px; background:#12121c; border-radius:6px;">';
+    h += '<div style="font-size:12px; color:#777; line-height:1.6;">First time visiting API Access? You\'ll be asked to set a password on your first click — check your inbox for the invite.</div>';
+    h += '</div>';
+
+    // Footer
+    h += '<div style="padding:28px 32px; text-align:center;">';
+    h += '<div style="font-size:12px; color:#555; line-height:1.6;">';
+    h += 'Applied Performance Innovation — Nike Sport Research Lab<br>';
+    h += '<a href="https://api-access.netlify.app" style="color:#7a9dff; text-decoration:none;">api-access.netlify.app</a>';
+    h += '</div>';
+    h += '</div>';
+
+    document.getElementById('emailInner').innerHTML = h;
   }
 
-  document.getElementById('labNote').addEventListener('input', updateLabBlock);
+  document.getElementById('labNote').addEventListener('input', renderEmail);
 
   function copyNewsletter() {
     var content = document.getElementById('emailContent');
@@ -587,7 +411,7 @@
     sel.removeAllRanges();
   }
 
-  loadNewsletter();
+  loadStories();
 </script>
 </body>
 </html>
