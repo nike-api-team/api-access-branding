@@ -1,0 +1,67 @@
+{
+  "stories": [
+    {
+      "title": "ACG Team Camp: Palm Springs",
+      "teaser": "25+ professional trail runners from around the world. Five days in the Palm Springs desert. Four research studies, fireside seminars, and product sessions — where science met the mountain.",
+      "url": "https://api-access.netlify.app/api-access-acg-camp.html",
+      "date": "2026-02-15",
+      "category": "Athlete Story",
+      "image": "acg-camp-hero.jpg",
+      "source": "NSRL × ACG Racing Department"
+    },
+    {
+      "title": "Inside HYROX Physiology",
+      "teaser": "The 3rd-place finisher at the HYROX World Championships visits the NSRL. Blood lactate, muscle oxygen, and footwear feedback — a field-to-lab look at hybrid racing demands.",
+      "url": "https://api-access.netlify.app/api-access-dylan-scott.html",
+      "date": "2026-01-20",
+      "category": "Athlete Story",
+      "image": "dylan-welcome.jpg",
+      "source": "NSRL × Nike Training"
+    },
+    {
+      "title": "Every Answer: Elite Miler Case Study",
+      "teaser": "A world-class miler embeds with the NSRL for an intensive residency of discovery. Fourteen days of concierge-level performance science — physiology, biomechanics, nutrition, and beyond.",
+      "url": "https://api-access.netlify.app/api-access-case-study.html",
+      "date": "2026-02-01",
+      "category": "Case Study",
+      "image": null,
+      "source": "Applied Performance Innovation — NSRL"
+    },
+    {
+      "title": "Breaking4: What Would It Take?",
+      "teaser": "A multi-year scientific expedition across four institutions to answer one question: what would it take for a woman to break 4 minutes in the mile? Five studies. One thread of oxygen.",
+      "url": "https://api-access.netlify.app/api-access-breaking4-series.html",
+      "date": "2025-11-01",
+      "category": "Data Drop",
+      "image": "breaking4-hero.jpg",
+      "source": "NSRL · Exeter · Oregon · IEEM"
+    },
+    {
+      "title": "Your brain after 50km: ultramarathon racing alters executive function",
+      "teaser": "76 runners. Mobile EEG. The first large-sample evidence that ultramarathon racing reduces neural activity tied to inhibitory control and attention.",
+      "url": "https://api-access.netlify.app/api-access-boere-ultra-eeg.html",
+      "date": "2026-01-10",
+      "category": "Publication",
+      "image": null,
+      "source": "Boere et al. — Journal of Applied Physiology, 2026"
+    },
+    {
+      "title": "Hot baths, more oxygen: passive heat acclimation boosts VO₂max by 4.4%",
+      "teaser": "5 weeks of hot water immersion increased hemoglobin mass and expanded the heart's stroke volume in trained runners — without changing their training.",
+      "url": "https://api-access.netlify.app/api-access-jenkins-heat-vo2max.html",
+      "date": "2025-10-15",
+      "category": "Publication",
+      "image": null,
+      "source": "Jenkins et al. — The Journal of Physiology, 2025"
+    },
+    {
+      "title": "7.65 seconds away: the physiology of a women's sub-4 minute mile",
+      "teaser": "A viewpoint on what it takes to break the barrier — and the 10 commentary letters it sparked from researchers worldwide.",
+      "url": "https://api-access.netlify.app/api-access-osborne-mile.html",
+      "date": "2025-09-01",
+      "category": "Publication",
+      "image": null,
+      "source": "Osborne, Kirby et al. — Journal of Applied Physiology, 2025"
+    }
+  ]
+}
