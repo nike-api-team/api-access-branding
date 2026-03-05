@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Dylan Scott — Inside HYROX Physiology</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --story: #43b0d6;
+      --story-light: #79c9e5;
+      --story-glow: rgba(67, 176, 214, 0.22);
+      --story-deep: #2d8aad;
+      --hyrox: #e8d92a;
+      --hyrox-dim: rgba(232, 217, 42, 0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Header ── */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.92);
+    }
+
+    .brand-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: baseline;
+      text-decoration: none;
+    }
+
+    .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+
+    .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--story); }
+    .edition-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+    /* ── Hero ── */
+    .hero { position: relative; overflow: hidden; }
+    .hero-img { width: 100%; display: block; filter: brightness(0.72); }
+    .hero-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 52px 24px 28px;
+      background: linear-gradient(transparent, rgba(10,10,15,0.85) 40%, var(--bg));
+    }
+    .hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--story-light); margin-bottom: 8px; }
+    .hero-title { font-size: 32px; font-weight: 800; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero-sub { font-size: 15px; color: var(--muted); line-height: 1.5; }
+    .hero-sub strong { color: var(--text); font-weight: 600; }
+
+    /* ── Intro ── */
+    .brand-intro { padding: 32px 0 0; text-align: center; }
+    .brand-intro .from-line { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .brand-intro .team-name { font-size: 14px; color: var(--story-light); font-weight: 600; margin-bottom: 20px; }
+    .edition-divider { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .edition-divider .line { flex: 1; height: 1px; background: var(--border); }
+    .edition-divider .label { font-size: 11px; color: var(--story); letter-spacing: 3px; text-transform: uppercase; font-weight: 700; white-space: nowrap; }
+
+    /* ── Section ── */
+    section { padding: 48px 0; }
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--story); margin-bottom: 12px; }
+    .section-title { font-size: 22px; font-weight: 700; line-height: 1.3; margin-bottom: 16px; }
+    .section-text { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+    .section-text strong { color: var(--text); font-weight: 600; }
+    .section-divider { height: 1px; background: var(--border); margin: 0 24px; max-width: 432px; margin-left: auto; margin-right: auto; }
+
+    /* ── Photos ── */
+    .photo-break { width: 100%; overflow: hidden; }
+    .photo-break img { width: 100%; display: block; }
+    .photo-break .caption { text-align: center; font-size: 11px; color: var(--muted); letter-spacing: 0.5px; padding: 10px 24px; background: var(--surface); border-bottom: 1px solid var(--border); }
+
+    .photo-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin: 24px 0; }
+    .photo-pair img { width: 100%; height: 200px; object-fit: cover; border-radius: 6px; }
+
+    .photo-inset { border-radius: 12px; overflow: hidden; margin: 24px 0; }
+    .photo-inset img { width: 100%; display: block; }
+    .photo-inset .caption { font-size: 11px; color: var(--muted); letter-spacing: 0.5px; padding: 10px 0 0; text-align: center; }
+
+    /* ── Stat Strip ── */
+    .stat-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin: 28px 0; background: var(--border); border-radius: 10px; overflow: hidden; }
+    .stat-cell { background: var(--surface); padding: 18px 8px; text-align: center; }
+    .stat-cell .val { font-size: 26px; font-weight: 800; color: var(--story); line-height: 1; }
+    .stat-cell .label { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; }
+
+    /* ── Study Cards ── */
+    .study-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 14px; position: relative; overflow: hidden; }
+    .study-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--story); border-radius: 3px 0 0 3px; }
+    .study-icon { font-size: 22px; margin-bottom: 8px; }
+    .study-name { font-size: 14px; font-weight: 700; color: var(--story-light); margin-bottom: 6px; letter-spacing: 0.5px; }
+    .study-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .study-desc strong { color: var(--text); font-weight: 600; }
+
+    /* ── Callout ── */
+    .callout { background: var(--story-glow); border-left: 3px solid var(--story); border-radius: 0 10px 10px 0; padding: 18px 20px; margin: 28px 0; }
+    .callout-text { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.5; font-style: italic; }
+    .callout-source { font-size: 11px; color: var(--story-light); letter-spacing: 1px; text-transform: uppercase; margin-top: 10px; }
+
+    /* ── Voice Cards ── */
+    .voice-grid { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; }
+    .voice-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; }
+    .voice-card::after { content: '\201D'; position: absolute; top: 8px; right: 16px; font-size: 48px; color: var(--story-glow); font-family: Georgia, serif; line-height: 1; }
+    .voice-quote { font-size: 14px; color: var(--text); line-height: 1.6; font-style: italic; padding-right: 24px; }
+    .voice-attr { font-size: 11px; color: var(--story-light); margin-top: 10px; letter-spacing: 0.5px; }
+
+    /* ── Race Flow ── */
+    .race-flow { margin: 24px 0; }
+    .race-segment { display: flex; align-items: stretch; margin-bottom: 2px; }
+    .race-seg-label { width: 110px; flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.5px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-right: none; border-radius: 6px 0 0 6px; display: flex; align-items: center; }
+    .race-seg-bar { flex: 1; display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 0 6px 6px 0; }
+    .race-bar-fill { height: 6px; border-radius: 3px; background: var(--story); transition: width 0.3s; }
+    .race-bar-val { font-size: 12px; font-weight: 700; color: var(--story-light); white-space: nowrap; }
+    .race-segment.station .race-seg-label { color: var(--hyrox); }
+    .race-segment.station .race-bar-fill { background: var(--hyrox); }
+    .race-segment.station .race-bar-val { color: var(--hyrox); }
+
+    /* ── Signal Cards ── */
+    .signal-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 14px; }
+    .signal-num { font-size: 28px; font-weight: 900; color: var(--story); line-height: 1; margin-bottom: 8px; }
+    .signal-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .signal-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── Product Tags ── */
+    .product-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+    .product-tag { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 8px 16px; font-size: 12px; color: var(--text); font-weight: 600; letter-spacing: 0.5px; }
+    .product-tag.highlight { border-color: var(--story); color: var(--story-light); background: var(--story-glow); }
+
+    /* ── HYROX Format Strip ── */
+    .hyrox-format { margin: 24px 0; }
+    .hyrox-station { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .hyrox-station:last-child { border-bottom: none; }
+    .hyrox-num { width: 28px; height: 28px; border-radius: 6px; background: var(--hyrox); color: #0a0a0f; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .hyrox-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .hyrox-detail { font-size: 11px; color: var(--muted); margin-left: auto; }
+    .hyrox-run { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+    .hyrox-run-line { flex: 1; height: 1px; background: var(--border); }
+    .hyrox-run-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+    /* ── Video Player ── */
+    .video-section { padding: 48px 0; }
+    .video-wrap {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      cursor: pointer;
+    }
+    .video-wrap video {
+      width: 100%;
+      display: block;
+    }
+    .video-play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 10, 15, 0.45);
+      transition: opacity 0.3s;
+    }
+    .video-play-overlay.hidden { opacity: 0; pointer-events: none; }
+    .play-btn {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(67, 176, 214, 0.9);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .play-btn:hover { transform: scale(1.1); background: rgba(67, 176, 214, 1); }
+    .play-btn svg { width: 28px; height: 28px; margin-left: 3px; }
+    .video-label {
+      margin-top: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--story-light);
+    }
+
+    /* ── Mobile adjustments ── */
+    @media screen and (max-width: 400px) {
+      .stat-strip { grid-template-columns: repeat(2, 1fr) !important; }
+      .stat-cell .val { font-size: 22px; }
+      .race-seg-label { width: 90px; font-size: 10px; }
+      .race-bar-val { font-size: 11px; }
+      .hero-title { font-size: 28px; }
+      .section-title { font-size: 20px; }
+      .hyrox-name { font-size: 12px; }
+    }
+
+    /* ── Footer ── */
+    .brand-footer { background: var(--surface); border-top: 1px solid var(--border); padding: 48px 0; text-align: center; }
+    .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .footer-logo { text-decoration: none; }
+    .footer-logo .api { font-size: 20px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 20px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .footer-team { font-size: 11px; color: var(--story-light); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+    .footer-desc { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 340px; }
+    .footer-cta { display: inline-block; margin-top: 8px; padding: 12px 32px; background: var(--accent); color: var(--text); border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; }
+    .footer-fine { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Athlete Story</span>
+        <span class="edition-date">January 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="hero">
+    <img class="hero-img" src="dylan-welcome.jpg" alt="Dylan Scott standing at the Nike LeBron James Innovation Center welcome wall" />
+    <div class="hero-overlay">
+      <div class="hero-tag">NSRL Athlete Visit</div>
+      <h1 class="hero-title">Dylan Scott</h1>
+      <p class="hero-sub">3rd at the <strong>HYROX World Championships</strong> walks into the LeBron James Innovation Center at Nike World Headquarters to find out what's happening inside his body — and what it means for race day.</p>
+    </div>
+  </div>
+
+  <!-- ═══ INTRO ═══ -->
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">From the</div>
+      <div class="team-name">Nike Sport Research Lab &times; API</div>
+      <div class="edition-divider">
+        <div class="line"></div>
+        <div class="label">Beaverton &bull; Jan 2026</div>
+        <div class="line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ THE ATHLETE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Athlete</div>
+      <h2 class="section-title">A hybrid competitor at the top of his game</h2>
+      <p class="section-text">Dylan Scott is one of the best HYROX athletes in the world — <strong>3rd place at the 2025 World Championships</strong> with a personal best of 54:47. He came to Nike World Headquarters to spend a day with the Applied Performance Innovation team in the Nike Sport Research Lab, learning more about himself and his body during HYROX-style exercise.</p>
+      <p class="section-text">The primary goal: <strong>review his priming protocol, test race pace, examine thresholds of tolerance, and deploy strategies</strong> to improve performance.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ THE SPORT ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Sport</div>
+      <h2 class="section-title">8 runs. 8 stations. No hiding.</h2>
+      <p class="section-text">HYROX is a fitness race that alternates <strong>1 km runs with 8 functional workout stations</strong> — demanding power, endurance, and durability from every energy system in the body. The elite men's division sees athletes completing this gauntlet in under 60 minutes.</p>
+
+      <div class="photo-inset">
+        <img src="dylan-hyrox-format.jpg" alt="HYROX competition format showing all 8 stations" />
+        <div class="caption">The full HYROX competition structure.</div>
+      </div>
+
+      <div class="hyrox-format">
+        <div class="hyrox-run"><div class="hyrox-run-line"></div><div class="hyrox-run-label">1 KM RUN</div><div class="hyrox-run-line"></div></div>
+        <div class="hyrox-station"><div class="hyrox-num">01</div><div class="hyrox-name">SkiErg</div><div class="hyrox-detail">1000m</div></div>
+        <div class="hyrox-run"><div class="hyrox-run-line"></div><div class="hyrox-run-label">1 KM RUN</div><div class="hyrox-run-line"></div></div>
+        <div class="hyrox-station"><div class="hyrox-num">02</div><div class="hyrox-name">Sled Push</div><div class="hyrox-detail">50m</div></div>
+        <div class="hyrox-run"><div class="hyrox-run-line"></div><div class="hyrox-run-label">1 KM RUN</div><div class="hyrox-run-line"></div></div>
+        <div class="hyrox-station"><div class="hyrox-num">03</div><div class="hyrox-name">Sled Pull</div><div class="hyrox-detail">50m</div></div>
+        <div class="hyrox-run"><div class="hyrox-run-line"></div><div class="hyrox-run-label">1 KM RUN</div><div class="hyrox-run-line"></div></div>
+        <div class="hyrox-station"><div class="hyrox-num">04</div><div class="hyrox-name">Burpee Broad Jumps</div><div class="hyrox-detail">80m</div></div>
+        <div class="hyrox-run"><div class="hyrox-run-line"></div><div class="hyrox-run-label">1 KM RUN</div><div class="hyrox-run-line"></div></div>
+        <div class="hyrox-station"><div class="hyrox-num">05</div><div class="hyrox-name">Row</div><div class="hyrox-detail">1000m</div></div>
+        <div class="hyrox-run"><div class="hyrox-run-line"></div><div class="hyrox-run-label">1 KM RUN</div><div class="hyrox-run-line"></div></div>
+        <div class="hyrox-station"><div class="hyrox-num">06</div><div class="hyrox-name">Farmers Carry</div><div class="hyrox-detail">200m</div></div>
+        <div class="hyrox-run"><div class="hyrox-run-line"></div><div class="hyrox-run-label">1 KM RUN</div><div class="hyrox-run-line"></div></div>
+        <div class="hyrox-station"><div class="hyrox-num">07</div><div class="hyrox-name">Sandbag Lunges</div><div class="hyrox-detail">100m</div></div>
+        <div class="hyrox-run"><div class="hyrox-run-line"></div><div class="hyrox-run-label">1 KM RUN</div><div class="hyrox-run-line"></div></div>
+        <div class="hyrox-station"><div class="hyrox-num">08</div><div class="hyrox-name">Wall Balls</div><div class="hyrox-detail">100 reps</div></div>
+      </div>
+
+      <p class="section-text"><em>Some athletes have raw power, some have all-day endurance. HYROX demands everything — strength, power, endurance. Not just upper body, not just lower body, the whole body. It is all essential.</em></p>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO: Wall Ball Action ═══ -->
+  <div class="photo-break">
+    <img src="dylan-wallball.jpg" alt="Dylan Scott performing sandbag lunges during the half HYROX session at the NSRL" />
+    <div class="caption">Sandbag lunges at the NSRL — grinding through station work while lactate climbs.</div>
+  </div>
+
+  <!-- ═══ THE SESSION ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Session</div>
+      <h2 class="section-title">Simulating the back half of HYROX</h2>
+      <p class="section-text">To model the demands of the second half of competition — where races are won and lost — Dylan performed a structured warm-up followed by the final five station-and-run sequences: <strong>Burpees, Row, Farmers Carry, Lunges, and Wall Balls</strong>, each separated by 1 km runs on the indoor track.</p>
+      <p class="section-text">Throughout the session, the team captured <strong>venous blood lactate, heart rate, and local muscle oxygenation</strong> (Moxy sensors on the shoulder, forearm, and quadriceps) to map the shifting physiological demands in real time.</p>
+
+      <div class="stat-strip" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="stat-cell">
+          <div class="val">0.8</div>
+          <div class="label">Baseline Lactate</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">7.1</div>
+          <div class="label">Peak Lactate</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">4%</div>
+          <div class="label">Low Quad O&#8322;</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">23%</div>
+          <div class="label">Low Arm O&#8322;</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO: Blood Lactate Testing ═══ -->
+  <div class="photo-break">
+    <img src="dylan-lactate.jpg" alt="NSRL scientist taking blood lactate sample from Dylan Scott with Moxy sensors visible" />
+    <div class="caption">Blood lactate sampling between stations — Moxy sensors tracking muscle oxygen in real time.</div>
+  </div>
+
+  <!-- ═══ THE DATA ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Data</div>
+      <h2 class="section-title">Lactate climbed with station load, not just running speed</h2>
+      <p class="section-text">The lactate profile told a clear story: the metabolic cost didn't build linearly — it <strong>spiked with each station</strong> and partially cleared during running segments, creating a repeated metabolic rollercoaster.</p>
+
+      <div class="race-flow">
+        <div class="race-segment"><div class="race-seg-label">Baseline</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:11%"></div><div class="race-bar-val">0.8</div></div></div>
+        <div class="race-segment"><div class="race-seg-label">Post Warm-up</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:14%"></div><div class="race-bar-val">1.0</div></div></div>
+        <div class="race-segment"><div class="race-seg-label">1st KM Run</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:28%"></div><div class="race-bar-val">2.0</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Burpees</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:55%"></div><div class="race-bar-val">3.9</div></div></div>
+        <div class="race-segment"><div class="race-seg-label">2nd KM Run</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:63%"></div><div class="race-bar-val">4.5</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Row</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:85%"></div><div class="race-bar-val">6.0</div></div></div>
+        <div class="race-segment"><div class="race-seg-label">3rd KM Run</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:72%"></div><div class="race-bar-val">5.1</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Farmer Carry</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:73%"></div><div class="race-bar-val">5.2</div></div></div>
+        <div class="race-segment"><div class="race-seg-label">4th KM Run</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:68%"></div><div class="race-bar-val">4.8</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Lunges</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:69%"></div><div class="race-bar-val">4.9</div></div></div>
+        <div class="race-segment"><div class="race-seg-label">5th KM Run</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:63%"></div><div class="race-bar-val">4.5</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Wall Balls</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:100%"></div><div class="race-bar-val">7.1</div></div></div>
+      </div>
+
+      <p class="section-text">The highest lactate spike — <strong>7.1 mmol/L during Wall Balls</strong> — came at the very end of the session. This matches the race structure: the final station demands sustained upper-body work while the entire system is already fatigued from the preceding 45+ minutes.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ THE SIGNAL ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Signal</div>
+      <h2 class="section-title">The rotating limiter</h2>
+
+      <div class="study-card">
+        <div class="study-name">Quad oxygen collapsed during station work</div>
+        <div class="study-desc">Quad Moxy started around <strong>41 at baseline</strong>, surged to <strong>95+ from the warm-up priming protocol</strong>, then dropped dramatically during high-load stations — bottoming out at <strong>~4% after Lunges and Wall Balls</strong>. The quads desaturated almost completely during stations and only partially recovered on each run.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-name">Arm oxygen was remarkably stable — until it wasn't</div>
+        <div class="study-desc">While quad oxygen swung wildly through the session, arm Moxy remained <strong>steady around 32-34</strong> for most of the effort — dropping to a low of <strong>23% during Burpees</strong>. The practical takeaway: performance was constrained more by <strong>local leg oxygen stress and systemic metabolite load</strong> than by broad upper-body collapse.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-name">The runs don't recover you — they maintain you</div>
+        <div class="study-desc">Lactate never dropped below the previous station's value during a run segment. Running between stations is <strong>not recovery — it's managed accumulation</strong>. The ability to sustain pace while clearing just enough metabolite is the competitive differentiator.</div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">"The demands for this sport appear to rely heavily on work at upper threshold for a long period of time. That is very difficult."</div>
+        <div class="callout-source">API Team Observation</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ VIDEO: Campus Visit ═══ -->
+  <section class="video-section" style="padding-top: 0;">
+    <div class="container">
+      <div class="section-label">Watch</div>
+      <h2 class="section-title">Dylan at Nike World Headquarters</h2>
+      <div class="video-wrap" id="video-wrap">
+        <video id="dylan-video" preload="metadata" playsinline>
+          <source src="dylan-hero-loop.mp4" type="video/mp4" />
+        </video>
+        <div class="video-play-overlay" id="video-overlay">
+          <button class="play-btn" aria-label="Play video">
+            <svg viewBox="0 0 24 24" fill="#fff"><polygon points="6,3 20,12 6,21" /></svg>
+          </button>
+          <div class="video-label">Play Video</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO: Data Review ═══ -->
+  <div class="photo-break">
+    <img src="dylan-data-review.jpg" alt="Overhead view of Dylan Scott and scientists reviewing real-time Moxy data on laptop" />
+    <div class="caption">Reviewing Moxy data in real time between stations — the numbers tell the story.</div>
+  </div>
+
+  <!-- ═══ ATHLETE VOICE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Athlete Voice</div>
+      <h2 class="section-title">Dylan on footwear</h2>
+      <p class="section-text">Dylan spent significant time giving feedback on the latest footwear developments. His insight was specific and direct — shaped by racing at the highest level.</p>
+
+      <div class="voice-grid">
+        <div class="voice-card">
+          <div class="voice-quote">"From the perception I have from talking to people that have raced, they are really looking for a fast runner shoe. And that is what they value more than anything... and they would compromise stability a little bit for that."</div>
+          <div class="voice-attr">Dylan Scott</div>
+        </div>
+        <div class="voice-card">
+          <div class="voice-quote">"The closer that we can get to feeling like a running shoe, that isn't unstable, and less of a cross training shoe that has a little run in it... I think that is the better direction in my opinion for the elite and the entire market."</div>
+          <div class="voice-attr">Dylan Scott</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO: Footwear Session ═══ -->
+  <div class="photo-break">
+    <img src="dylan-footwear.jpg" alt="Dylan Scott reviewing prototype footwear with Nike design team" />
+    <div class="caption">Direct athlete feedback on footwear prototypes — product insight from the podium.</div>
+  </div>
+
+  <!-- ═══ THE PRODUCT ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Product</div>
+      <h2 class="section-title">Fast shoe first, functional shoe second</h2>
+      <p class="section-text">Dylan's message was consistent: <strong>the elite HYROX athlete wants a running shoe</strong> that can handle the stations — not a cross-trainer that happens to run. Speed on the 1 km segments is where the biggest time gains live, and compromising that for station stability is a trade-off most top competitors wouldn't make.</p>
+
+      <div class="product-tags">
+        <span class="product-tag highlight">Running feel</span>
+        <span class="product-tag highlight">Speed on 1K segments</span>
+        <span class="product-tag">Station stability</span>
+        <span class="product-tag">Grip</span>
+        <span class="product-tag">Transition durability</span>
+        <span class="product-tag highlight">Lightweight</span>
+      </div>
+
+      <p class="section-text">He also tried on the <strong>weighted compression hoodie</strong> and immediately said with a wide smile: <em>"This feels like a big hug."</em></p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══ PHOTO: Wall Balls from Behind ═══ -->
+  <div class="photo-break">
+    <img src="dylan-wallball-behind.jpg" alt="Dylan Scott performing wall balls from behind at the NSRL, LeBron logo visible" />
+    <div class="caption">100 wall balls — the final station. Where lactate peaked and races are decided.</div>
+  </div>
+
+  <!-- ═══ PATH FORWARD ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Path Forward</div>
+      <h2 class="section-title">From lab readout to race execution</h2>
+      <p class="section-text">Wrapping up the day was a discussion around future opportunities — how to prime, how to recover, and how to train the transitions that separate podium finishers from the rest.</p>
+
+      <div class="signal-card">
+        <div class="signal-num">01</div>
+        <div class="signal-title">Extend the warm-up — aerobic and anaerobic</div>
+        <div class="signal-body">Priming before a HYROX race should include both aerobic and anaerobic stimulation. Get the system fully primed, not just moving.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">02</div>
+        <div class="signal-title">Practice pacing in training</div>
+        <div class="signal-body">Train with pacing strategies in workouts to find the just-right sustainable pace. The cost of going too hard early compounds through every remaining station.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">03</div>
+        <div class="signal-title">Post-exercise nutrition</div>
+        <div class="signal-body">Immediate intake of carbohydrate and protein post-session, and prioritizing sleep or "synthetic sleep" recovery tools like Shiftwave.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">04</div>
+        <div class="signal-title">Train the transitions, not just the pieces</div>
+        <div class="signal-body">Build sessions that force repeated run-to-station-to-run switches. The ability to manage oxygen recovery while clearing lactate between tasks is where races are won.</div>
+      </div>
+
+      <div class="callout" style="margin-top: 28px;">
+        <div class="callout-text">"So much learned, so much to learn."</div>
+        <div class="callout-source">Rapid Summary</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO: Team Review ═══ -->
+  <div class="photo-break">
+    <img src="dylan-team-review.jpg" alt="Dylan Scott and NSRL team reviewing session data together" />
+    <div class="caption">Applied data. Athlete context. Better decisions.</div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Insights from the cutting edge of athlete performance — the problems, the solutions, and what we're learning along the way.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var video = document.getElementById('dylan-video');
+      var overlay = document.getElementById('video-overlay');
+      var wrap = document.getElementById('video-wrap');
+      if (!video || !overlay) return;
+
+      function togglePlay() {
+        if (video.paused) {
+          video.play();
+          overlay.classList.add('hidden');
+        } else {
+          video.pause();
+          overlay.classList.remove('hidden');
+        }
+      }
+
+      wrap.addEventListener('click', togglePlay);
+
+      video.addEventListener('ended', function () {
+        overlay.classList.remove('hidden');
+      });
+    })();
+  </script>
+</body>
+</html>
