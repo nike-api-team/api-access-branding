@@ -1,25 +1,4 @@
-function categoryColor(cat) {
-  var colors = {
-    'Publication': '#3a6df5',
-    'Athlete Story': '#22c55e',
-    'Case Study': '#a855f7',
-    'Data Drop': '#f59e0b'
-  };
-  return colors[cat] || '#3a6df5';
-}
-
-function categoryGradient(cat) {
-  var grads = {
-    'Publication': 'linear-gradient(135deg, #1a2a5f 0%, #0d1533 100%)',
-    'Athlete Story': 'linear-gradient(135deg, #0f3d1f 0%, #0a1a10 100%)',
-    'Case Study': 'linear-gradient(135deg, #2d1854 0%, #150d2a 100%)',
-    'Data Drop': 'linear-gradient(135deg, #3d2a0a 0%, #1a1205 100%)'
-  };
-  return grads[cat] || grads['Publication'];
-}
-
 function storyCard(s, isFeatured) {
-  var color = categoryColor(s.category);
   var h = '';
 
   h += '<div style="margin:0 24px 24px; border-radius:12px; overflow:hidden; border:1px solid #2a2a45; background:#151520;">';
@@ -27,8 +6,8 @@ function storyCard(s, isFeatured) {
   if (s.image) {
     h += '<img src="https://api-access.netlify.app/' + s.image + '" alt="" style="width:100%; height:auto; max-height:200px; object-fit:cover; display:block;" />';
   } else {
-    h += '<div style="padding:28px 24px 20px; background:' + categoryGradient(s.category) + '; border-bottom:2px solid ' + color + ';">';
-    h += '<span style="font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:' + color + ';">' + s.category + '</span>';
+    h += '<div style="padding:28px 24px 20px; background:linear-gradient(135deg, #1a2a5f 0%, #0d1533 100%); border-bottom:2px solid #3a6df5;">';
+    h += '<span style="font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#3a6df5;">' + s.category + '</span>';
     h += '</div>';
   }
 
@@ -39,19 +18,15 @@ function storyCard(s, isFeatured) {
 
   if (s.image) {
     h += '<div style="margin-bottom:10px;">';
-    h += '<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:' + color + '; margin-right:8px; vertical-align:middle;"></span>';
-    h += '<span style="font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:' + color + '; vertical-align:middle;">' + s.category + '</span>';
+    h += '<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#3a6df5; margin-right:8px; vertical-align:middle;"></span>';
+    h += '<span style="font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#3a6df5; vertical-align:middle;">' + s.category + '</span>';
     h += '</div>';
   }
 
   h += '<div style="font-size:' + titleSize + '; font-weight:900; color:#f0f0f8; line-height:1.2; margin-bottom:10px; letter-spacing:-0.5px;">' + s.title + '</div>';
   h += '<div style="font-size:' + teaserSize + '; color:#9999b8; line-height:1.7; margin-bottom:18px;">' + s.teaser + '</div>';
 
-  if (isFeatured) {
-    h += '<a href="' + s.url + '" style="display:inline-block; padding:12px 32px; background:#3a6df5; color:#ffffff; text-decoration:none; font-size:13px; font-weight:700; border-radius:8px; letter-spacing:0.5px;">Read the story &#8594;</a>';
-  } else {
-    h += '<a href="' + s.url + '" style="display:inline-block; padding:10px 28px; border:2px solid ' + color + '; color:' + color + '; text-decoration:none; font-size:12px; font-weight:700; border-radius:8px; letter-spacing:0.5px;">Read more &#8594;</a>';
-  }
+  h += '<a href="' + s.url + '" style="display:inline-block; padding:12px 32px; background:#3a6df5; color:#ffffff; text-decoration:none; font-size:13px; font-weight:700; border-radius:8px; letter-spacing:0.5px;">Read the story &#8594;</a>';
 
   h += '</div>';
   h += '</div>';
