@@ -1,35 +1,31 @@
-function storyCard(s, isFeatured) {
+function storySection(s, isFeatured) {
   var h = '';
 
-  h += '<div style="margin:0 24px 24px; border-radius:12px; overflow:hidden; border:1px solid #2a2a45; background:#151520;">';
-
+  // ── Full-bleed image ──
   if (s.image) {
-    h += '<img src="https://api-access.netlify.app/' + s.image + '" alt="" style="width:100%; height:auto; max-height:200px; object-fit:cover; display:block;" />';
-  } else {
-    h += '<div style="padding:28px 24px 20px; background:linear-gradient(135deg, #1a2a5f 0%, #0d1533 100%); border-bottom:2px solid #3a6df5;">';
-    h += '<span style="font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#3a6df5;">' + s.category + '</span>';
-    h += '</div>';
+    h += '<img src="https://api-access.netlify.app/' + s.image + '" alt="" style="width:100%; height:auto; display:block;" />';
   }
 
-  var titleSize = isFeatured ? '24px' : '20px';
-  var teaserSize = isFeatured ? '14px' : '13px';
+  // ── Content block ──
+  h += '<div style="padding:28px 32px 36px;">';
 
-  h += '<div style="padding:20px 24px 24px;">';
+  // Category label
+  h += '<div style="font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#3a6df5; margin-bottom:14px;">' + s.category + '</div>';
 
-  if (s.image) {
-    h += '<div style="margin-bottom:10px;">';
-    h += '<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#3a6df5; margin-right:8px; vertical-align:middle;"></span>';
-    h += '<span style="font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#3a6df5; vertical-align:middle;">' + s.category + '</span>';
-    h += '</div>';
-  }
+  // Title
+  var titleSize = isFeatured ? '28px' : '24px';
+  h += '<div style="font-size:' + titleSize + '; font-weight:900; color:#f0f0f8; line-height:1.2; margin-bottom:14px; letter-spacing:-0.5px;">' + s.title + '</div>';
 
-  h += '<div style="font-size:' + titleSize + '; font-weight:900; color:#f0f0f8; line-height:1.2; margin-bottom:10px; letter-spacing:-0.5px;">' + s.title + '</div>';
-  h += '<div style="font-size:' + teaserSize + '; color:#9999b8; line-height:1.7; margin-bottom:18px;">' + s.teaser + '</div>';
+  // Teaser
+  h += '<div style="font-size:15px; color:#9999b8; line-height:1.8; margin-bottom:24px;">' + s.teaser + '</div>';
 
-  h += '<a href="' + s.url + '" style="display:inline-block; padding:12px 32px; background:#3a6df5; color:#ffffff; text-decoration:none; font-size:13px; font-weight:700; border-radius:8px; letter-spacing:0.5px;">Read the story &#8594;</a>';
+  // Full-width CTA button
+  h += '<a href="' + s.url + '" style="display:block; padding:16px 0; background:#3a6df5; color:#ffffff; text-decoration:none; font-size:14px; font-weight:700; border-radius:8px; letter-spacing:0.5px; text-align:center;">Read the story &#8594;</a>';
 
   h += '</div>';
-  h += '</div>';
+
+  // ── Section divider ──
+  h += '<div style="padding:0 32px;"><div style="border-top:1px solid #2a2a45;"></div></div>';
 
   return h;
 }
@@ -38,51 +34,51 @@ function generateEmailHtml(story, secondary, otherStories) {
   var h = '';
 
   h += '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>';
-  h += '<body style="margin:0; padding:0; background:#0d1017; font-family:Segoe UI, system-ui, -apple-system, Helvetica, Arial, sans-serif;">';
-  h += '<div style="max-width:600px; margin:0 auto; background:#0d1017;">';
+  h += '<body style="margin:0; padding:0; background:#0a0a0f; font-family:Segoe UI, system-ui, -apple-system, Helvetica, Arial, sans-serif;">';
+  h += '<div style="max-width:600px; margin:0 auto; background:#0f0f18;">';
 
   // ── Header ──
-  h += '<div style="padding:36px 32px 16px; text-align:center;">';
-  h += '<span style="font-size:20px; font-weight:900; color:#f0f0f8; letter-spacing:-0.5px;">API</span>';
-  h += '<span style="font-size:20px; font-weight:300; color:#3a6df5; letter-spacing:2px; margin-left:4px;">ACCESS</span>';
+  h += '<div style="padding:40px 32px 20px; text-align:center;">';
+  h += '<span style="font-size:22px; font-weight:900; color:#f0f0f8; letter-spacing:-0.5px;">API</span>';
+  h += '<span style="font-size:22px; font-weight:300; color:#3a6df5; letter-spacing:2px; margin-left:6px;">ACCESS</span>';
   h += '</div>';
 
   // ── Team intro ──
   h += '<div style="padding:0 32px 36px;">';
-  h += '<div style="font-size:14px; color:#9999b8; line-height:1.8; text-align:justify;">';
-  h += 'Welcome to <strong style="color:#f0f0f8;">API Access</strong>, from the Applied Performance Innovation team at the Nike Sport Research Lab. ';
-  h += 'Real insights from real athletes, backed by real data. ';
-  h += 'You\'re on the short list &#8212; this hits your inbox before it goes anywhere else. Enjoy the access.';
+  h += '<div style="font-size:15px; color:#9999b8; line-height:1.8; text-align:center;">';
+  h += 'From the Applied Performance Innovation team at the Nike Sport Research Lab. ';
+  h += 'Real insights from real athletes, backed by real data.';
   h += '</div>';
   h += '</div>';
 
-  // ── Featured story card ──
-  h += storyCard(story, true);
+  // ── Divider ──
+  h += '<div style="padding:0 32px;"><div style="border-top:1px solid #2a2a45;"></div></div>';
 
-  // ── Secondary story card ──
+  // ── Featured story ──
+  h += storySection(story, true);
+
+  // ── Secondary story ──
   if (secondary) {
-    h += storyCard(secondary, false);
+    h += storySection(secondary, false);
   }
 
-  // ── Additional story cards ──
+  // ── Additional stories ──
   if (otherStories && otherStories.length > 0) {
     otherStories.forEach(function(s) {
-      h += storyCard(s, false);
+      h += storySection(s, false);
     });
   }
 
   // ── First-time visitor note ──
-  h += '<div style="padding:12px 24px 8px;">';
-  h += '<div style="padding:14px 16px; background:#151520; border-radius:8px; border:1px solid #2a2a45;">';
-  h += '<div style="font-size:12px; color:#777; line-height:1.6;">First time visiting API Access? You\'ll be asked to set a password on your first click &#8212; check your inbox for the invite.</div>';
-  h += '</div>';
+  h += '<div style="padding:24px 32px 8px;">';
+  h += '<div style="font-size:12px; color:#666; line-height:1.7; text-align:center;">First time visiting API Access? You\'ll be asked to set a password on your first click &#8212; check your inbox for the invite.</div>';
   h += '</div>';
 
   // ── Footer ──
-  h += '<div style="padding:28px 32px 40px; text-align:center;">';
-  h += '<div style="font-size:11px; color:#555; line-height:1.8;">';
+  h += '<div style="padding:28px 32px 44px; text-align:center;">';
+  h += '<div style="font-size:11px; color:#555; line-height:2;">';
   h += 'Applied Performance Innovation<br>Nike Sport Research Lab<br>';
-  h += '<a href="https://api-access.netlify.app" style="color:#7a9dff; text-decoration:none;">api-access.netlify.app</a>';
+  h += '<a href="https://access-performance.com" style="color:#7a9dff; text-decoration:none;">access-performance.com</a>';
   h += '</div>';
   h += '</div>';
 
