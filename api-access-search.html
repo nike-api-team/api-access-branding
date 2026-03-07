@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search — API Access</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --fuchsia: #d946a8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ── Sticky Header ── */
+    .brand-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 15, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+    }
+
+    .brand-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+
+    .brand-logo .api { color: var(--text); }
+    .brand-logo .access { color: var(--accent); font-weight: 300; letter-spacing: 2px; margin-left: 4px; }
+
+    .brand-edition {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1px;
+    }
+
+    .edition-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+    }
+
+    /* ── Search Section ── */
+    .search-section {
+      padding: 32px 0 8px;
+    }
+
+    .search-title {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .search-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 18px 14px 44px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .search-input::placeholder {
+      color: var(--muted);
+      opacity: 0.7;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 18px;
+      cursor: pointer;
+      display: none;
+      padding: 4px;
+      line-height: 1;
+    }
+
+    .search-clear:hover { color: var(--text); }
+
+    /* ── Tag Chips ── */
+    .tags-section {
+      padding: 0 0 16px;
+    }
+
+    .tags-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .tags-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag-chip {
+      display: inline-block;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .tag-chip:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .tag-chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .tag-count {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-left: 4px;
+    }
+
+    /* ── Category Filter ── */
+    .category-filter {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .cat-btn {
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 6px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cat-btn:hover { border-color: var(--accent); color: var(--text); }
+    .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* ── Results ── */
+    .results-section {
+      padding: 0 0 40px;
+    }
+
+    .results-count {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .results-count span { color: var(--accent-light); }
+
+    .card-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* ── Content Cards ── */
+    .content-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .content-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 24px var(--accent-glow);
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .tag-drop { background: var(--accent); color: #fff; }
+    .tag-story { background: #e8622a; color: #fff; }
+    .tag-pub { background: transparent; color: var(--accent-light); border: 1px solid rgba(122, 157, 255, 0.3); }
+    .tag-case { background: #5b8a9a; color: #fff; }
+    .tag-series { background: var(--fuchsia); color: #fff; }
+
+    .card-date {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .card-source {
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.7;
+      margin-bottom: 10px;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .card-tag-sm {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(58, 109, 245, 0.1);
+      color: var(--accent-light);
+      border: 1px solid rgba(122, 157, 255, 0.15);
+    }
+
+    .card-cta {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.3px;
+    }
+
+    /* ── Highlight matches ── */
+    mark {
+      background: rgba(58, 109, 245, 0.25);
+      color: var(--text);
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+
+    /* ── No results ── */
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .no-results-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+
+    .no-results h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .no-results p {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* ── Footer ── */
+    .brand-footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .footer-logo .api { color: var(--text); }
+    .footer-logo .access { color: var(--accent); font-weight: 300; letter-spacing: 2px; margin-left: 3px; }
+
+    .footer-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .footer-link {
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-link:hover { text-decoration: underline; }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Search</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Search ── -->
+  <div class="search-section">
+    <div class="container">
+      <h1 class="search-title">Explore</h1>
+      <p class="search-sub">Search across all data drops, athlete stories, and publications by topic, keyword, or tag.</p>
+
+      <div class="search-input-wrap">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search — e.g. priming, hemoglobin, HYROX..." autocomplete="off" />
+        <button id="clearBtn" class="search-clear" title="Clear">&times;</button>
+      </div>
+
+      <!-- Category filter -->
+      <div class="category-filter" id="categoryFilter">
+        <button class="cat-btn active" data-cat="all">All</button>
+        <button class="cat-btn" data-cat="Data Drop">Data Drops</button>
+        <button class="cat-btn" data-cat="Athlete Story">Athlete Stories</button>
+        <button class="cat-btn" data-cat="Case Study">Case Studies</button>
+        <button class="cat-btn" data-cat="Publication">Publications</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tags ── -->
+  <div class="tags-section">
+    <div class="container">
+      <div class="tags-label">Popular tags</div>
+      <div class="tags-wrap" id="tagsWrap"></div>
+    </div>
+  </div>
+
+  <!-- ── Results ── -->
+  <div class="results-section">
+    <div class="container">
+      <div class="results-count" id="resultsCount"></div>
+      <div class="card-stack" id="resultsStack"></div>
+      <div class="loading" id="loadingState">
+        <div class="loading-spinner"></div>
+        <div>Loading content...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <div class="brand-footer">
+    <div class="container">
+      <div class="footer-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </div>
+      <div class="footer-sub">Applied Performance Innovation</div>
+      <a href="api-access-landing.html" class="footer-link">&#8592; Back to home</a>
+    </div>
+  </div>
+
+  <script>
+    var allStories = [];
+    var activeTags = [];
+    var activeCategory = 'all';
+
+    // ── Read URL params (for "View all" links from landing page) ──
+    var urlParams = new URLSearchParams(window.location.search);
+    var paramCat = urlParams.get('cat');
+    var paramTag = urlParams.get('tag');
+    var paramQ = urlParams.get('q');
+
+    if (paramCat) activeCategory = paramCat;
+    if (paramTag) activeTags.push(paramTag);
+    if (paramQ) {
+      document.getElementById('searchInput').value = paramQ;
+      document.getElementById('clearBtn').style.display = 'block';
+    }
+
+    // Set active category button from URL
+    if (paramCat) {
+      document.querySelectorAll('.cat-btn').forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-cat') === paramCat);
+      });
+    }
+
+    // ── Load content index ──
+    fetch('newsletter-content.json?v=' + Date.now())
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        allStories = data.stories.sort(function(a, b) {
+          return new Date(b.date) - new Date(a.date);
+        });
+        document.getElementById('loadingState').style.display = 'none';
+        buildTagCloud();
+        render();
+      })
+      .catch(function(err) {
+        document.getElementById('loadingState').innerHTML = '<div style="color:#e54;">Failed to load content. Try refreshing.</div>';
+        console.error(err);
+      });
+
+    // ── Build tag cloud (most common tags) ──
+    function buildTagCloud() {
+      var tagCounts = {};
+      allStories.forEach(function(s) {
+        (s.tags || []).forEach(function(t) {
+          tagCounts[t] = (tagCounts[t] || 0) + 1;
+        });
+      });
+
+      // Sort by count descending, take top 20
+      var sorted = Object.keys(tagCounts).sort(function(a, b) { return tagCounts[b] - tagCounts[a]; });
+      var top = sorted.slice(0, 20);
+
+      var wrap = document.getElementById('tagsWrap');
+      wrap.innerHTML = '';
+      top.forEach(function(tag) {
+        var chip = document.createElement('span');
+        chip.className = 'tag-chip';
+        if (activeTags.indexOf(tag) > -1) chip.classList.add('active');
+        chip.textContent = tag;
+        chip.setAttribute('data-tag', tag);
+        chip.addEventListener('click', function() { toggleTag(tag); });
+        wrap.appendChild(chip);
+      });
+    }
+
+    function toggleTag(tag) {
+      var idx = activeTags.indexOf(tag);
+      if (idx > -1) {
+        activeTags.splice(idx, 1);
+      } else {
+        activeTags.push(tag);
+      }
+
+      // Update chip styling
+      var chips = document.querySelectorAll('.tag-chip');
+      chips.forEach(function(c) {
+        c.classList.toggle('active', activeTags.indexOf(c.getAttribute('data-tag')) > -1);
+      });
+
+      render();
+    }
+
+    // ── Category filter ──
+    document.getElementById('categoryFilter').addEventListener('click', function(e) {
+      if (!e.target.classList.contains('cat-btn')) return;
+      activeCategory = e.target.getAttribute('data-cat');
+      document.querySelectorAll('.cat-btn').forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-cat') === activeCategory);
+      });
+      render();
+    });
+
+    // ── Search input ──
+    var searchInput = document.getElementById('searchInput');
+    var clearBtn = document.getElementById('clearBtn');
+
+    searchInput.addEventListener('input', function() {
+      clearBtn.style.display = this.value ? 'block' : 'none';
+      render();
+    });
+
+    clearBtn.addEventListener('click', function() {
+      searchInput.value = '';
+      clearBtn.style.display = 'none';
+      searchInput.focus();
+      render();
+    });
+
+    // ── Render results ──
+    function render() {
+      var query = searchInput.value.trim().toLowerCase();
+      var results = allStories.filter(function(s) {
+        // Category filter
+        if (activeCategory !== 'all' && s.category !== activeCategory) return false;
+
+        // Tag filter (AND logic — must match all selected tags)
+        if (activeTags.length > 0) {
+          var storyTags = (s.tags || []).map(function(t) { return t.toLowerCase(); });
+          for (var i = 0; i < activeTags.length; i++) {
+            if (storyTags.indexOf(activeTags[i].toLowerCase()) === -1) return false;
+          }
+        }
+
+        // Text search (OR across title, teaser, source, category, tags)
+        if (query) {
+          var haystack = [
+            s.title, s.teaser, s.source, s.category,
+            (s.tags || []).join(' ')
+          ].join(' ').toLowerCase();
+          // Split query into words, ALL must match somewhere
+          var words = query.split(/\s+/);
+          for (var w = 0; w < words.length; w++) {
+            if (haystack.indexOf(words[w]) === -1) return false;
+          }
+        }
+
+        return true;
+      });
+
+      // Results count
+      var countEl = document.getElementById('resultsCount');
+      if (query || activeTags.length > 0 || activeCategory !== 'all') {
+        countEl.innerHTML = '<span>' + results.length + '</span> of ' + allStories.length + ' stories';
+      } else {
+        countEl.innerHTML = '<span>' + allStories.length + '</span> stories';
+      }
+
+      // Render cards
+      var stack = document.getElementById('resultsStack');
+
+      if (results.length === 0) {
+        stack.innerHTML = '<div class="no-results">' +
+          '<div class="no-results-icon">&#128301;</div>' +
+          '<h3>No matches</h3>' +
+          '<p>Try a different keyword, tag, or category.</p>' +
+          '</div>';
+        return;
+      }
+
+      var html = '';
+      results.forEach(function(s) {
+        var title = s.title;
+        var teaser = s.teaser;
+
+        // Highlight query matches
+        if (query) {
+          var words = query.split(/\s+/);
+          words.forEach(function(w) {
+            if (w.length < 2) return;
+            var re = new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            title = title.replace(re, '<mark>$1</mark>');
+            teaser = teaser.replace(re, '<mark>$1</mark>');
+          });
+        }
+
+        // Category tag class
+        var tagClass = 'tag-pub';
+        if (s.category === 'Data Drop') tagClass = 'tag-drop';
+        else if (s.category === 'Athlete Story') tagClass = 'tag-story';
+        else if (s.category === 'Case Study') tagClass = 'tag-case';
+
+        // Format date
+        var d = new Date(s.date + 'T00:00:00');
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var dateStr = months[d.getMonth()] + ' ' + d.getFullYear();
+
+        html += '<a class="content-card" href="' + s.url.replace('https://api-access.netlify.app/', '') + '">';
+        html += '<div class="card-meta">';
+        html += '<span class="card-tag ' + tagClass + '">' + s.category + '</span>';
+        html += '<span class="card-date">' + dateStr + '</span>';
+        html += '</div>';
+        html += '<h3 class="card-title">' + title + '</h3>';
+        html += '<p class="card-desc">' + teaser + '</p>';
+        html += '<div class="card-source">' + s.source + '</div>';
+
+        // Show tags on each card
+        if (s.tags && s.tags.length > 0) {
+          html += '<div class="card-tags">';
+          s.tags.forEach(function(t) {
+            var isActive = activeTags.indexOf(t) > -1;
+            var activeStyle = isActive ? 'background:rgba(58,109,245,0.3); border-color:rgba(122,157,255,0.4);' : '';
+            html += '<span class="card-tag-sm" style="' + activeStyle + '">' + t + '</span>';
+          });
+          html += '</div>';
+        }
+
+        html += '<span class="card-cta">Read the story &#8594;</span>';
+        html += '</a>';
+      });
+
+      stack.innerHTML = html;
+    }
+  </script>
+
+</body>
+</html>

@@ -7,7 +7,8 @@
       "date": "2026-02-27",
       "category": "Publication",
       "image": null,
-      "source": "Abreu et al. — Int J Sports Physiol Perform, 2026"
+      "source": "Abreu et al. — Int J Sports Physiol Perform, 2026",
+      "tags": ["halftime", "priming", "warm-up", "soccer", "sprint", "women", "performance", "FIFA 11+"]
     },
     {
       "title": "ACG Team Camp: Palm Springs",
@@ -16,16 +17,8 @@
       "date": "2026-02-15",
       "category": "Athlete Story",
       "image": "acg-camp-hero.jpg",
-      "source": "NSRL × ACG Racing Department"
-    },
-    {
-      "title": "Inside HYROX Physiology",
-      "teaser": "The 3rd-place finisher at the HYROX World Championships visits the NSRL. Blood lactate, muscle oxygen, and footwear feedback — a field-to-lab look at hybrid racing demands.",
-      "url": "https://api-access.netlify.app/api-access-dylan-scott.html",
-      "date": "2026-01-20",
-      "category": "Athlete Story",
-      "image": "dylan-welcome.jpg",
-      "source": "NSRL × Nike Training"
+      "source": "NSRL × ACG Racing Department",
+      "tags": ["trail running", "ACG", "team camp", "athletes", "product", "research", "desert", "NSRL"]
     },
     {
       "title": "Every Answer: Elite Miler Case Study",
@@ -34,16 +27,18 @@
       "date": "2026-02-01",
       "category": "Case Study",
       "image": null,
-      "source": "Applied Performance Innovation — NSRL"
+      "source": "Applied Performance Innovation — NSRL",
+      "tags": ["case study", "VO2max", "O2 cascade", "NIRS", "cardiac output", "EIAH", "spirometry", "running economy", "lactate", "biomechanics", "priming", "NSRL", "mile", "women", "elite"]
     },
     {
-      "title": "Breaking4: What Would It Take?",
-      "teaser": "A multi-year scientific expedition across four institutions to answer one question: what would it take for a woman to break 4 minutes in the mile? Five studies. One thread of oxygen.",
-      "url": "https://api-access.netlify.app/api-access-breaking4-series.html",
-      "date": "2025-11-01",
-      "category": "Data Drop",
-      "image": "breaking4-hero.jpg",
-      "source": "NSRL · Exeter · Oregon · IEEM"
+      "title": "Inside HYROX Physiology",
+      "teaser": "The 3rd-place finisher at the HYROX World Championships visits the NSRL. Blood lactate, muscle oxygen, and footwear feedback — a field-to-lab look at hybrid racing demands.",
+      "url": "https://api-access.netlify.app/api-access-dylan-scott.html",
+      "date": "2026-01-20",
+      "category": "Athlete Story",
+      "image": "dylan-welcome.jpg",
+      "source": "NSRL × Nike Training",
+      "tags": ["HYROX", "lactate", "muscle oxygen", "Moxy", "NIRS", "footwear", "hybrid racing", "NSRL", "athlete visit"]
     },
     {
       "title": "Your brain after 50km: ultramarathon racing alters executive function",
@@ -52,7 +47,18 @@
       "date": "2026-01-10",
       "category": "Publication",
       "image": null,
-      "source": "Boere et al. — Journal of Applied Physiology, 2026"
+      "source": "Boere et al. — Journal of Applied Physiology, 2026",
+      "tags": ["ultramarathon", "EEG", "brain", "cognition", "executive function", "endurance", "neuroscience"]
+    },
+    {
+      "title": "Breaking4: What Would It Take?",
+      "teaser": "A multi-year scientific expedition across four institutions to answer one question: what would it take for a woman to break 4 minutes in the mile? Five studies. One thread of oxygen.",
+      "url": "https://api-access.netlify.app/api-access-breaking4-series.html",
+      "date": "2025-11-01",
+      "category": "Data Drop",
+      "image": "breaking4-hero.jpg",
+      "source": "NSRL · Exeter · Oregon · IEEM",
+      "tags": ["Breaking4", "oxygen", "mile", "women", "VO2max", "hemoglobin", "running", "aerobic", "series"]
     },
     {
       "title": "Hot baths, more oxygen: passive heat acclimation boosts VO₂max by 4.4%",
@@ -61,7 +67,8 @@
       "date": "2025-10-15",
       "category": "Publication",
       "image": null,
-      "source": "Jenkins et al. — The Journal of Physiology, 2025"
+      "source": "Jenkins et al. — The Journal of Physiology, 2025",
+      "tags": ["heat acclimation", "hot water immersion", "VO2max", "hemoglobin", "stroke volume", "running", "recovery"]
     },
     {
       "title": "7.65 seconds away: the physiology of a women's sub-4 minute mile",
@@ -70,7 +77,58 @@
       "date": "2025-09-01",
       "category": "Publication",
       "image": null,
-      "source": "Osborne, Kirby et al. — Journal of Applied Physiology, 2025"
+      "source": "Osborne, Kirby et al. — Journal of Applied Physiology, 2025",
+      "tags": ["mile", "women", "sub-4", "physiology", "viewpoint", "commentary", "running"]
+    },
+    {
+      "title": "The Physiology of 4 Minutes",
+      "teaser": "The first study examining the complete O₂ transport cascade during running in humans — and the first to ask whether women face unique physiological challenges in closing the gap to four minutes.",
+      "url": "https://api-access.netlify.app/api-access-breaking4.html",
+      "date": "2025-08-01",
+      "category": "Data Drop",
+      "image": null,
+      "source": "IEEM — Breaking4 Chapter 1",
+      "tags": ["Breaking4", "oxygen", "O2 cascade", "VO2max", "mile", "women", "physiology", "IEEM", "running"]
+    },
+    {
+      "title": "The Exeter Model: The formula for 4 minutes",
+      "teaser": "21 middle-distance athletes. Lab and track testing. Two predictive models. The first mathematical framework for the 4-minute mile — and the discovery that aerobic capacity has 5.7x more impact than anaerobic reserve.",
+      "url": "https://api-access.netlify.app/api-access-breaking4-exeter.html",
+      "date": "2025-07-01",
+      "category": "Data Drop",
+      "image": null,
+      "source": "University of Exeter — Breaking4 Chapter 2",
+      "tags": ["Breaking4", "critical speed", "aerobic", "anaerobic", "modeling", "mile", "women", "Exeter", "running"]
+    },
+    {
+      "title": "It's Not the Hormones",
+      "teaser": "Oregon tested whether menstrual cycle phase changes middle-distance running performance. What actually mattered was the capacity to consume oxygen — muscle oxidative capacity and hemoglobin mass.",
+      "url": "https://api-access.netlify.app/api-access-breaking4-oregon.html",
+      "date": "2025-06-01",
+      "category": "Data Drop",
+      "image": null,
+      "source": "University of Oregon — Breaking4 Chapter 3",
+      "tags": ["Breaking4", "hormones", "menstrual cycle", "hemoglobin", "NIRS", "muscle oxidative capacity", "women", "Oregon", "running"]
+    },
+    {
+      "title": "The World Record Holder",
+      "teaser": "The aerobic engine is extraordinary — the gap is anaerobic. A full physiological assessment of the world's most prolific middle-distance runner reveals where the 4-minute barrier lives.",
+      "url": "https://api-access.netlify.app/api-access-breaking4-wrholder.html",
+      "date": "2025-05-01",
+      "category": "Data Drop",
+      "image": null,
+      "source": "University of Exeter — Breaking4 Chapter 4",
+      "tags": ["Breaking4", "world record", "aerobic", "anaerobic", "elite", "mile", "women", "Exeter", "lab testing", "running"]
+    },
+    {
+      "title": "Breathe. Hold. Prime: The Breath-Hold Priming Protocol",
+      "teaser": "Five breath holds before the gun. More hemoglobin in the blood. Higher lactate thresholds. Longer time to exhaustion. A race-day intervention that shifts the oxygen equation.",
+      "url": "https://api-access.netlify.app/api-access-breaking4-breathhold.html",
+      "date": "2025-04-01",
+      "category": "Data Drop",
+      "image": null,
+      "source": "Nike Sport Research Lab — Breaking4 Chapter 5",
+      "tags": ["Breaking4", "breath hold", "priming", "hemoglobin", "spleen", "lactate", "race day", "women", "NSRL", "oxygen", "running"]
     }
   ]
 }

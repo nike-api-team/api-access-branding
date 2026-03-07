@@ -685,8 +685,42 @@
       text-decoration: none;
       letter-spacing: 1px;
       text-transform: uppercase;
-      opacity: 0.35;
-      cursor: default;
+      transition: opacity 0.2s;
+    }
+
+    .view-all:hover {
+      opacity: 0.7;
+    }
+
+    .search-banner {
+      text-align: center;
+      padding: 20px 0 10px;
+    }
+
+    .search-banner a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: border-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+
+    .search-banner a:hover {
+      border-color: var(--accent);
+      color: var(--text);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .search-banner .search-icon {
+      font-size: 14px;
     }
   </style>
 </head>
@@ -760,6 +794,14 @@
     </div>
   </div>
 
+  <!-- ═══ SEARCH BANNER ═══ -->
+  <div class="search-banner">
+    <a href="api-access-search.html">
+      <span class="search-icon">&#128269;</span>
+      Search all content by topic
+    </a>
+  </div>
+
   <!-- ═══ FEATURED ═══ -->
   <div class="landing-section">
     <div class="container">
@@ -809,7 +851,7 @@
       </div>
 
       <div class="section-footer">
-        <span class="view-all">View all &#8594;</span>
+        <a href="api-access-search.html?cat=Data+Drop" class="view-all">View all &#8594;</a>
       </div>
     </div>
   </div>
@@ -897,7 +939,7 @@
       </div>
 
       <div class="section-footer">
-        <span class="view-all">View all &#8594;</span>
+        <a href="api-access-search.html?cat=Athlete+Story" class="view-all">View all &#8594;</a>
       </div>
     </div>
   </div>
@@ -938,12 +980,12 @@
           <h3 class="card-title">7.65 seconds away: the physiology of a women's sub-4 minute mile</h3>
           <p class="card-desc">A viewpoint on what it takes to break the barrier — and the 10 commentary letters it sparked from researchers worldwide.</p>
           <div class="card-source">Osborne, Kirby et al. — Journal of Applied Physiology, 2025</div>
-          <span class="card-cta">Read our take &#8594;</span>
+            <span class="card-cta">Read our take &#8594;</span>
         </a>
       </div>
 
       <div class="section-footer">
-        <span class="view-all">View all &#8594;</span>
+        <a href="api-access-search.html?cat=Publication" class="view-all">View all &#8594;</a>
       </div>
     </div>
   </div>
