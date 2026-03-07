@@ -442,7 +442,7 @@
 
       <div class="search-input-wrap">
         <span class="search-icon">&#128269;</span>
-        <input type="text" id="searchInput" class="search-input" placeholder="Search — e.g. priming, hemoglobin, HYROX..." autocomplete="off" />
+        <input type="text" id="searchInput" class="search-input" placeholder="Search — e.g. priming, women, hemoglobin, HYROX..." autocomplete="off" />
         <button id="clearBtn" class="search-clear" title="Clear">&times;</button>
       </div>
 
@@ -487,6 +487,16 @@
       <a href="api-access-landing.html" class="footer-link">&#8592; Back to home</a>
     </div>
   </div>
+
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    netlifyIdentity.on('init', function(user) {
+      if (!user) window.location.href = '/api-access-gate.html';
+    });
+    netlifyIdentity.on('logout', function() {
+      window.location.href = '/api-access-gate.html';
+    });
+  </script>
 
   <script>
     var allStories = [];
