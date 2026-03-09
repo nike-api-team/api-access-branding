@@ -101,14 +101,14 @@
       "tags": ["Breaking4", "critical speed", "aerobic", "anaerobic", "modeling", "mile", "women", "Exeter", "running"]
     },
     {
-      "title": "It's Not the Hormones",
-      "teaser": "Oregon tested whether menstrual cycle phase changes middle-distance running performance. What actually mattered was the capacity to consume oxygen — muscle oxidative capacity and hemoglobin mass.",
+      "title": "Hemoglobin First. Hormones Second.",
+      "teaser": "16 highly trained women. Two supramaximal TTE trials across hormone phases. Hormones didn't predict performance — but every 100 mL of red blood cell volume bought 11 seconds, and every 100 mL of plasma cost 16.",
       "url": "https://api-access.netlify.app/api-access-breaking4-oregon.html",
-      "date": "2026-02-27",
+      "date": "2026-03-09",
       "category": "Data Drop",
       "image": null,
       "source": "University of Oregon — Breaking4 Chapter 3",
-      "tags": ["Breaking4", "hormones", "menstrual cycle", "hemoglobin", "NIRS", "muscle oxidative capacity", "women", "Oregon", "running"]
+      "tags": ["Breaking4", "hormones", "menstrual cycle", "hemoglobin", "NIRS", "muscle oxidative capacity", "women", "Oregon", "running", "RBCV", "plasma volume", "critical speed", "supramaximal", "linear mixed model"]
     },
     {
       "title": "The World Record Holder",
