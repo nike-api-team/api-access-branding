@@ -164,5 +164,15 @@
     Nike Sport Research Lab &mdash; Athlete Performance Innovation &bull; February&ndash;March 2026 &bull; NIRS &bull; Force Plate &bull; CO-Rebreathing &bull; GXT/TTE &bull; Spirometry &bull; Bilateral Rectus Femoris &bull; M' Balance Model
 </footer>
 
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  netlifyIdentity.on('init', function(user) {
+    if (!user) window.location.href = '/api-access-gate.html?redirect=case-study-abstract.html';
+  });
+  netlifyIdentity.on('logout', function() {
+    window.location.href = '/api-access-gate.html';
+  });
+</script>
+
 </body>
 </html>

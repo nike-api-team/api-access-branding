@@ -491,7 +491,7 @@
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script>
     netlifyIdentity.on('init', function(user) {
-      if (!user) window.location.href = '/api-access-gate.html';
+      if (!user) window.location.href = '/api-access-gate.html?redirect=api-access-search.html';
     });
     netlifyIdentity.on('logout', function() {
       window.location.href = '/api-access-gate.html';

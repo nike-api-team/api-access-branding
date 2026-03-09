@@ -688,16 +688,21 @@
 
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script>
-    // If already logged in, go straight to the hub
+    // Check for ?redirect= parameter (from gated content pages)
+    var params = new URLSearchParams(window.location.search);
+    var redirectTo = params.get('redirect');
+    var destination = redirectTo ? '/' + redirectTo : '/api-access-landing.html';
+
+    // If already logged in, go straight to intended page
     netlifyIdentity.on('init', function(user) {
       if (user) {
-        window.location.href = '/api-access-landing.html';
+        window.location.href = destination;
       }
     });
 
-    // After login, go to the hub
+    // After login, go to intended page
     netlifyIdentity.on('login', function() {
-      window.location.href = '/api-access-landing.html';
+      window.location.href = destination;
     });
 
     // Login button opens the Identity modal

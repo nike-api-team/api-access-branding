@@ -1059,7 +1059,7 @@
   // Auth gate — redirect to gate page if not logged in
   netlifyIdentity.on('init', function(user) {
     if (!user) {
-      window.location.href = '/api-access-gate.html';
+      window.location.href = '/api-access-gate.html?redirect=api-access-landing.html';
     }
   });
 

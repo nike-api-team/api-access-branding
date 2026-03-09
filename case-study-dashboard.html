@@ -576,5 +576,15 @@
         updateIntensity(0);
         document.getElementById('intensitySlider').style.background = 'linear-gradient(90deg, #4ade80 0%, #a855f7 20%, #ef4444 40%, #f97316 60%, #fbbf24 80%, #dc2626 100%)';
     </script>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  netlifyIdentity.on('init', function(user) {
+    if (!user) window.location.href = '/api-access-gate.html?redirect=case-study-dashboard.html';
+  });
+  netlifyIdentity.on('logout', function() {
+    window.location.href = '/api-access-gate.html';
+  });
+</script>
 </body>
 </html>
