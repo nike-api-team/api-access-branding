@@ -123,7 +123,7 @@ function generateEmailHtml(story, secondary, otherStories) {
   h += '<tr><td align="center" style="padding:24px 32px 44px 32px;">';
   h += '<p style="margin:0; font-size:11px; color:#555; line-height:2;">';
   h += 'Applied Performance Innovation<br>Nike Sport Research Lab<br>';
-  h += '<a href="https://access-performance.com" style="color:#7a9dff; text-decoration:none;">access-performance.com</a>';
+  h += '<a href="https://api-access.netlify.app" style="color:#7a9dff; text-decoration:none;">api-access.netlify.app</a>';
   h += '</p>';
   h += '</td></tr>';
 
