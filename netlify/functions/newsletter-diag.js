@@ -12,7 +12,11 @@ exports.handler = async (event) => {
 
   // 2. Try to read the lastSentUrl from the store
   try {
-    const store = getStore("newsletter");
+    const store = getStore({
+      name: "newsletter",
+      siteID: process.env.SITE_ID,
+      token: process.env.NETLIFY_API_TOKEN,
+    });
     const lastSentUrl = await store.get("lastSentUrl");
     results.lastSentUrl = lastSentUrl || "(empty/null)";
     results.blobsRead = "OK";

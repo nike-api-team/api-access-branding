@@ -206,7 +206,11 @@ exports.handler = async (event) => {
     // If Blobs fails entirely, we SKIP (safer to miss a send than double-send).
     let store;
     try {
-      store = getStore("newsletter");
+      store = getStore({
+        name: "newsletter",
+        siteID: process.env.SITE_ID,
+        token: process.env.NETLIFY_API_TOKEN,
+      });
       const lastSentUrl = await store.get("lastSentUrl");
 
       if (!lastSentUrl) {
