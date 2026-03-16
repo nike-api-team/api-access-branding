@@ -1,5 +1,8 @@
 // ── Newsletter Email Generator ──
 // Table-based layout for Outlook/Gmail/Apple Mail/mobile compatibility
+// Dedup: sends ONCE per new featured story, then skips until content changes
+
+const { getStore } = require("@netlify/blobs");
 
 var CANVAS = '#111118';    // outer background
 var CARD_BG = '#1a1a28';   // story card background
@@ -197,13 +200,30 @@ exports.handler = async (event) => {
   try {
     const { featured, secondary, others } = await getLatestStory();
 
-    const storyDate = new Date(featured.date);
-    const now = new Date();
-    const daysSincePublish = (now - storyDate) / (1000 * 60 * 60 * 24);
+    // ── Deduplication via Netlify Blobs ──
+    // Sends only when the featured story URL changes (i.e., new content added).
+    // First run seeds the store without sending.
+    let store;
+    try {
+      store = getStore("newsletter");
+      const lastSentUrl = await store.get("lastSentUrl");
 
-    if (daysSincePublish > 10) {
-      console.log(`Newest story "${featured.title}" is ${Math.floor(daysSincePublish)} days old — no new content, skipping send`);
-      return { statusCode: 200, body: 'No new content to send' };
+      if (lastSentUrl === null) {
+        // First run after deployment — seed the store, skip send
+        await store.set("lastSentUrl", featured.url);
+        console.log(`First run: seeded lastSentUrl with "${featured.url}", skipping send`);
+        return { statusCode: 200, body: 'Seeded dedup store — no send on first run' };
+      }
+
+      if (lastSentUrl === featured.url) {
+        console.log(`Already sent "${featured.title}" — no new content, skipping`);
+        return { statusCode: 200, body: 'Already sent this content' };
+      }
+
+      console.log(`New content detected: "${featured.title}" (was: ${lastSentUrl})`);
+    } catch (blobErr) {
+      // If Blobs fails, proceed with send (better to possibly double-send than never send)
+      console.warn('Blob store check failed, proceeding with send:', blobErr.message);
     }
 
     const contacts = await getContacts(RESEND_API_KEY, RESEND_AUDIENCE_ID);
@@ -224,6 +244,16 @@ exports.handler = async (event) => {
         console.log('Sent to:', email);
       } catch (err) {
         console.error('Failed to send to', email, err.message);
+      }
+    }
+
+    // ── Store the sent URL for future dedup ──
+    if (store && sent > 0) {
+      try {
+        await store.set("lastSentUrl", featured.url);
+        console.log('Stored lastSentUrl:', featured.url);
+      } catch (blobErr) {
+        console.warn('Failed to store lastSentUrl:', blobErr.message);
       }
     }
 
