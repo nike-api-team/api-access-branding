@@ -203,13 +203,14 @@ exports.handler = async (event) => {
     // ── Deduplication via Netlify Blobs ──
     // Sends only when the featured story URL changes (i.e., new content added).
     // First run seeds the store without sending.
+    // If Blobs fails entirely, we SKIP (safer to miss a send than double-send).
     let store;
     try {
       store = getStore("newsletter");
       const lastSentUrl = await store.get("lastSentUrl");
 
-      if (lastSentUrl === null) {
-        // First run after deployment — seed the store, skip send
+      if (!lastSentUrl) {
+        // First run after deployment (null, undefined, or empty) — seed the store, skip send
         await store.set("lastSentUrl", featured.url);
         console.log(`First run: seeded lastSentUrl with "${featured.url}", skipping send`);
         return { statusCode: 200, body: 'Seeded dedup store — no send on first run' };
@@ -222,8 +223,9 @@ exports.handler = async (event) => {
 
       console.log(`New content detected: "${featured.title}" (was: ${lastSentUrl})`);
     } catch (blobErr) {
-      // If Blobs fails, proceed with send (better to possibly double-send than never send)
-      console.warn('Blob store check failed, proceeding with send:', blobErr.message);
+      // If Blobs fails, SKIP the send — safer to miss than to double-send
+      console.error('Blob store check failed, skipping send for safety:', blobErr.message);
+      return { statusCode: 200, body: 'Blob store unavailable — skipped send for safety' };
     }
 
     const contacts = await getContacts(RESEND_API_KEY, RESEND_AUDIENCE_ID);
