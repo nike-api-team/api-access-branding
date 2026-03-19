@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Hannah Hampton — Goalkeeper Gloves</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --story: #2d8a4e;
+      --story-light: #5bc47a;
+      --story-glow: rgba(45, 138, 78, 0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Branded Header ── */
+    .brand-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.9);
+    }
+
+    .brand-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: baseline;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .brand-logo .api {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .brand-logo .access {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .brand-edition {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .edition-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--story);
+    }
+
+    .edition-sub {
+      font-size: 9px;
+      color: var(--story-light);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .brand-intro {
+      padding: 32px 0 0;
+      text-align: center;
+    }
+
+    .brand-intro .from-line {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .brand-intro .team-name {
+      font-size: 14px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .brand-intro .reporter {
+      font-size: 12px;
+      color: var(--story-light);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .brand-intro .edition-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--story);
+      margin: 0 auto;
+    }
+
+    /* ── Hero ── */
+    .hero-img-wrap {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .hero-img-wrap img {
+      width: 100%;
+      display: block;
+      min-height: 260px;
+      object-fit: cover;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 48px 24px 28px;
+      background: linear-gradient(transparent, rgba(10,10,15,0.95));
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--story);
+      margin-bottom: 10px;
+    }
+
+    .hero-headline {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--muted);
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    /* ── Content Sections ── */
+    section {
+      padding: 48px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--story);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .story-text {
+      font-size: 15px;
+      color: #c8c8e0;
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .story-text:last-child { margin-bottom: 0; }
+
+    .story-text em {
+      color: var(--story-light);
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    .story-text strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .divider {
+      width: 40px;
+      height: 3px;
+      background: var(--story);
+      border-radius: 2px;
+      margin: 24px 0;
+    }
+
+    /* ── Full-bleed photo ── */
+    .full-photo {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      margin: 24px 0;
+    }
+
+    /* ── Stat strip ── */
+    .stat-strip {
+      display: flex;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .stat-box {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--story-light);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    /* ── Callout card ── */
+    .callout {
+      background: var(--surface);
+      border-left: 3px solid var(--story);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 24px 0;
+    }
+
+    .callout h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--story-light);
+      margin-bottom: 6px;
+    }
+
+    .callout p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Problem card ── */
+    .problem-card {
+      background: linear-gradient(135deg, rgba(45,138,78,0.1) 0%, var(--surface) 100%);
+      border: 1px solid rgba(45,138,78,0.3);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+
+    .problem-card .problem-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .problem-card .problem-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--story-light);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .problem-card .problem-text {
+      font-size: 14px;
+      color: #c8c8e0;
+      line-height: 1.6;
+    }
+
+    /* ── Issue list ── */
+    .issue-list {
+      list-style: none;
+      margin: 20px 0;
+    }
+
+    .issue-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: #c8c8e0;
+      line-height: 1.5;
+    }
+
+    .issue-list li:last-child { border-bottom: none; }
+
+    .issue-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ── Science card ── */
+    .science-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 24px 0;
+    }
+
+    .science-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--story);
+    }
+
+    .science-body {
+      padding: 20px;
+    }
+
+    .science-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(42,42,69,0.5);
+      font-size: 13px;
+    }
+
+    .science-row:last-child { border-bottom: none; }
+
+    .science-metric {
+      color: var(--muted);
+    }
+
+    .science-value {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .science-diff {
+      color: var(--story-light);
+      font-weight: 700;
+    }
+
+    /* ── Video ── */
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin: 24px 0;
+      cursor: pointer;
+    }
+
+    .video-wrap video {
+      width: 100%;
+      display: block;
+    }
+
+    .video-play-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px;
+      height: 64px;
+      background: rgba(45,138,78,0.85);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .video-play-btn::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 12px 0 12px 22px;
+      border-color: transparent transparent transparent #fff;
+      margin-left: 4px;
+    }
+
+    .video-wrap.playing .video-play-btn {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+
+    .video-caption {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    /* ── Competitor card ── */
+    .comp-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .comp-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .comp-brand {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .comp-detail {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Insight chips ── */
+    .insight-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .insight-chip {
+      background: rgba(45,138,78,0.12);
+      border: 1px solid rgba(45,138,78,0.3);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--story-light);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* ── Process flow ── */
+    .process-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 24px 0;
+    }
+
+    .process-step {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .process-marker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .process-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--story);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      color: #0a0a0f;
+    }
+
+    .process-line {
+      width: 2px;
+      flex: 1;
+      background: var(--border);
+      margin-top: 4px;
+    }
+
+    .process-step:last-child .process-line { display: none; }
+
+    .process-content {
+      padding-top: 6px;
+    }
+
+    .process-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .process-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Takeaway ── */
+    .takeaway-section {
+      text-align: center;
+      padding: 64px 0;
+    }
+
+    .takeaway-statement {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--story), var(--story-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .takeaway-body {
+      font-size: 15px;
+      color: #c8c8e0;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    /* ── Connection card ── */
+    .connection-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 32px 0;
+      text-align: center;
+    }
+
+    .connection-card .conn-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--story);
+      margin-bottom: 8px;
+    }
+
+    .connection-card .conn-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .connection-card .conn-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Branded Footer ── */
+    .brand-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+
+    .footer-inner {
+      text-align: center;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: baseline;
+      margin-bottom: 16px;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .footer-logo .api {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .footer-logo .access {
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .footer-team {
+      font-size: 13px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 360px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    .footer-cta {
+      display: inline-block;
+      padding: 12px 32px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    .footer-cta:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .footer-fine {
+      margin-top: 32px;
+      font-size: 11px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ BRANDED HEADER ═══ -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Athlete Story</span>
+        <span class="edition-sub">Listening In from the London Lab</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">Reported by</div>
+      <div class="team-name">Applied Performance Innovation</div>
+      <div class="reporter">Harmer &bull; NSRL London</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="hero-img-wrap">
+    <img src="hannah-hero.jpg" alt="Hannah Hampton making a penalty save for England" />
+    <div class="hero-overlay">
+      <div class="hero-tag">Listening In from the London Lab</div>
+      <h1 class="hero-headline">Her Gloves Don't Fit.</h1>
+      <p class="hero-sub">Hannah Hampton. England & Chelsea goalkeeper. Euro penalty saver. And she's constantly adjusting her gloves during games.</p>
+    </div>
+  </div>
+
+  <!-- ═══ THE VISIT ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The visit</div>
+      <h2 class="section-title">A 3D Footscan turned into a product conversation.</h2>
+
+      <p class="story-text">
+        Hannah visited the London NSRL for a 3D Footscan to optimize boot fitting. While we were with her, Tobie Hatfield asked a simple question: <em>what would you change about our product to optimize for your position?</em>
+      </p>
+
+      <p class="story-text">
+        Hannah's answer was immediate. The goalkeeper gloves — they don't fit. Not because they're the wrong size, but because they were never designed for a female hand.
+      </p>
+
+      <img src="hannah-physio.jpg" alt="Hannah Hampton with Chelsea physio Andy Walling at the London NSRL" class="full-photo" />
+      <div style="font-size:12px; color:var(--muted); margin-top:-16px; margin-bottom:24px; text-align:center; font-style:italic;">Hannah with Chelsea physio Andy Walling at the London NSRL</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE PROBLEM ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The problem</div>
+      <h2 class="section-title">Designed for men. Worn by women.</h2>
+
+      <p class="story-text">
+        Most goalkeeper gloves are designed for men. The fit, feel, and proportions are based on a male hand and do not address glove comfort, fit, or performance for the female goalkeeper.
+      </p>
+
+      <div class="problem-card">
+        <div class="problem-icon">🧤</div>
+        <div class="problem-title">Hannah's three challenges</div>
+        <div class="problem-text">The effect: constantly adjusting her gloves throughout games — a distraction in high-pressure moments of play.</div>
+      </div>
+
+      <ul class="issue-list">
+        <li>
+          <span class="issue-icon">📐</span>
+          <span><strong>Excess volume</strong> on the back of the hand — the glove doesn't sit flush against a smaller female hand</span>
+        </li>
+        <li>
+          <span class="issue-icon">📏</span>
+          <span><strong>Extra space</strong> between the wrist and base of the metacarpals — a gap that shouldn't be there</span>
+        </li>
+        <li>
+          <span class="issue-icon">✂️</span>
+          <span><strong>Excess material</strong> on the wrist strap when tightened — the strap is too long for a female wrist</span>
+        </li>
+      </ul>
+
+      <img src="hannah-gloves.jpg" alt="Close-up of Hannah's goalkeeper gloves showing excess material above the wrist" class="full-photo" />
+      <div style="font-size:12px; color:var(--muted); margin-top:-16px; margin-bottom:24px; text-align:center; font-style:italic;">Excess volume and material in the section above the wrist</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE SCIENCE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The science</div>
+      <h2 class="section-title">Not a scaled-down version.</h2>
+
+      <p class="story-text">
+        Scientific studies consistently show significant sexual dimorphism in hand dimensions. Adult males generally possess hands that are <em>10–15% larger</em> across multiple metrics — but it's not just size. Female hands have <em>different proportions</em>.
+      </p>
+
+      <div class="science-card">
+        <div class="science-header">Male vs Female Hand Dimensions</div>
+        <div class="science-body">
+          <div class="science-row">
+            <span class="science-metric">Hand Length</span>
+            <span class="science-value">19.3 cm vs 17.3 cm</span>
+          </div>
+          <div class="science-row">
+            <span class="science-metric">Hand Breadth</span>
+            <span class="science-value">8.9 cm vs 7.9 cm</span>
+          </div>
+          <div class="science-row">
+            <span class="science-metric">Hand Circumference</span>
+            <span class="science-value">8.6 in vs 7.0 in</span>
+          </div>
+          <div class="science-row">
+            <span class="science-metric">2D:4D Digit Ratio</span>
+            <span class="science-value">< 1.0 vs ≥ 1.0</span>
+          </div>
+          <div class="science-row">
+            <span class="science-metric">Hand Shape</span>
+            <span class="science-diff">Different breadth-to-length ratio</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <h3>The Hand Index</h3>
+        <p>Ergonomics research shows that female hands differ in breadth-to-length ratios — the "Hand Index." Women's hands are not just smaller versions of men's. They are shaped differently. This matters for grip, feel, and control.</p>
+      </div>
+
+      <p class="story-text">
+        The <em>2D:4D digit ratio</em> is the most studied proportional difference. In males, the ring finger is typically longer than the index finger (ratio &lt; 1.0). In females, the index finger is often equal to or longer than the ring finger (ratio ≥ 1.0). This affects finger-to-finger spacing, gusset fit, and palm alignment inside the glove.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ THE VIDEO ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">In her words</div>
+      <h2 class="section-title">Hannah on the challenge with glove fit.</h2>
+
+      <p class="story-text">
+        We asked Sammy Quayle from the UK Sports Marketing Team to collect a more detailed description of Hannah's feedback at the training ground post-session.
+      </p>
+
+      <div class="video-wrap" onclick="let v=this.querySelector('video');if(v.paused){v.play();this.classList.add('playing')}else{v.pause();this.classList.remove('playing')}">
+        <video src="hannah-gloves-video.mp4" preload="metadata" playsinline></video>
+        <div class="video-play-btn"></div>
+      </div>
+      <div class="video-caption">Hannah describes the fit challenges with current goalkeeper gloves</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE COMPETITION ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The market</div>
+      <h2 class="section-title">Others have already moved.</h2>
+
+      <p class="story-text">
+        Women-specific goalkeeper gloves already exist from smaller brands. They're not just resized — they're <em>re-engineered</em>.
+      </p>
+
+      <div class="comp-grid">
+        <div class="comp-card">
+          <div class="comp-brand">Select — 89W</div>
+          <div class="comp-detail">Completely new construction: longer fingers and gussets, shortened and tightened palm, thumb latex removed for mobility, minimized lateral wraps, shorter wrist and elastic-textile EVA strap designed for a woman's wrist and forearm.</div>
+        </div>
+        <div class="comp-card">
+          <div class="comp-brand">Keepher</div>
+          <div class="comp-detail">A brand built entirely around female-specific goalkeeper equipment.</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <h3>Sound familiar?</h3>
+        <p>This is the same theme that surfaced at WISC 2026 — fighter pilots in flight gear not designed for women, cricketers using off-the-shelf bats with no female option. Equipment designed for men, used by women. The pattern is everywhere.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE RESPONSE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The response</div>
+      <h2 class="section-title">Listen. Innovate. Test.</h2>
+
+      <p class="story-text">
+        Hannah's feedback went straight to the team. Here's what happened next.
+      </p>
+
+      <div class="process-flow">
+        <div class="process-step">
+          <div class="process-marker">
+            <div class="process-dot">1</div>
+            <div class="process-line"></div>
+          </div>
+          <div class="process-content">
+            <div class="process-title">Listen to the athlete</div>
+            <div class="process-desc">Hannah identifies three specific fit challenges during her London NSRL visit with Tobie Hatfield.</div>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="process-marker">
+            <div class="process-dot">2</div>
+            <div class="process-line"></div>
+          </div>
+          <div class="process-content">
+            <div class="process-title">Collect detailed feedback</div>
+            <div class="process-desc">Sammy Quayle (UK Sports Marketing) captures in-depth feedback from Hannah at the Chelsea training ground.</div>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="process-marker">
+            <div class="process-dot">3</div>
+            <div class="process-line"></div>
+          </div>
+          <div class="process-content">
+            <div class="process-title">Engineering response</div>
+            <div class="process-desc">Hannah's feedback is sent to George Kim (Engineer — Accessories) to explore modification opportunities.</div>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="process-marker">
+            <div class="process-dot">4</div>
+            <div class="process-line"></div>
+          </div>
+          <div class="process-content">
+            <div class="process-title">Prototype built</div>
+            <div class="process-desc">George works with the team at PHK to produce a prototype based on Hannah's observations — sent to Chelsea for testing.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-strip">
+        <span class="insight-chip">Athlete voice → Product change</span>
+        <span class="insight-chip">London NSRL to Chelsea</span>
+        <span class="insight-chip">Prototype in testing</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TAKEAWAY ═══ -->
+  <section class="takeaway-section">
+    <div class="container">
+      <div class="section-label">The takeaway</div>
+      <p class="takeaway-statement">The best product insights come from listening.</p>
+      <p class="takeaway-body">
+        Hannah didn't fill out a survey. She wasn't in a focus group. She was at the NSRL for a Footscan, and someone asked the right question. That one conversation surfaced a real problem — one that other brands have already started solving — and set a prototype in motion.
+      </p>
+      <p class="takeaway-body">
+        This is what the London Lab is for. Get close to the athletes. Listen. Then move.
+      </p>
+
+      <div class="divider" style="margin:32px auto;"></div>
+
+      <div class="connection-card">
+        <div class="conn-label">WISC 2026 Connection</div>
+        <div class="conn-title">Equipment designed for men, used by women.</div>
+        <p class="conn-text">This story echoes findings from the Women in Sport Congress 2026 — where fighter pilots and cricketers independently surfaced the same problem. From flight suits to cricket bats to goalkeeper gloves, the pattern is consistent.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BRANDED FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Listening in from the London Lab — athlete insights from the NSRL London team.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  netlifyIdentity.on('init', function(user) {
+    if (!user) window.location.href = '/api-access-gate.html?redirect=api-access-hannah-hampton.html';
+  });
+  netlifyIdentity.on('logout', function() {
+    window.location.href = '/api-access-gate.html';
+  });
+</script>
+
+</body>
+</html>
