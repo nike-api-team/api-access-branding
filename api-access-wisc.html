@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: WISC 2026 — Conference Dispatch</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --conf: #e6a817;
+      --conf-light: #f5d060;
+      --conf-glow: rgba(230, 168, 23, 0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Branded Header ── */
+    .brand-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.9);
+    }
+
+    .brand-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: baseline;
+      user-select: none;
+    }
+
+    .brand-logo .api {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .brand-logo .access {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .brand-edition {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .edition-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--conf);
+    }
+
+    .edition-sub {
+      font-size: 9px;
+      color: var(--conf-light);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .edition-date {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .brand-intro {
+      padding: 32px 0 0;
+      text-align: center;
+    }
+
+    .brand-intro .from-line {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .brand-intro .team-name {
+      font-size: 14px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .brand-intro .reporter {
+      font-size: 12px;
+      color: var(--conf-light);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .brand-intro .edition-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--conf);
+      margin: 0 auto;
+    }
+
+    /* ── Content Sections ── */
+    section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 48px 0;
+    }
+
+    .hero-headline {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--conf) 0%, var(--conf-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .hero-sub {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.3;
+      max-width: 400px;
+    }
+
+    .hero-detail {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 380px;
+      line-height: 1.7;
+    }
+
+    .hero-conf-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(230,168,23,0.1);
+      border: 1px solid rgba(230,168,23,0.3);
+      border-radius: 8px;
+      padding: 10px 18px;
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--conf-light);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .hero-img {
+      width: 100%;
+      border-radius: 14px;
+      margin-top: 28px;
+      border: 1px solid var(--border);
+    }
+
+    .pres-img {
+      width: 100%;
+      display: block;
+    }
+
+    .scroll-hint {
+      margin-top: 48px;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--conf);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    .matters-text {
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .matters-text em {
+      color: var(--conf-light);
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    .divider {
+      width: 40px;
+      height: 3px;
+      background: var(--conf);
+      border-radius: 2px;
+      margin: 24px 0;
+    }
+
+    /* ── Presentation Cards ── */
+    .pres-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .pres-header {
+      padding: 20px 20px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .pres-number {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--conf);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: #0a0a0f;
+      flex-shrink: 0;
+    }
+
+    .pres-meta {
+      flex: 1;
+    }
+
+    .pres-speaker {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--conf-light);
+      margin-bottom: 2px;
+    }
+
+    .pres-role {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .pres-title {
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.25;
+      padding: 16px 20px 0;
+    }
+
+    .pres-body {
+      padding: 16px 20px 20px;
+    }
+
+    .pres-body p {
+      font-size: 14px;
+      color: #c8c8e0;
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+    .pres-body p:last-child { margin-bottom: 0; }
+
+    /* ── Insight chips ── */
+    .insight-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 20px 20px;
+    }
+
+    .insight-chip {
+      background: rgba(230,168,23,0.1);
+      border: 1px solid rgba(230,168,23,0.25);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--conf-light);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* ── Callout cards ── */
+    .callout-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .callout {
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .callout h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-light);
+      margin-bottom: 4px;
+    }
+
+    .callout p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .callout.gold { border-left-color: var(--conf); }
+    .callout.gold h3 { color: var(--conf-light); }
+
+    .callout.red { border-left-color: #e63946; }
+    .callout.red h3 { color: #ff8fa3; }
+
+    /* ── Gap card ── */
+    .gap-card {
+      background: linear-gradient(135deg, rgba(230,168,23,0.12) 0%, var(--surface) 100%);
+      border: 1px solid rgba(230,168,23,0.3);
+      border-radius: 14px;
+      padding: 28px 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+
+    .gap-card .gap-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .gap-card .gap-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--conf-light);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .gap-card .gap-text {
+      font-size: 14px;
+      color: #c8c8e0;
+      line-height: 1.6;
+    }
+
+    /* ── Connections grid ── */
+    .connect-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .connect-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .connect-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .connect-org {
+      font-size: 11px;
+      color: var(--conf-light);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .connect-note {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── GAFA card ── */
+    .gafa-card {
+      background: var(--surface);
+      border: 1px solid var(--conf);
+      border-radius: 14px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    .gafa-card .gafa-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--conf);
+      margin-bottom: 8px;
+    }
+
+    .gafa-card .gafa-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .gafa-card .gafa-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .gafa-card a {
+      font-size: 12px;
+      color: var(--conf-light);
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    /* ── Close / Takeaway ── */
+    .close-section {
+      text-align: center;
+      padding: 80px 0;
+    }
+
+    .close-statement {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, var(--conf), var(--conf-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .close-body {
+      font-size: 15px;
+      color: #c8c8e0;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    /* ── Branded Footer ── */
+    .brand-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+
+    .footer-inner {
+      text-align: center;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: baseline;
+      margin-bottom: 16px;
+      user-select: none;
+    }
+
+    .footer-logo .api {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .footer-logo .access {
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .footer-team {
+      font-size: 13px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 360px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    .footer-cta {
+      display: inline-block;
+      padding: 12px 32px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    .footer-cta:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .footer-fine {
+      margin-top: 32px;
+      font-size: 11px;
+      color: #555;
+    }
+
+    /* ── Conference program link ── */
+    .program-cta {
+      display: inline-block;
+      padding: 14px 36px;
+      border: 2px solid var(--conf);
+      border-radius: 8px;
+      color: var(--conf);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+    .program-cta:hover {
+      background: var(--conf);
+      color: #0a0a0f;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ BRANDED HEADER ═══ -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo" style="text-decoration:none;">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Conference Dispatch</span>
+        <span class="edition-sub">WISC 2026 &bull; Brisbane</span>
+        <span class="edition-date">March 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">Reported by</div>
+      <div class="team-name">Applied Performance Innovation</div>
+      <div class="reporter">Parsonage</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="hero-headline">Women in Sport Congress 2026</div>
+      <p class="hero-sub">Field Notes from Brisbane, Australia</p>
+      <p class="hero-detail">World-class speakers across physiology, psychology, S&amp;C, endocrinology, and medicine. From fighter pilots to cricketers, from resilience to injury prevention.</p>
+      <img src="wisc-panel.jpg" alt="WISC 2026 panel" class="hero-img" />
+      <div class="hero-conf-badge">
+        &#127919; WISC 2026 &mdash; March 8&ndash;12, Brisbane
+      </div>
+      <div class="scroll-hint">Scroll &#8595;</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE LANDSCAPE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The landscape</div>
+      <h2 class="section-title">Lots of health research. Not enough performance research.</h2>
+
+      <p class="matters-text">
+        WISC 2026 brought together researchers, practitioners, and athletes for a comprehensive exploration of the female athlete's lifecycle — from puberty through elite performance, pregnancy, and retirement.
+      </p>
+      <p class="matters-text">
+        The conference was strong across performance support pillars: <em>psychology, physiology, endocrinology, medicine, S&amp;C, and physiotherapy</em>. There were standout insights from female fast-jet pilots and Australia's first female astronaut.
+      </p>
+      <p class="matters-text">
+        But a pattern emerged: most research focused on <em>female athlete health</em> — reproductive systems, hormones, and REDs. Very limited performance research in elite cohorts. In our view, that's a <em>huge gap</em> requiring more high-quality research.
+      </p>
+
+      <div class="gap-card">
+        <div class="gap-icon">&#128269;</div>
+        <div class="gap-title">Health is the foundation. Performance is the frontier.</div>
+        <div class="gap-text">You can't have performance without health (menstrual cycle, REDs, etc.) — but studying health alone won't unlock performance. The women-in-sport research space is heavy on health, but light on elite performance physiology. This conference confirmed it — and it's where we see opportunity.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRESENTATION 1 ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Presentation 1</div>
+
+      <div class="pres-card">
+        <div class="pres-header">
+          <div class="pres-number">1</div>
+          <div class="pres-meta">
+            <div class="pres-speaker">Professor Tiffany Stewart</div>
+            <div class="pres-role">Pennington Biomedical Research Center / LSU Institute for Health &amp; Performance of Champions</div>
+          </div>
+        </div>
+
+        <h3 class="pres-title">Identifying modifiable factors of psychological resilience in high-performance populations</h3>
+
+        <div class="pres-body">
+          <p>Stewart's research examines psychological resilience in both athletes and combat personnel. Three factors have been consistently found to impact resilience:</p>
+        </div>
+
+        <div class="insight-strip">
+          <span class="insight-chip">Emotion regulation difficulties</span>
+          <span class="insight-chip">Experiential avoidance</span>
+          <span class="insight-chip">Intolerance of uncertainty</span>
+        </div>
+
+        <div class="pres-body">
+          <p>A key finding: resilience has <strong style="color:var(--conf-light);">two different phenotypes</strong>, meaning interventions need to be tailored rather than one-size-fits-all.</p>
+        </div>
+
+        <img src="wisc-pheno1.png" alt="Resilience phenotype 1" class="pres-img" />
+        <img src="wisc-pheno2.png" alt="Resilience phenotype 2" class="pres-img" />
+
+        <div class="pres-body">
+          <p>App-based technology interventions have shown very positive impacts across populations. One example: <em style="color:var(--conf-light);">Beyond the Battlefield — Resilience Hub</em>, a platform designed for combat personnel that has broader applications in high-performance sport.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRESENTATION 2 ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Presentation 2</div>
+
+      <div class="pres-card">
+        <div class="pres-header">
+          <div class="pres-number">2</div>
+          <div class="pres-meta">
+            <div class="pres-speaker">Australian Female Fighter Pilots</div>
+            <div class="pres-role">Royal Australian Air Force (identities withheld for security)</div>
+          </div>
+        </div>
+
+        <h3 class="pres-title">Authority, awe, and leadership: Australia's female fighter pilots</h3>
+
+        <div class="pres-body">
+          <p>This session was closed to filming and photography due to security concerns — all female pilots deliberately keep their identities private due to online trolling.</p>
+
+          <p>They don't use the word <em style="color:var(--conf-light);">resilience</em>. They use <strong style="color:var(--conf-light);">fortitude</strong> — the idea of constantly working toward something as a team, rather than the ability to recover and go again.</p>
+
+          <p>A standout detail on their debrief culture: a 20-minute simulation can generate a <strong style="color:var(--conf-light);">5-hour debrief</strong>. Every detail of how they can improve — individually and as a team — is examined. The same time is allocated even if the simulation goes perfectly, to maximize the chance of repeating those outcomes.</p>
+        </div>
+
+        <div class="insight-strip">
+          <span class="insight-chip">Fortitude &gt; Resilience</span>
+          <span class="insight-chip">5-hr debriefs from 20-min sims</span>
+          <span class="insight-chip">Equipment not designed for women</span>
+        </div>
+
+        <div class="pres-body">
+          <p>Equipment is still not designed for women — pilots often have to urinate in flight gear not designed for female anatomy, leading to recurrent UTIs. They also can't fly when menstruating, so many go on contraception just to fulfil duties.</p>
+          <p style="color:var(--conf-light);font-weight:600;font-size:13px;">It's striking that in 2026, equipment limitations still restrict female performance in high-stakes environments.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRESENTATION 3 ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Presentation 3</div>
+
+      <div class="pres-card">
+        <div class="pres-header">
+          <div class="pres-number">3</div>
+          <div class="pres-meta">
+            <div class="pres-speaker">Dr. Sean Harding</div>
+            <div class="pres-role">Cricket Australia / Sport Science</div>
+          </div>
+        </div>
+
+        <h3 class="pres-title">Power hitting in elite female cricketers: developing applied methods to improve performance</h3>
+
+        <div class="pres-body">
+          <p>One of the few presentations with direct practical application of strength and power training to performance outcomes.</p>
+
+          <p><strong style="color:var(--conf-light);">Bat speed</strong> was identified as a modifiable factor, and <strong style="color:var(--conf-light);">maximal upper body pull strength</strong> was the critical variable in elite female cricketers.</p>
+
+          <p>The equipment theme surfaced again: female cricketers are still using one off-the-shelf bat model. Male cricketers tailor bats by weight and other variables. Women don't get that option.</p>
+        </div>
+
+        <img src="wisc-cricket.png" alt="Power hitting in elite female cricketers" class="pres-img" />
+
+        <div class="insight-strip">
+          <span class="insight-chip">Bat speed = modifiable</span>
+          <span class="insight-chip">Upper body pull = critical</span>
+          <span class="insight-chip">Equipment not tailored for women</span>
+        </div>
+
+        <div class="callout-stack" style="margin-top:16px;padding:0 20px 20px;">
+          <div class="callout gold">
+            <h3>The equipment parallel</h3>
+            <p>Two presentations — fighter pilots and cricketers — independently surfaced the same problem: equipment designed for men, used by women. From flight suits to cricket bats, the theme is consistent.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRESENTATION 4 ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Presentation 4</div>
+
+      <div class="pres-card">
+        <div class="pres-header">
+          <div class="pres-number">4</div>
+          <div class="pres-meta">
+            <div class="pres-speaker">IOC Consensus Working Group</div>
+            <div class="pres-role">FAIR Practical Recommendations</div>
+          </div>
+        </div>
+
+        <h3 class="pres-title">Female Athlete Injury Prevention (FAIR): IOC consensus scoping review</h3>
+
+        <div class="pres-body">
+          <p>A comprehensive scoping review culminating in practical recommendations for female athlete injury prevention, published in the British Journal of Sports Medicine (BJSM).</p>
+
+          <p>The standout element was the <strong style="color:var(--conf-light);">framework for associations of injury</strong> — a structured approach to evaluating the strength of evidence behind each injury risk factor.</p>
+
+          <p>This framework could be directly applicable to work being done on the ACL position stand, ensuring statements mirror the standard and amount of empirical evidence currently available — not overstating what we know.</p>
+        </div>
+
+        <img src="wisc-fair.jpg" alt="FAIR framework — IOC consensus" class="pres-img" />
+
+        <div class="insight-strip">
+          <span class="insight-chip">IOC consensus</span>
+          <span class="insight-chip">Evidence grading framework</span>
+          <span class="insight-chip">ACL position stand application</span>
+        </div>
+
+        <div style="padding:0 20px 20px;">
+          <a class="program-cta" href="https://bjsm.bmj.com/content/59/22/1536.long" target="_blank" rel="noopener" style="font-size:11px;padding:10px 20px;">Read the FAIR paper &#8599;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONNECTIONS MADE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Connections made</div>
+      <h2 class="section-title">People and networks from the floor.</h2>
+
+      <p class="matters-text" style="margin-bottom:24px;">
+        Beyond the sessions, the conference was a chance to connect with researchers and practitioners doing relevant work. Here are the key contacts and what they're focused on.
+      </p>
+
+      <div class="connect-grid">
+        <div class="connect-card">
+          <div class="connect-name">Professor Tiffany Stewart</div>
+          <div class="connect-org">Pennington Biomedical / LSU</div>
+          <div class="connect-note">Objective measures of resilience in female athletes. Interesting intersection of psychology and physiology.</div>
+        </div>
+
+        <div class="connect-card">
+          <div class="connect-name">Dr. Kate Ackerman</div>
+          <div class="connect-org">Women's Health, Sport & Performance (WHSP) — Boston</div>
+          <div class="connect-note">Founder and director of WHSP. Also aligned with the Wu Tsai Human Performance Alliance.</div>
+        </div>
+
+        <div class="connect-card">
+          <div class="connect-name">Professor Jacqueline Alderson</div>
+          <div class="connect-org">UCLA (formerly UWA)</div>
+          <div class="connect-note">Director of tech and human performance. Leading work in wearables, sensor-based technologies, and machine learning applications for the female athlete.</div>
+        </div>
+
+        <div class="connect-card">
+          <div class="connect-name">Professor Louise Burke</div>
+          <div class="connect-org">Australian Catholic University</div>
+          <div class="connect-note">Leading global sports dietitian. Working with Jessica Hull. Exploring the utilization of AI and tech in sports nutrition.</div>
+        </div>
+
+        <div class="connect-card">
+          <div class="connect-name">Professor Shona Halson</div>
+          <div class="connect-org">Australian Catholic University</div>
+          <div class="connect-note">Sleep and recovery research. Most up-to-date insights on wearables. Existing connection with the NSRL.</div>
+        </div>
+
+        <div class="connect-card">
+          <div class="connect-name">Professor Clare Minahan &amp; Dr. Rachel Harris</div>
+          <div class="connect-org">Global Alliance for the Female Athlete (GAFA)</div>
+          <div class="connect-note">Leading the Australian arm of GAFA. Minahan's research focuses heavily on elite female performance.</div>
+        </div>
+
+        <div class="connect-card">
+          <div class="connect-name">Professor David Martin</div>
+          <div class="connect-org">University of Queensland / QAS</div>
+          <div class="connect-note">Research and innovation lead, heading Brisbane 2032.</div>
+        </div>
+
+        <div class="connect-card">
+          <div class="connect-name">Matt Green</div>
+          <div class="connect-org">AFLW Brisbane Lions</div>
+          <div class="connect-note">High-performance manager. Discussed their use of Actions apps in daily training — pros, cons, and implementation details.</div>
+        </div>
+      </div>
+
+      <div class="gafa-card">
+        <div class="gafa-label">Network</div>
+        <div class="gafa-title">Global Alliance for the Female Athlete (GAFA)</div>
+        <p class="gafa-text">GAFA's mission is a global approach to knowledge dissemination and accelerating impactful research and innovation. Initiated by the AIS (Australia), UKSI (UK), HPSNZ (New Zealand), and the USOPC (USA), with Canada recently joining. Provides open-access resources and education.</p>
+        <a href="https://yourgafa.com/" target="_blank" rel="noopener">Visit GAFA &#8599;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE TAKEAWAY ═══ -->
+  <section class="close-section">
+    <div class="container">
+      <div class="section-label">The takeaway</div>
+      <p class="close-statement">Health research is essential. Performance research is overdue.</p>
+      <p class="close-body">
+        WISC 2026 confirmed what we see in the literature: the women-in-sport space is rich with health research — reproductive health, hormones, REDs — but substantially under-resourced in elite performance. That's a gap our team is positioned to help close.
+      </p>
+      <p class="close-body">
+        The cross-domain themes were striking. Two completely unrelated sessions — fighter pilots and cricketers — surfaced the same equipment problem. Resilience research is finding biological phenotypes. And the IOC's injury prevention framework offers a model for how we should structure our own evidence-based recommendations.
+      </p>
+      <p class="close-body">
+        The connections made — from wearable tech at UCLA to sports nutrition AI at ACU to the GAFA network — open pathways for collaboration that align directly with our work at the NSRL.
+      </p>
+
+      <div class="divider" style="margin:32px auto;"></div>
+
+      <a class="program-cta" href="https://womeninsportcongress.com/program-2/" target="_blank" rel="noopener">View the full WISC 2026 program &#8599;</a>
+    </div>
+  </section>
+
+  <!-- ═══ BRANDED FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo" style="text-decoration:none;">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Conference dispatches from the front lines of sports science — curated by the API team.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  netlifyIdentity.on('init', function(user) {
+    if (!user) window.location.href = '/api-access-gate.html?redirect=api-access-wisc.html';
+  });
+  netlifyIdentity.on('logout', function() {
+    window.location.href = '/api-access-gate.html';
+  });
+</script>
+
+</body>
+</html>

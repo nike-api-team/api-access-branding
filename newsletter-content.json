@@ -1,6 +1,16 @@
 {
   "stories": [
     {
+      "title": "WISC 2026: The Lifecycle of the Female Athlete",
+      "teaser": "Field notes from the Women in Sport Congress in Brisbane. Four standout presentations — psychological resilience phenotypes, fighter pilot debrief culture, cricket bat speed as a trainable variable, and the IOC's FAIR injury prevention framework — plus key connections across the global female athlete research network.",
+      "url": "https://api-access.netlify.app/api-access-wisc.html",
+      "date": "2026-03-16",
+      "category": "Conference Dispatch",
+      "image": null,
+      "source": "Parsonage — WISC 2026, Brisbane",
+      "tags": ["women", "conference", "resilience", "psychology", "cricket", "bat speed", "strength", "injury prevention", "female athlete", "military", "fighter pilot", "equipment", "IOC", "FAIR", "GAFA", "Brisbane", "WISC", "debrief", "fortitude", "wearables"]
+    },
+    {
       "title": "Don't just sit there at halftime: a 3-minute priming protocol changes the second half",
       "teaser": "22 professional women's soccer players. Randomized controlled trial. A brief protocol combining FIFA 11+ exercises and a small-sided game improved sprint performance and attenuated jump decline compared to passive rest.",
       "url": "https://api-access.netlify.app/api-access-abreu-rewarmup.html",
