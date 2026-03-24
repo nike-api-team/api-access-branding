@@ -1,6 +1,6 @@
-// ── Newsletter Send (full audience) ──
-// HTTP-invocable: POST /.netlify/functions/newsletter-send?key=<NEWSLETTER_SEND_KEY>
-// Sends to all active subscribers in the Resend audience.
+// ── Newsletter Test (single recipient) ──
+// HTTP-invocable: POST /.netlify/functions/newsletter-test?key=<NEWSLETTER_SEND_KEY>
+// Sends a preview to Brett only. Same layout as the full send.
 
 var CANVAS = '#111118';
 var CARD_BG = '#1a1a28';
@@ -117,50 +117,9 @@ function generateEmailHtml(story, secondary, otherStories) {
   return h;
 }
 
-async function getContacts(apiKey, audienceId) {
-  const response = await fetch(
-    `https://api.resend.com/audiences/${audienceId}/contacts`,
-    { headers: { Authorization: `Bearer ${apiKey}` } }
-  );
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch contacts: ' + response.status);
-  }
-
-  const data = await response.json();
-  return data.data.filter(c => !c.unsubscribed).map(c => c.email);
-}
-
-async function sendEmail(apiKey, to, subject, html) {
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: 'API Access <newsletter@access-performance.com>',
-      to,
-      subject,
-      html,
-    }),
-  });
-
-  if (!response.ok) {
-    const err = await response.text();
-    throw new Error('Send failed: ' + response.status + ' ' + err);
-  }
-
-  return response.json();
-}
-
 async function getLatestStory() {
   const response = await fetch('https://api-access.netlify.app/newsletter-content.json?v=' + Date.now());
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch newsletter content');
-  }
-
+  if (!response.ok) throw new Error('Failed to fetch newsletter content');
   const data = await response.json();
   const sorted = data.stories.sort((a, b) => new Date(b.date) - new Date(a.date));
   return { featured: sorted[0], secondary: sorted[1] || null, others: sorted.slice(2, 5) };
@@ -168,14 +127,13 @@ async function getLatestStory() {
 
 exports.handler = async (event) => {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  const RESEND_AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID;
   const SEND_KEY = process.env.NEWSLETTER_SEND_KEY;
+  const TEST_EMAIL = 'Brett.Kirby@nike.com';
 
-  if (!RESEND_API_KEY || !RESEND_AUDIENCE_ID) {
-    return { statusCode: 500, body: 'Missing RESEND_API_KEY or RESEND_AUDIENCE_ID' };
+  if (!RESEND_API_KEY) {
+    return { statusCode: 500, body: 'Missing RESEND_API_KEY' };
   }
 
-  // Simple auth: require a secret key via query param
   const params = event.queryStringParameters || {};
   if (!SEND_KEY || params.key !== SEND_KEY) {
     return { statusCode: 403, body: 'Unauthorized — invalid or missing key' };
@@ -183,33 +141,33 @@ exports.handler = async (event) => {
 
   try {
     const { featured, secondary, others } = await getLatestStory();
-    const contacts = await getContacts(RESEND_API_KEY, RESEND_AUDIENCE_ID);
-
-    if (contacts.length === 0) {
-      return { statusCode: 200, body: 'No active subscribers' };
-    }
-
     const html = generateEmailHtml(featured, secondary, others);
-    const subject = featured.title + ' \u2014 API Access';
+    const subject = '[TEST] ' + featured.title + ' \u2014 API Access';
 
-    let sent = 0;
-    for (const email of contacts) {
-      try {
-        await sendEmail(RESEND_API_KEY, email, subject, html);
-        sent++;
-        console.log('Sent to:', email);
-      } catch (err) {
-        console.error('Failed to send to', email, err.message);
-      }
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'API Access <newsletter@access-performance.com>',
+        to: TEST_EMAIL,
+        subject,
+        html,
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      return { statusCode: 500, body: 'Send failed: ' + response.status + ' ' + err };
     }
 
-    console.log(`Newsletter sent: ${sent}/${contacts.length} recipients`);
     return {
       statusCode: 200,
-      body: JSON.stringify({ sent, total: contacts.length, story: featured.title }),
+      body: JSON.stringify({ sent: true, to: TEST_EMAIL, story: featured.title }),
     };
   } catch (err) {
-    console.error('Newsletter send error:', err);
     return { statusCode: 500, body: err.message };
   }
 };
