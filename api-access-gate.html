@@ -597,21 +597,22 @@
       <div class="access-card">
         <div class="card-label">Request Access</div>
         <h2 class="card-title">Get inside</h2>
-        <p class="card-desc">Drop your email and we'll reach out with access. No spam — just the good stuff when we publish.</p>
+        <p class="card-desc">Drop your Nike email and we'll review your request. Once approved, you'll get an invite in your inbox.</p>
 
         <form class="request-form" id="request-form">
           <div class="form-row">
             <input type="text" name="first-name" placeholder="First name" required />
             <input type="text" name="last-name" placeholder="Last name" />
           </div>
-          <input type="email" name="email" placeholder="your@email.com" required />
+          <input type="email" name="email" placeholder="your@nike.com" required />
+          <div class="domain-hint" id="domain-hint" style="display:none; color:#e05252; font-size:12px; margin-top:-4px;">Please use your @nike.com email address</div>
           <button type="submit" class="request-btn">Request Access &#8594;</button>
         </form>
 
         <div class="form-success" id="form-success">
           <div class="success-check">&#x2713;</div>
-          <div class="success-title">You're on the list</div>
-          <p class="success-desc">Check your inbox — we've sent you an invite to get inside.</p>
+          <div class="success-title">Request received</div>
+          <p class="success-desc">We'll review your request and send an invite to your inbox.</p>
         </div>
 
         <div class="divider">
@@ -717,11 +718,20 @@
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
+
+      var email = form.querySelector('input[type="email"]').value.trim().toLowerCase();
+      var hint = document.getElementById('domain-hint');
+
+      if (!email.endsWith('@nike.com')) {
+        hint.style.display = 'block';
+        return;
+      }
+      hint.style.display = 'none';
+
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending…';
 
       var data = new FormData(form);
-      var email = form.querySelector('input[type="email"]').value;
 
       fetch('/.netlify/functions/request-access', {
         method: 'POST',

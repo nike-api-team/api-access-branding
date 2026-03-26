@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Approve Access — API Access</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --text: #f0f0f8;
+      --muted: #9999b8;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 32px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 16px;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 24px;
+    }
+
+    .detail {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .detail strong {
+      color: var(--text);
+    }
+
+    .approve-btn {
+      display: block;
+      width: 100%;
+      margin-top: 28px;
+      padding: 16px;
+      background: #22c55e;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .approve-btn:hover { background: #1db954; }
+    .approve-btn:disabled { background: #555; cursor: default; }
+
+    .deny-btn {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .deny-btn:hover { color: #e05252; border-color: #e05252; }
+
+    .result {
+      display: none;
+      margin-top: 24px;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .result.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+    }
+
+    .result.error {
+      display: block;
+      background: rgba(224, 82, 82, 0.15);
+      color: #e05252;
+    }
+
+    .result.denied {
+      display: block;
+      background: rgba(153, 153, 184, 0.1);
+      color: var(--muted);
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="label">Access Request</div>
+    <div id="content">
+      <div class="empty">Loading...</div>
+    </div>
+  </div>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  netlifyIdentity.on('init', function(user) {
+    if (!user) window.location.href = '/api-access-gate.html?redirect=approve-access.html' + window.location.search;
+  });
+
+  var params = new URLSearchParams(window.location.search);
+  var email = params.get('email');
+  var name = params.get('name') || '';
+
+  var content = document.getElementById('content');
+
+  if (!email) {
+    content.innerHTML = '<div class="empty">No email specified.</div>';
+  } else {
+    content.innerHTML =
+      '<h2 class="title">Approve this request?</h2>' +
+      '<div class="detail"><strong>Name:</strong> ' + (name || '(not provided)') + '</div>' +
+      '<div class="detail"><strong>Email:</strong> ' + email + '</div>' +
+      '<button class="approve-btn" id="approve-btn">Approve Access</button>' +
+      '<button class="deny-btn" id="deny-btn">Deny</button>' +
+      '<div class="result" id="result"></div>';
+
+    document.getElementById('approve-btn').addEventListener('click', function() {
+      var btn = this;
+      btn.disabled = true;
+      btn.textContent = 'Approving…';
+
+      var user = netlifyIdentity.currentUser();
+      if (!user) {
+        showResult('error', 'You must be logged in to approve requests.');
+        return;
+      }
+
+      user.jwt().then(function(token) {
+        return fetch('/.netlify/functions/approve-access', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email: email, name: name })
+        });
+      }).then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.success) {
+            showResult('success', 'Approved — invite sent to ' + email);
+            btn.textContent = 'Approved';
+            document.getElementById('deny-btn').style.display = 'none';
+          } else {
+            showResult('error', data.error || 'Something went wrong');
+            btn.disabled = false;
+            btn.textContent = 'Approve Access';
+          }
+        }).catch(function() {
+          showResult('error', 'Request failed — try again');
+          btn.disabled = false;
+          btn.textContent = 'Approve Access';
+        });
+    });
+
+    document.getElementById('deny-btn').addEventListener('click', function() {
+      showResult('denied', 'Request denied. No invite sent.');
+      document.getElementById('approve-btn').style.display = 'none';
+      this.style.display = 'none';
+    });
+  }
+
+  function showResult(type, msg) {
+    var el = document.getElementById('result');
+    el.className = 'result ' + type;
+    el.textContent = msg;
+  }
+</script>
+</body>
+</html>
