@@ -149,12 +149,6 @@
       return;
     }
 
-    var roles = (user.app_metadata && user.app_metadata.roles) || [];
-    if (roles.indexOf('admin') === -1) {
-      document.getElementById('content').innerHTML = '<div class="empty">You don\'t have permission to approve requests.</div>';
-      return;
-    }
-
     loadRequest();
   });
 
