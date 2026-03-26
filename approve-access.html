@@ -144,9 +144,21 @@
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
   netlifyIdentity.on('init', function(user) {
-    if (!user) window.location.href = '/api-access-gate.html?redirect=approve-access.html' + window.location.search;
+    if (!user) {
+      window.location.href = '/api-access-gate.html?redirect=approve-access.html' + window.location.search;
+      return;
+    }
+
+    var roles = (user.app_metadata && user.app_metadata.roles) || [];
+    if (roles.indexOf('admin') === -1) {
+      document.getElementById('content').innerHTML = '<div class="empty">You don\'t have permission to approve requests.</div>';
+      return;
+    }
+
+    loadRequest();
   });
 
+  function loadRequest() {
   var params = new URLSearchParams(window.location.search);
   var email = params.get('email');
   var name = params.get('name') || '';
@@ -207,6 +219,7 @@
       document.getElementById('approve-btn').style.display = 'none';
       this.style.display = 'none';
     });
+  }
   }
 
   function showResult(type, msg) {
