@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Tottenham x Nike Performance Summit</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --story: #2d8a4e;
+      --story-light: #5bc47a;
+      --story-glow: rgba(45, 138, 78, 0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Branded Header ── */
+    .brand-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.9);
+    }
+
+    .brand-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: baseline;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .brand-logo .api {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .brand-logo .access {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .brand-edition {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .edition-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--story);
+    }
+
+    .edition-sub {
+      font-size: 9px;
+      color: var(--story-light);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .brand-intro {
+      padding: 32px 0 0;
+      text-align: center;
+    }
+
+    .brand-intro .from-line {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .brand-intro .team-name {
+      font-size: 14px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .brand-intro .reporter {
+      font-size: 12px;
+      color: var(--story-light);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .brand-intro .edition-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--story);
+      margin: 0 auto;
+    }
+
+    /* ── Hero ── */
+    .hero-img-wrap {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .hero-img-wrap img {
+      width: 100%;
+      display: block;
+      min-height: 340px;
+      object-fit: cover;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 80px 24px 32px;
+      background: linear-gradient(transparent 0%, rgba(10,10,15,0.6) 30%, rgba(10,10,15,0.95) 70%);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--story);
+      margin-bottom: 10px;
+    }
+
+    .hero-headline {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--muted);
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .hero-detail {
+      font-size: 12px;
+      color: var(--story-light);
+      margin-top: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Content Sections ── */
+    section {
+      padding: 48px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--story);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .story-text {
+      font-size: 15px;
+      color: #c8c8e0;
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .story-text:last-child { margin-bottom: 0; }
+
+    .story-text em {
+      color: var(--story-light);
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    .story-text strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .divider {
+      width: 40px;
+      height: 3px;
+      background: var(--story);
+      border-radius: 2px;
+      margin: 24px 0;
+    }
+
+    /* ── Full-bleed photo ── */
+    .full-photo {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      margin: 24px 0;
+    }
+
+    .photo-caption {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: -16px;
+      margin-bottom: 24px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* ── Stat strip ── */
+    .stat-strip {
+      display: flex;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .stat-box {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--story-light);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    /* ── Callout card ── */
+    .callout {
+      background: var(--surface);
+      border-left: 3px solid var(--story);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 24px 0;
+    }
+
+    .callout h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--story-light);
+      margin-bottom: 6px;
+    }
+
+    .callout p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Session card ── */
+    .session-card {
+      background: linear-gradient(135deg, rgba(45,138,78,0.1) 0%, var(--surface) 100%);
+      border: 1px solid rgba(45,138,78,0.3);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+
+    .session-card .session-speaker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--story);
+      margin-bottom: 8px;
+    }
+
+    .session-card .session-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .session-card .session-role {
+      font-size: 13px;
+      color: var(--story-light);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .session-card .session-desc {
+      font-size: 14px;
+      color: #c8c8e0;
+      line-height: 1.6;
+    }
+
+    /* ── Insight chips ── */
+    .insight-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .insight-chip {
+      background: rgba(45,138,78,0.12);
+      border: 1px solid rgba(45,138,78,0.3);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--story-light);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* ── Modification grid ── */
+    .mod-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .mod-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .mod-number {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--story-light);
+      line-height: 1;
+    }
+
+    .mod-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mod-detail {
+      font-size: 11px;
+      color: #888;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .mod-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* ── Issue list ── */
+    .issue-list {
+      list-style: none;
+      margin: 20px 0;
+    }
+
+    .issue-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: #c8c8e0;
+      line-height: 1.5;
+    }
+
+    .issue-list li:last-child { border-bottom: none; }
+
+    .issue-dot {
+      width: 8px;
+      height: 8px;
+      min-width: 8px;
+      border-radius: 50%;
+      background: var(--story);
+      margin-top: 7px;
+    }
+
+    /* ── Quote card ── */
+    .quote-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .quote-text {
+      font-size: 14px;
+      color: #c8c8e0;
+      line-height: 1.65;
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+
+    .quote-attr {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--story-light);
+    }
+
+    .quote-role {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── Attendee chips ── */
+    .attendee-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .attendee-chip {
+      background: rgba(58, 109, 245, 0.1);
+      border: 1px solid rgba(58, 109, 245, 0.25);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--accent-light);
+      font-weight: 600;
+    }
+
+    /* ── Takeaway ── */
+    .takeaway-section {
+      text-align: center;
+      padding: 64px 0;
+    }
+
+    .takeaway-statement {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--story), var(--story-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .takeaway-body {
+      font-size: 15px;
+      color: #c8c8e0;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    /* ── Connection card ── */
+    .connection-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 32px 0;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.2s;
+    }
+
+    .connection-card:hover {
+      border-color: var(--story);
+    }
+
+    .connection-card .conn-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--story);
+      margin-bottom: 8px;
+    }
+
+    .connection-card .conn-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .connection-card .conn-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Branded Footer ── */
+    .brand-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+
+    .footer-inner {
+      text-align: center;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: baseline;
+      margin-bottom: 16px;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .footer-logo .api {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .footer-logo .access {
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .footer-team {
+      font-size: 13px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 360px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    .footer-cta {
+      display: inline-block;
+      padding: 12px 32px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    .footer-cta:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .footer-fine {
+      margin-top: 32px;
+      font-size: 11px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ BRANDED HEADER ═══ -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Athlete Story</span>
+        <span class="edition-sub">Listening In from the London Lab</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">Reported by</div>
+      <div class="team-name">Applied Performance Innovation</div>
+      <div class="reporter">Harmer &bull; NSRL London</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="hero-img-wrap">
+    <img src="tottenham-hero.jpg" alt="Spurs performance staff attending the Nike Performance Summit at Tottenham's training centre" />
+    <div class="hero-overlay">
+      <div class="hero-tag">Listening In from the London Lab</div>
+      <h1 class="hero-headline">Tottenham x Nike Performance Summit</h1>
+      <p class="hero-sub">Moving forward: from the ground up.</p>
+      <p class="hero-detail">26 staff &bull; THFC Training Centre &bull; March 2026</p>
+    </div>
+  </div>
+
+  <!-- ═══ CONTEXT ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The context</div>
+      <h2 class="section-title">Bringing development to the club.</h2>
+
+      <p class="story-text">
+        Club medical and performance staff face a demanding, year-round schedule. There is rarely time to step away from the team to pursue development opportunities. Conferences happen in the off-season. Courses require travel. The reality is that most of these staff are <em>always on</em>.
+      </p>
+
+      <p class="story-text">
+        Nike Sports Marketing Manager <strong>Jason Purewal</strong> contacted the London NSRL to see if we could help. The idea was simple: instead of asking club staff to come to us, <em>we go to them</em>. Bring leading speakers from our network directly to the training ground.
+      </p>
+
+      <img src="tottenham-opening.jpg" alt="Nike x Tottenham Hotspur branding at the summit opening" class="full-photo" />
+      <div class="photo-caption">The first Innovation and Performance Summit at Tottenham's training centre</div>
+
+      <p class="story-text">
+        The result was the first <strong>Tottenham x Nike Innovation and Performance Summit</strong> &mdash; a half-day event at Spurs' training centre covering ground interaction research, global football product development, and high-speed running biomechanics.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ WHO WAS THERE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Who was there</div>
+      <h2 class="section-title">31 staff. 5 clubs. One room.</h2>
+
+      <div class="stat-strip">
+        <div class="stat-box">
+          <div class="stat-number">26</div>
+          <div class="stat-label">Spurs Staff</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Loan Clubs</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Sessions</div>
+        </div>
+      </div>
+
+      <p class="story-text">
+        Twenty-six staff from Tottenham's <em>men's, women's, and academy</em> teams attended, along with five staff from clubs where Spurs players are on loan.
+      </p>
+
+      <div class="attendee-strip">
+        <span class="attendee-chip">Millwall</span>
+        <span class="attendee-chip">Oxford City</span>
+        <span class="attendee-chip">Charlton</span>
+        <span class="attendee-chip">Bristol Rovers</span>
+      </div>
+
+      <p class="story-text">
+        Attendees included physiotherapists, strength and conditioning coaches, doctors, osteopaths, and sports scientists &mdash; the staff who work directly with players every day but rarely get access to development events during the season.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ SESSION 1: THOMSON ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Session 1</div>
+      <h2 class="section-title">Ground Interaction Research</h2>
+
+      <div class="session-card">
+        <div class="session-speaker">Guest Speaker</div>
+        <div class="session-name">Dr. Athol Thomson</div>
+        <div class="session-role">Researcher &amp; Consultant Podiatrist, Nike</div>
+        <div class="session-desc">Overview of player and footwear surface interaction research, with insights from ACL and foot/ankle injury mechanisms.</div>
+      </div>
+
+      <img src="tottenham-thomson.jpg" alt="Dr. Athol Thomson presenting ground interaction research at Tottenham" class="full-photo" />
+      <div class="photo-caption">Dr. Thomson presenting "Science Friction" &mdash; reflections from the FIFA 2022 World Cup and beyond</div>
+
+      <ul class="issue-list">
+        <li>
+          <span class="issue-dot"></span>
+          <span>Detailed analysis of football surface variations: <strong>natural grass, hybrid reinforced, and artificial surfaces</strong></span>
+        </li>
+        <li>
+          <span class="issue-dot"></span>
+          <span>How <strong>surface and boot</strong> interact to influence rotational and translational traction</span>
+        </li>
+        <li>
+          <span class="issue-dot"></span>
+          <span>Injury mechanisms related to <strong>high traction plates combined with high traction surfaces</strong></span>
+        </li>
+        <li>
+          <span class="issue-dot"></span>
+          <span>Orthotic solutions and rehab strategies at the <strong>foot and ankle</strong></span>
+        </li>
+      </ul>
+
+      <div class="insight-strip">
+        <span class="insight-chip">Surface interaction</span>
+        <span class="insight-chip">Rotational traction</span>
+        <span class="insight-chip">ACL risk</span>
+        <span class="insight-chip">Foot &amp; ankle rehab</span>
+        <span class="insight-chip">FIFA 2022</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SESSION 2: MONTEBELLUNA ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Session 2</div>
+      <h2 class="section-title">What's inside the boot.</h2>
+
+      <div class="session-card">
+        <div class="session-speaker">Guest Speakers</div>
+        <div class="session-name">Bruno Previtera &amp; Dimi Michael</div>
+        <div class="session-role">Nike Montebelluna, Italy &amp; UK Product Testing Manager</div>
+        <div class="session-desc">Nike GFB product innovations alongside the Montebelluna team's modification services &mdash; a detailed component breakdown of Mercurial, Tiempo, and Phantom silos.</div>
+      </div>
+
+      <img src="tottenham-boots.jpg" alt="Boot modification data presented at the summit &mdash; 103 custom lasts, 30 plates, 28 heel modifications" class="full-photo" />
+      <div class="photo-caption">Bruno Previtera breaking down the modification data from a 180-player roster</div>
+
+      <p class="story-text">
+        From a roster of <em>180 players</em> (130 men, 50 women), the Montebelluna team has built an extraordinary dataset of what elite footballers actually need from their boots. The numbers tell the story:
+      </p>
+
+      <div class="mod-grid">
+        <div class="mod-card">
+          <div class="mod-number">103</div>
+          <div class="mod-label">Custom Lasts</div>
+          <div class="mod-detail">Different last than in-line, based on foot morphology</div>
+        </div>
+        <div class="mod-card">
+          <div class="mod-number">30</div>
+          <div class="mod-label">Custom Plates</div>
+          <div class="mod-detail">AG, FG, SG, and hybrid options</div>
+        </div>
+        <div class="mod-card">
+          <div class="mod-number">28</div>
+          <div class="mod-label">Heel Mods</div>
+          <div class="mod-detail">Foam removal, volume adds, curve straightening</div>
+        </div>
+        <div class="mod-card">
+          <div class="mod-number">24</div>
+          <div class="mod-label">Carbon Stiffening</div>
+          <div class="mod-detail">Reinforcement shapes based on morphological needs</div>
+        </div>
+        <div class="mod-card">
+          <div class="mod-number">21</div>
+          <div class="mod-label">Wedges</div>
+          <div class="mod-detail">3&ndash;7 mm heights for leg length and fatigue</div>
+        </div>
+        <div class="mod-card">
+          <div class="mod-number">16</div>
+          <div class="mod-label">Counter Mods</div>
+          <div class="mod-detail">Low counter preferred by 16 players</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <h3>No sockliner</h3>
+        <p>27 of 180 players wear their boots without the sockliner &mdash; a simple preference that affects fit, feel, and ground contact.</p>
+      </div>
+
+      <p class="story-text">
+        The session gave club staff direct insight into the <em>available modifications and solutions</em> for different injury mechanisms affecting the foot and ankle. Plate options &mdash; SG, FG, and AG &mdash; were broken down alongside commonly requested adjustments: carbon fiber stiffening, heel counter options, and last manipulations.
+      </p>
+
+      <div class="callout">
+        <h3>AG plates: a new option for academy</h3>
+        <p>Several staff noted they had only considered SG and FG plates previously. The AG option is particularly useful for academy teams spending more time on artificial surfaces.</p>
+      </div>
+
+      <div class="insight-strip">
+        <span class="insight-chip">180-player roster</span>
+        <span class="insight-chip">103 custom lasts</span>
+        <span class="insight-chip">Boot modification</span>
+        <span class="insight-chip">Montebelluna</span>
+        <span class="insight-chip">Mercurial / Tiempo / Phantom</span>
+        <span class="insight-chip">Injury prevention</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SESSION 3: BRAMAH ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Session 3</div>
+      <h2 class="section-title">85% of peak speed changes everything.</h2>
+
+      <div class="session-card">
+        <div class="session-speaker">Guest Speaker</div>
+        <div class="session-name">Dr. Chris Bramah</div>
+        <div class="session-role">Physiotherapist, Professor &amp; Researcher, University of Salford. Consultant Biomechanist for European football clubs.</div>
+        <div class="session-desc">Using 3D motion capture to assess sprinting biomechanics in relation to hamstring injury &mdash; and the implications for testing and rehabilitation.</div>
+      </div>
+
+      <img src="tottenham-bramah.jpg" alt="Dr. Chris Bramah presenting hamstring biomechanics research at the summit" class="full-photo" />
+      <div class="photo-caption">Dr. Bramah presenting sprint biomechanics and hamstring injury mechanisms</div>
+
+      <ul class="issue-list">
+        <li>
+          <span class="issue-dot"></span>
+          <span>Players exposed to <strong>high forces during the swing phase</strong> of sprinting &mdash; this is where hamstrings are most vulnerable</span>
+        </li>
+        <li>
+          <span class="issue-dot"></span>
+          <span>Hamstring injury rates have <strong>not changed significantly over 10 years</strong>, with more days of missed playing time than previously</span>
+        </li>
+        <li>
+          <span class="issue-dot"></span>
+          <span>Above <strong>85% of peak speed</strong>, eccentric demand on the hamstrings increases exponentially &mdash; low-velocity testing misses this</span>
+        </li>
+        <li>
+          <span class="issue-dot"></span>
+          <span>Deficits in <strong>ankle and calf power</strong> can affect the chain further up &mdash; the hamstring doesn't work in isolation</span>
+        </li>
+      </ul>
+
+      <img src="tottenham-bramah-wide.jpg" alt="Wide view of Dr. Bramah's hamstring biomechanics session with the audience" class="full-photo" />
+      <div class="photo-caption">The full room during the sprint biomechanics session</div>
+
+      <div class="callout">
+        <h3>The 85% threshold</h3>
+        <p>Various studies have referenced 85% of peak speed as the required intensity to simulate the eccentric demand of match play. Below this, the assessment doesn't represent the injury mechanism. This has direct implications for return-to-play testing protocols.</p>
+      </div>
+
+      <div class="insight-strip">
+        <span class="insight-chip">3D motion capture</span>
+        <span class="insight-chip">Hamstring biomechanics</span>
+        <span class="insight-chip">85% peak speed</span>
+        <span class="insight-chip">Swing phase forces</span>
+        <span class="insight-chip">Calf-ankle chain</span>
+        <span class="insight-chip">Return to play</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FEEDBACK ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Feedback</div>
+      <h2 class="section-title">In their words.</h2>
+
+      <div class="quote-card">
+        <p class="quote-text">"Great to involve all areas of the club and allowed the opportunity to connect with staff members that I hadn't met before, stimulating conversations between staff and between teams."</p>
+        <div class="quote-attr">Stuart Campbell</div>
+        <div class="quote-role">Head of Therapy Services, Tottenham Hotspur FC</div>
+      </div>
+
+      <div class="quote-card">
+        <p class="quote-text">"On the boot plates alone, I previously only considered the two main types of SG and FG and wasn't as familiar with the AG. This is a useful option, especially for academy teams that have more time on artificial surfaces."</p>
+        <div class="quote-attr">Stuart Campbell</div>
+        <div class="quote-role">Head of Therapy Services, Tottenham Hotspur FC</div>
+      </div>
+
+      <div class="quote-card">
+        <p class="quote-text">"As a medical team we routinely have conversations with ground staff around surface conditions at the training ground and stadium, but the information isn't passed on to players. This is something we will consider sharing based on the research and information."</p>
+        <div class="quote-attr">Gary Hemens</div>
+        <div class="quote-role">Head of Medical, Millwall FC</div>
+      </div>
+
+      <div class="quote-card">
+        <p class="quote-text">"After the summit I was able to connect directly with club staff at Tottenham regarding testing opportunities with the academy and younger age group teams. Previously we have had limited interactions with these teams."</p>
+        <div class="quote-attr">Dimi Michael</div>
+        <div class="quote-role">UK Product Testing Manager, Nike</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TAKEAWAY ═══ -->
+  <section class="takeaway-section">
+    <div class="container">
+      <div class="section-label">The takeaway</div>
+      <p class="takeaway-statement">Don't wait for them to come to you. Go to them.</p>
+      <p class="takeaway-body">
+        Club staff don't have time to attend conferences during the season. They can't leave the team for a week to visit a research lab. But give them a half-day at their own training ground, with speakers who understand their world, and the room fills up.
+      </p>
+      <p class="takeaway-body">
+        Thirty-one people showed up. Staff connected across teams &mdash; men's, women's, and academy &mdash; in ways they hadn't before. New testing relationships were formed on the spot. Information that had been siloed within medical teams was identified as something worth sharing with players directly.
+      </p>
+      <p class="takeaway-body">
+        This is the model. Bring the development to the club. Make it easy to say yes.
+      </p>
+
+      <div class="divider" style="margin:32px auto;"></div>
+
+      <a href="api-access-hannah-hampton.html" class="connection-card">
+        <div class="conn-label">London Lab Series</div>
+        <div class="conn-title">Her Gloves Don't Fit.</div>
+        <p class="conn-text">Hannah Hampton visited the London NSRL for a Footscan &mdash; and surfaced a product problem that set a prototype in motion. Another story from the London Lab.</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ BRANDED FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Listening in from the London Lab &mdash; bringing development to the club, not the other way around.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  netlifyIdentity.on('init', function(user) {
+    if (!user) window.location.href = '/api-access-gate.html?redirect=api-access-tottenham.html';
+  });
+  netlifyIdentity.on('logout', function() {
+    window.location.href = '/api-access-gate.html';
+  });
+</script>
+
+</body>
+</html>

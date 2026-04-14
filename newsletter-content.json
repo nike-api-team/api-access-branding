@@ -1,6 +1,16 @@
 {
   "stories": [
     {
+      "title": "Tottenham x Nike Performance Summit: Moving forward, from the ground up",
+      "teaser": "31 club staff from Spurs and four loan clubs gathered at Tottenham's training centre for a half-day summit covering ground interaction research, boot modification from a 180-player roster, and sprint biomechanics in relation to hamstring injury. The model: bring development to the club.",
+      "url": "https://api-access.netlify.app/api-access-tottenham.html",
+      "date": "2026-04-13",
+      "category": "Athlete Story",
+      "image": "tottenham-hero.jpg",
+      "source": "Harmer — NSRL London",
+      "tags": ["football", "soccer", "Tottenham", "summit", "biomechanics", "hamstring", "boots", "traction", "surface", "injury", "ACL", "modification", "Montebelluna", "London", "NSRL", "sprint", "ground interaction", "podiatry", "3D motion capture"]
+    },
+    {
       "title": "Her Gloves Don't Fit: Hannah Hampton & the case for women-specific goalkeeper gloves",
       "teaser": "England & Chelsea goalkeeper Hannah Hampton visited the London NSRL and surfaced a problem hiding in plain sight — goalkeeper gloves designed for men, worn by women. One conversation led to a prototype.",
       "url": "https://api-access.netlify.app/api-access-hannah-hampton.html",
