@@ -1,6 +1,16 @@
 {
   "stories": [
     {
+      "title": "Nike Innovation Farm Team x ACG: Week 2 — Speed x Grade & The Brain at Baseline",
+      "teaser": "Treadmill testing begins. Lactate threshold is mapped across four trail gradients revealing that being a strong flat runner does not make you a strong climber. EEG baselines captured. Muscle oxidative capacity measured. First product debriefs land on endurance apparel prototypes.",
+      "url": "https://api-access.netlify.app/api-access-farmteam-week2.html",
+      "date": "2026-05-04",
+      "category": "Innovation Series",
+      "image": "farmteam-treadmill.jpg",
+      "source": "Winn, Boere, Parsonage, Kirby — NSRL",
+      "tags": ["farm team", "ACG", "trail running", "ultra", "lactate threshold", "EEG", "cognitive", "muscle oxidative capacity", "NIRS", "MVC", "strength", "apparel", "footwear", "Kiger", "treadmill", "grade", "innovation", "longitudinal", "physiological resilience"]
+    },
+    {
       "title": "Tottenham x Nike Performance Summit: Moving forward, from the ground up",
       "teaser": "31 club staff from Spurs and four loan clubs gathered at Tottenham's training centre for a half-day summit covering ground interaction research, boot modification from a 180-player roster, and sprint biomechanics in relation to hamstring injury. The model: bring development to the club.",
       "url": "https://api-access.netlify.app/api-access-tottenham.html",

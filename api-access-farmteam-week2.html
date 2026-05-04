@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Farm Team &mdash; Week 2</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #050507;
+      --surface: #0e0e14;
+      --border: #1f1f30;
+      --accent: #e8622a;
+      --accent-light: #f4905e;
+      --accent-glow: rgba(232, 98, 42, 0.2);
+      --text: #f0f0f8;
+      --muted: #8888a0;
+      --blue: #3a6df5;
+      --blue-light: #7a9dff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 480px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Header ── */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(5, 5, 7, 0.92);
+    }
+    .brand-header .container { display: flex; align-items: center; justify-content: space-between; }
+    .brand-logo { display: flex; align-items: baseline; user-select: none; text-decoration: none; }
+    .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--blue); }
+    .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+    .edition-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+    .brand-intro { padding: 32px 0 0; text-align: center; }
+    .brand-intro .from-line { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .brand-intro .team-name { font-size: 14px; color: var(--accent-light); font-weight: 600; margin-bottom: 20px; }
+    .brand-intro .edition-divider { width: 40px; height: 2px; background: var(--accent); margin: 0 auto; }
+
+    /* ── Sections ── */
+    section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .section-title { font-size: 22px; font-weight: 800; line-height: 1.2; margin-bottom: 20px; }
+
+    .narrative { font-size: 15px; color: #c8c8e0; line-height: 1.8; margin-bottom: 16px; }
+    .narrative em { color: var(--accent-light); font-style: normal; font-weight: 700; }
+    .narrative strong { color: var(--text); }
+
+    .divider { width: 40px; height: 3px; background: var(--accent); border-radius: 2px; margin: 28px 0; }
+
+    /* ── Hero ── */
+    .hero-image {
+      width: 100%; border-radius: 12px; margin-bottom: 32px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── Full-width photo ── */
+    .full-photo {
+      width: calc(100% + 48px); margin-left: -24px; margin-right: -24px;
+      margin-top: 24px; margin-bottom: 24px;
+    }
+
+    /* ── Protocol Card ── */
+    .protocol-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px; margin: 20px 0;
+    }
+    .protocol-card h4 {
+      font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .protocol-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    /* ── Stat Cards ── */
+    .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 16px 14px; text-align: center;
+    }
+    .stat-num { font-size: 24px; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+    /* ── Finding/Callout ── */
+    .finding {
+      background: rgba(232, 98, 42, 0.06); border-left: 3px solid var(--accent);
+      border-radius: 8px; padding: 16px 18px; margin: 20px 0;
+    }
+    .finding p { font-size: 14px; color: var(--accent-light); font-weight: 600; line-height: 1.6; margin: 0; }
+
+    /* ── Chart Image ── */
+    .chart-img {
+      width: 100%; border-radius: 10px; margin: 16px 0;
+      border: 1px solid var(--border); background: #fff;
+    }
+    .chart-caption { font-size: 11px; color: var(--muted); text-align: center; margin-top: -8px; margin-bottom: 16px; }
+
+    /* ── Quote Card ── */
+    .quote-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px; margin: 16px 0; position: relative;
+    }
+    .quote-card::before {
+      content: '\201C'; position: absolute; top: 10px; left: 16px;
+      font-size: 36px; color: var(--accent); opacity: 0.4; line-height: 1;
+    }
+    .quote-text { font-size: 14px; color: #c8c8e0; line-height: 1.7; font-style: italic; padding-left: 24px; }
+    .quote-attr { font-size: 11px; color: var(--muted); margin-top: 8px; padding-left: 24px; }
+
+    /* ── Product Theme Card ── */
+    .theme-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px; margin: 14px 0;
+    }
+    .theme-card h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .theme-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── Connection Card ── */
+    .connection-card {
+      display: block; text-decoration: none; color: inherit;
+      background: var(--surface); border: 1px solid var(--accent);
+      border-radius: 14px; padding: 24px; margin-top: 40px;
+      text-align: center; transition: box-shadow 0.3s;
+    }
+    .connection-card:hover { box-shadow: 0 0 30px var(--accent-glow); }
+    .connection-card .label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .connection-card .title { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+    .connection-card .cta { font-size: 12px; font-weight: 700; color: var(--accent); }
+
+    /* ── Footer ── */
+    .brand-footer { border-top: 1px solid var(--border); padding: 48px 0; }
+    .footer-inner { text-align: center; }
+    .footer-logo { display: inline-flex; align-items: baseline; margin-bottom: 16px; user-select: none; }
+    .footer-logo .api { font-size: 28px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 28px; font-weight: 300; letter-spacing: 1.5px; color: var(--blue); }
+    .footer-team { font-size: 13px; color: var(--accent-light); font-weight: 600; margin-bottom: 8px; }
+    .footer-desc { font-size: 13px; color: var(--muted); max-width: 360px; margin: 0 auto 24px; line-height: 1.6; }
+    .footer-cta { display: inline-block; padding: 12px 32px; border: 2px solid var(--blue); border-radius: 8px; color: var(--blue); font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: background 0.2s, color 0.2s; }
+    .footer-cta:hover { background: var(--blue); color: #fff; }
+    .footer-fine { margin-top: 32px; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Farm Team</span>
+        <span class="edition-date">Week 2</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">Nike Innovation Farm Team x ACG</div>
+      <div class="team-name">Week 2 &bull; April 27 &ndash; May 1, 2026</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <section style="padding-top:32px;">
+    <div class="container">
+      <img class="hero-image" src="farmteam-halo.jpg" alt="Athlete running on treadmill during metabolic testing, shot through ring light" />
+      <h1 style="font-size:28px; font-weight:900; line-height:1.15; margin-bottom:16px;">Pace Has No Place in the Mountains</h1>
+      <p class="narrative">
+        The gravity of the situation is &mdash; that pace has no place in mountains. Vertical meters is the <em>metric of choice</em> for trail runners. This week we mapped what it takes to sustain exercise intensity across declined &minus;5% and flat, and inclined gradients of 5%, and 15% &mdash; to understand how the body responds when gravity enters the equation.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ 1. LACTATE THRESHOLD ═══ -->
+  <section>
+    <div class="container">
+      <h2 class="section-title">Speed &times; Grade Lactate Threshold</h2>
+
+      <p class="narrative">
+        Each athlete completed a protocol called <em>Speed &times; Grade</em> to determine lactate threshold at four different gradients spanning trail terrain: <strong>&minus;5%, 0%, +5%, and +15%</strong>.
+      </p>
+
+      <div class="protocol-card">
+        <h4>Protocol</h4>
+        <p>Each grade had 5 progressively faster stages. Lactate was measured at the end of each stage. The researcher was looking for a small but meaningful rise in blood lactate, indicating the athlete is now requiring a shift in energy demand and transitioning from moderate to heavy intensity exercise.</p>
+      </div>
+
+      <!-- Vertical Ascent Rate chart -->
+      <div style="margin:28px 0 24px;">
+        <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:16px;">Vertical Ascent Rate at Lactate Threshold</div>
+        <div style="display:flex; align-items:flex-end; gap:8px; height:200px; padding-bottom:4px;">
+          <!-- -5% bar (descending, shown inverted) -->
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+            <div style="font-size:14px; font-weight:700; color:#22d3ee; margin-bottom:6px;">&minus;775</div>
+            <div style="width:100%; height:73%; background:linear-gradient(180deg, #22d3ee22, #22d3ee); border-radius:6px 6px 0 0; opacity:0.5; border:1px solid #22d3ee44;"></div>
+            <div style="font-size:14px; font-weight:700; color:var(--muted); margin-top:8px; text-align:center;">&minus;5%</div>
+          </div>
+          <!-- 0% bar -->
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+            <div style="font-size:14px; font-weight:700; color:#888; margin-bottom:6px;">0</div>
+            <div style="width:100%; height:2px; background:var(--border); border-radius:6px;"></div>
+            <div style="font-size:14px; font-weight:700; color:var(--muted); margin-top:8px; text-align:center;">0%</div>
+          </div>
+          <!-- +5% bar -->
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+            <div style="font-size:14px; font-weight:700; color:#ff7a1a; margin-bottom:6px;">+560</div>
+            <div style="width:100%; height:53%; background:linear-gradient(180deg, #ff7a1a, #ff7a1a22); border-radius:6px 6px 0 0; border:1px solid #ff7a1a44;"></div>
+            <div style="font-size:14px; font-weight:700; color:var(--muted); margin-top:8px; text-align:center;">+5%</div>
+          </div>
+          <!-- +15% bar -->
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+            <div style="font-size:14px; font-weight:900; color:#ff2e63; margin-bottom:6px;">+1,065</div>
+            <div style="width:100%; height:100%; background:linear-gradient(180deg, #ff2e63, #ff2e6322); border-radius:6px 6px 0 0; border:1px solid #ff2e6344;"></div>
+            <div style="font-size:14px; font-weight:700; color:var(--muted); margin-top:8px; text-align:center;">+15%</div>
+          </div>
+        </div>
+        <div style="font-size:13px; font-weight:600; color:var(--muted); text-align:center; margin-top:10px;">m/hr at lactate threshold &middot; team average (n=18)</div>
+      </div>
+
+      <div style="background:var(--surface); border-left:3px solid #ff7a1a; border-radius:0 8px 8px 0; padding:14px 16px; margin-bottom:32px;">
+        <p style="font-size:13px; color:var(--text); line-height:1.6; margin:0;">At +15% threshold pace, the team would cover the vertical gain of UTMB (9,600m) in ~9 hours of sustained climbing.</p>
+      </div>
+
+      <!-- Relative Speed Change chart -->
+      <div style="margin:0 0 28px;">
+        <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:16px;">Relative Change in Threshold Speed vs Flat</div>
+        <div style="position:relative; height:220px; display:flex; flex-direction:column; justify-content:center;">
+          <!-- Baseline reference line (flat = 0%) -->
+          <div style="position:absolute; top:50%; left:0; right:0; height:1px; background:var(--text); opacity:0.3;"></div>
+
+          <div style="display:flex; align-items:center; gap:8px; height:100%;">
+            <!-- -5% bar (goes UP = faster) -->
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; position:relative;">
+              <div style="position:absolute; bottom:50%; width:80%; display:flex; flex-direction:column; align-items:center;">
+                <div style="font-size:14px; font-weight:700; color:#22d3ee; margin-bottom:4px;">+13%</div>
+                <div style="width:100%; height:28px; background:linear-gradient(180deg, #22d3ee, #22d3ee44); border-radius:6px 6px 0 0; border:1px solid #22d3ee55; border-bottom:none;"></div>
+              </div>
+              <div style="position:absolute; top:calc(50% + 8px); font-size:14px; font-weight:700; color:var(--muted);">&minus;5%</div>
+            </div>
+            <!-- 0% (reference) -->
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; position:relative;">
+              <div style="position:absolute; top:calc(50% - 20px); font-size:14px; font-weight:700; color:#d6ff5a;">0%</div>
+              <div style="position:absolute; top:calc(50% + 8px); font-size:14px; font-weight:700; color:var(--muted);">0%</div>
+            </div>
+            <!-- +5% bar (goes DOWN = slower) -->
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; position:relative;">
+              <div style="position:absolute; top:50%; width:80%; display:flex; flex-direction:column; align-items:center;">
+                <div style="width:100%; height:42px; background:linear-gradient(180deg, #ff7a1a44, #ff7a1a); border-radius:0 0 6px 6px; border:1px solid #ff7a1a55; border-top:none;"></div>
+                <div style="font-size:14px; font-weight:700; color:#ff7a1a; margin-top:4px;">&minus;19%</div>
+              </div>
+              <div style="position:absolute; bottom:calc(50% + 8px); font-size:14px; font-weight:700; color:var(--muted);">+5%</div>
+            </div>
+            <!-- +15% bar (goes DOWN = much slower) -->
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; position:relative;">
+              <div style="position:absolute; top:50%; width:80%; display:flex; flex-direction:column; align-items:center;">
+                <div style="width:100%; height:90px; background:linear-gradient(180deg, #ff2e6344, #ff2e63); border-radius:0 0 6px 6px; border:1px solid #ff2e6355; border-top:none;"></div>
+                <div style="font-size:14px; font-weight:900; color:#ff2e63; margin-top:4px;">&minus;48%</div>
+              </div>
+              <div style="position:absolute; bottom:calc(50% + 8px); font-size:14px; font-weight:700; color:var(--muted);">+15%</div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:13px; font-weight:600; color:var(--muted); text-align:center; margin-top:10px;">% change in LT speed relative to flat &middot; team average (n=18)</div>
+      </div>
+
+      <div style="background:var(--surface); border-left:3px solid #ff7a1a; border-radius:0 8px 8px 0; padding:14px 16px; margin-bottom:24px;">
+        <p style="font-size:13px; color:var(--text); line-height:1.6; margin:0;"><strong>The cost of gravity:</strong> athletes lose nearly half their threshold speed at 15% grade. Every +1% of incline costs roughly 3% of threshold speed.</p>
+        <p style="font-size:13px; color:var(--text); line-height:1.6; margin:10px 0 0 0;"><strong>The asymmetry:</strong> Gravity takes more than it returns. Our study shows that a +5% gradient costs more than a &minus;5% gradient gives back. Eccentric braking forces and neuromuscular control cap how much &ldquo;free speed&rdquo; the body can convert on the downhill.</p>
+      </div>
+
+
+
+      <div style="margin:24px -24px; position:relative; cursor:pointer;" onclick="var v=this.querySelector('video'); v.paused?v.play():v.pause(); this.querySelector('.play-btn').style.display=v.paused?'flex':'none';">
+        <video src="farmteam-speedgrade.mp4" style="width:100%; display:block;" playsinline muted loop autoplay></video>
+        <div class="play-btn" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:56px; height:56px; background:rgba(0,0,0,0.6); border-radius:50%; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+          <div style="width:0; height:0; border-left:18px solid white; border-top:11px solid transparent; border-bottom:11px solid transparent; margin-left:4px;"></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2 class="section-title">VO2max at Steep Gradient</h2>
+
+      <img class="full-photo" src="farmteam-vo2steep.jpg" alt="Athlete climbing at steep gradient on inclined Woodway treadmill with VO2 mask" style="border-radius:0; border:none;" />
+
+      <p class="narrative">
+        After Speed &times; Grade was complete, each athlete performed a maximal running test to failure &mdash; at none other than +15% gradient. The steepest grade. The one that exposed the largest drop in threshold speed. Now pushed to absolute exhaustion.
+      </p>
+
+      <div class="protocol-card">
+        <h4>Protocol</h4>
+        <p>Starting at an individualized speed (based on each athlete&rsquo;s +15% LT), speed increased incrementally until volitional exhaustion. Peak oxygen consumption and time to exhaustion were recorded.</p>
+      </div>
+
+      <!-- VO2max dot strip -->
+      <div style="margin:28px 0 20px;">
+        <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:16px;">VO2max at 15% Gradient (mL/kg/min)</div>
+        <div style="position:relative; height:60px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 16px;">
+          <!-- Scale: 35 to 75 range -->
+          <div style="position:absolute; bottom:6px; left:16px; font-size:9px; color:var(--muted);">35</div>
+          <div style="position:absolute; bottom:6px; right:16px; font-size:9px; color:var(--muted);">70</div>
+          <div style="position:absolute; bottom:6px; left:50%; transform:translateX(-50%); font-size:9px; color:var(--muted);">52.5</div>
+          <!-- Dots (positioned as % of 35-70 range) -->
+          <div style="position:absolute; top:18px; left:16px; right:16px; height:20px;">
+            <!-- Mean line -->
+            <div style="position:absolute; left:51.4%; top:-4px; width:2px; height:28px; background:var(--accent); opacity:0.6; border-radius:1px;"></div>
+            <!-- Individual dots: (val - 35) / 35 * 100 -->
+            <div style="position:absolute; left:83.1%; top:6px; width:8px; height:8px; border-radius:50%; background:#ff2e63;" title="Zev 68.7"></div>
+            <div style="position:absolute; left:86.3%; top:6px; width:8px; height:8px; border-radius:50%; background:#ff2e63;" title="Alejandro 65.2"></div>
+            <div style="position:absolute; left:83.1%; top:14px; width:8px; height:8px; border-radius:50%; background:#ff2e63;" title="Tim 64.1"></div>
+            <div style="position:absolute; left:75.1%; top:6px; width:8px; height:8px; border-radius:50%; background:#ff7a1a;" title="Zac 61.3"></div>
+            <div style="position:absolute; left:70.9%; top:6px; width:8px; height:8px; border-radius:50%; background:#ff7a1a;" title="Tim V 59.8"></div>
+            <div style="position:absolute; left:53.4%; top:2px; width:8px; height:8px; border-radius:50%; background:#d6ff5a;" title="Alec 53.7"></div>
+            <div style="position:absolute; left:52.3%; top:12px; width:8px; height:8px; border-radius:50%; background:#d6ff5a;" title="Andrew 53.5"></div>
+            <div style="position:absolute; left:52.3%; top:22px; width:8px; height:8px; border-radius:50%; background:#d6ff5a;" title="Michelle 53.3"></div>
+            <div style="position:absolute; left:52.3%; top:-2px; width:8px; height:8px; border-radius:50%; background:#d6ff5a;" title="Kristen 53.3"></div>
+            <div style="position:absolute; left:52%; top:6px; width:8px; height:8px; border-radius:50%; background:#d6ff5a;" title="Anthony 53.2"></div>
+            <div style="position:absolute; left:51.7%; top:18px; width:8px; height:8px; border-radius:50%; background:#d6ff5a;" title="Erin 53.1"></div>
+            <div style="position:absolute; left:36.6%; top:6px; width:8px; height:8px; border-radius:50%; background:#22d3ee;" title="Alex 47.8"></div>
+            <div style="position:absolute; left:35.7%; top:14px; width:8px; height:8px; border-radius:50%; background:#22d3ee;" title="Meaghan 47.5"></div>
+            <div style="position:absolute; left:34.3%; top:6px; width:8px; height:8px; border-radius:50%; background:#22d3ee;" title="Tara 47.0"></div>
+            <div style="position:absolute; left:32.9%; top:14px; width:8px; height:8px; border-radius:50%; background:#22d3ee;" title="Sydney 46.5"></div>
+            <div style="position:absolute; left:31.1%; top:6px; width:8px; height:8px; border-radius:50%; background:#22d3ee;" title="Jessica 45.9"></div>
+            <div style="position:absolute; left:17.7%; top:6px; width:8px; height:8px; border-radius:50%; background:#22d3ee;" title="Lexi 41.2"></div>
+            <div style="position:absolute; left:15.4%; top:14px; width:8px; height:8px; border-radius:50%; background:#22d3ee;" title="Shannon 40.4"></div>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px;">
+          <span style="color:var(--muted);">Range: <strong style="color:var(--text);">40.4 &ndash; 68.7</strong></span>
+          <span style="color:var(--muted);">Mean: <strong style="color:var(--accent);">53.0</strong></span>
+        </div>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-num">10.6</div>
+          <div class="stat-label">kph at VO2max<br/>on +15% grade</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">~1,590</div>
+          <div class="stat-label">m/hr vertical<br/>at VO2max</div>
+        </div>
+      </div>
+
+      <div style="background:var(--surface); border-left:3px solid #ff7a1a; border-radius:0 8px 8px 0; padding:14px 16px; margin:20px 0;">
+        <p style="font-size:13px; color:var(--text); line-height:1.6; margin:0;"><strong>The variability:</strong> Gas Exchange Threshold ranged from 47% to 87% of VO2max across the group. Some athletes can access nearly their entire aerobic engine before crossing the first metabolic boundary. Others hit it at less than half capacity. This spread may be one of the keys to understanding physiological resilience.</p>
+      </div>
+
+      <!-- Kiger vs PJ peaks comparison -->
+      <div style="margin:20px 0;">
+        <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:12px;">Peak Values at 15% &mdash; By Footwear</div>
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; overflow:hidden;">
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border);">
+            <div style="font-size:10px; color:var(--muted);"></div>
+            <div style="font-size:11px; font-weight:700; color:var(--text); text-align:center;">Kiger (n=10)</div>
+            <div style="font-size:11px; font-weight:700; color:#ff7a1a; text-align:center;">PJ (n=8)</div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px;">
+            <div style="font-size:11px; color:var(--muted);">Peak Velocity</div>
+            <div style="font-size:14px; font-weight:700; color:var(--text); text-align:center;">11.0 &plusmn; 1.7 <span style="font-size:10px; color:var(--muted);">kph</span></div>
+            <div style="font-size:14px; font-weight:700; color:#ff7a1a; text-align:center;">11.5 &plusmn; 1.7 <span style="font-size:10px; color:#ff7a1a;">kph</span></div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px;">
+            <div style="font-size:11px; color:var(--muted);">Peak Power</div>
+            <div style="font-size:14px; font-weight:700; color:var(--text); text-align:center;">285 &plusmn; 83 <span style="font-size:10px; color:var(--muted);">W</span></div>
+            <div style="font-size:14px; font-weight:700; color:#ff7a1a; text-align:center;">291 &plusmn; 58 <span style="font-size:10px; color:#ff7a1a;">W</span></div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+            <div style="font-size:11px; color:var(--muted);">Peak Power/kg</div>
+            <div style="font-size:14px; font-weight:700; color:var(--text); text-align:center;">4.26 &plusmn; 0.69 <span style="font-size:10px; color:var(--muted);">W/kg</span></div>
+            <div style="font-size:14px; font-weight:700; color:#ff7a1a; text-align:center;">4.46 &plusmn; 0.71 <span style="font-size:10px; color:#ff7a1a;">W/kg</span></div>
+          </div>
+        </div>
+        <p style="font-size:11px; color:var(--muted); margin-top:8px; text-align:center;">Groups matched at baseline &mdash; clean slate for crossover comparison</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2 class="section-title">Vertical Field Work Capacity</h2>
+
+      <p class="narrative">
+        Out on the LeBron James Innovation Center ramp &mdash; which also just happens to be a 15% gradient &mdash; athletes ran at a speed associated with maximal oxygen consumption for as many repetitions as possible.
+      </p>
+
+      <div class="protocol-card">
+        <h4>Protocol</h4>
+        <p>Repeated efforts at VO2max speed up a 15% ramp until failure. Total repetitions completed quantifies vertical field work capacity &mdash; how much high-intensity vertical work the athlete can sustain in a real-world setting.</p>
+      </div>
+
+      <div style="font-size:15px; font-weight:800; color:var(--text); margin:24px 0 6px;">Uphill means extra work. Period.</div>
+      <p class="narrative" style="font-size:13px; margin-bottom:20px;">Total mechanical work done across 15 reps at VO2max on a 15% ramp. This is the edge of capacity &mdash; not how fast, but how much.</p>
+
+      <!-- Total Work bar chart -->
+      <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:24px;">
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">1</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:100%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">286</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">2</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:92%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">263</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">3</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:88%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">252</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">4</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:88%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">252</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">5</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:81%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">233</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">6</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:80%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">230</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">7</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:80%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">228</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">8</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:76%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">217</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">9</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:74%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">212</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">10</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:72%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">207</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">11</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:72%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">207</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">12</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:72%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">205</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">13</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:71%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">204</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">14</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:66%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">188</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">15</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:65%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">185</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">16</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:63%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">179</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">17</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:60%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">171</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; color:var(--muted); width:20px; text-align:right;">18</span><div style="height:14px; width:100%; background:var(--surface); border-radius:3px; overflow:hidden;"><div style="height:100%; width:60%; background:linear-gradient(90deg, var(--accent), #ff7a1a); border-radius:3px;"></div></div><span style="font-size:10px; font-weight:700; color:var(--text); width:42px;">171</span></div>
+      </div>
+      <div style="font-size:13px; font-weight:600; color:var(--muted); text-align:center; margin-bottom:20px;">Total work (kJ) &middot; 15 reps at VO2max &middot; 15% gradient</div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-num">216</div>
+          <div class="stat-label">kJ avg total<br/>work done</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">~344</div>
+          <div class="stat-label">meters vertical<br/>gained (15 reps)</div>
+        </div>
+      </div>
+
+      <img class="full-photo" src="farmteam-ramp-group.jpg" alt="Farm Team group photo after completing the Vertical Field Work Capacity test on the LeBron James Innovation Center ramp" style="border-radius:0; border:none;" />
+    </div>
+  </section>
+
+  <!-- ═══ 2. PRODUCT ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Product</div>
+      <h2 class="section-title">Apparel Wear Test Debrief</h2>
+
+      <p class="narrative">
+        Week 2 brought the first structured wear test feedback sessions. Four Farm Team athletes (2M, 2F) debriefed on two prototype garments after running in them on trails and roads.
+      </p>
+
+      <div class="divider"></div>
+
+      <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">Reimagine Endurance Half Tight</h3>
+
+      <div class="theme-card">
+        <h4>Fit &amp; Comfort</h4>
+        <p>Compression was appreciated for quads but waistband height and groin area caused discomfort, requiring frequent adjustments.</p>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">&ldquo;It was basically giving just like a wedgy through the whole groin area.&rdquo;</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">&ldquo;Having the hugging sensation was probably more helpful than not.&rdquo;</div>
+      </div>
+
+      <div class="theme-card">
+        <h4>Storage &amp; Functionality</h4>
+        <p>Pockets were functional but shallow pocket perceived as less secure. Deeper pocket appreciated for holding gels during runs.</p>
+      </div>
+
+      <div class="theme-card">
+        <h4>Recommendations</h4>
+        <p>Increase waistband height, improve groin fit for mobility, deepen pockets, and test in hotter conditions for thermal regulation assessment.</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">Reimagine Endurance Next% Performance Top</h3>
+
+      <div class="theme-card">
+        <h4>Comfort &amp; Moisture</h4>
+        <p>Described as &ldquo;sleepwear comfortable&rdquo; with excellent moisture wicking. Did not pool sweat, sag, or hold water even during intense activity.</p>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">&ldquo;When I first put it on, it felt like a merino shirt, like kind of like a sleepywear bedtime shirt. It was really comfortable and soft.&rdquo;</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">&ldquo;I tend to sweat a lot, but I did not pool any sweat in any part of the shirt.&rdquo;</div>
+      </div>
+
+      <div class="theme-card">
+        <h4>Thermal &amp; Mobility</h4>
+        <p>Maintained consistent temperature throughout runs. Unique seam placement minimized chafing. Roomy sleeves praised for unrestricted movement.</p>
+      </div>
+
+      <div class="theme-card">
+        <h4>Concern: Sun Protection</h4>
+        <p>Athletes expressed worry about UV exposure through the fabric on long trail runs in desert/exposed conditions.</p>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">&ldquo;My shoulders and the back of my neck make me nervous being out for a long time in the desert.&rdquo;</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">Footwear: Kiger 10 vs Picklejuice</h3>
+
+      <p class="narrative">
+        A majority of athletes doing the Speed &times; Grade treadmill test wore either Kiger 10 or Picklejuice. Initial athlete voice and ongoing feedback will be collected via the Move37 app.
+      </p>
+      <div class="quote-card">
+        <div class="quote-text">&ldquo;The Kiger feels super low profile. I am a little nervous about running on the long treadmill tests with it.&rdquo;</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">&ldquo;I wish I was the sample size for Picklejuice. It looks a lot more comfortable and cushiony.&rdquo;</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONNECTION CARD ═══ -->
+  <section style="padding:40px 0;">
+    <div class="container">
+      <a class="connection-card" href="api-access-farmteam-series.html">
+        <div class="label">Innovation Series</div>
+        <div class="title">Nike Innovation Farm Team x ACG</div>
+        <div class="cta">View series overview &#8594;</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </div>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <div class="footer-desc">Nike Sport Research Lab</div>
+        <a href="api-access-landing.html" class="footer-cta">Back to Hub</a>
+        <div class="footer-fine">Highly Confidential &bull; Internal Use Only</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Netlify Identity gate -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    const defined = typeof netlifyIdentity !== 'undefined';
+    if (defined) {
+      netlifyIdentity.on('init', user => {
+        if (!user) {
+          const page = location.pathname.split('/').pop().replace('.html','');
+          window.location.href = 'api-access-gate.html?redirect=' + page;
+        }
+      });
+    }
+  </script>
+</body>
+</html>

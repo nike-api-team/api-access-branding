@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Farm Team &mdash; Week 1</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #050507;
+      --surface: #0e0e14;
+      --border: #1f1f30;
+      --accent: #e8622a;
+      --accent-light: #f4905e;
+      --accent-glow: rgba(232, 98, 42, 0.2);
+      --text: #f0f0f8;
+      --muted: #8888a0;
+      --blue: #3a6df5;
+      --blue-light: #7a9dff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 480px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Header ── */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(5, 5, 7, 0.92);
+    }
+    .brand-header .container { display: flex; align-items: center; justify-content: space-between; }
+    .brand-logo { display: flex; align-items: baseline; user-select: none; text-decoration: none; }
+    .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--blue); }
+    .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+    .edition-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+    .brand-intro { padding: 32px 0 0; text-align: center; }
+    .brand-intro .from-line { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .brand-intro .team-name { font-size: 14px; color: var(--accent-light); font-weight: 600; margin-bottom: 20px; }
+    .brand-intro .edition-divider { width: 40px; height: 2px; background: var(--accent); margin: 0 auto; }
+
+    /* ── Sections ── */
+    section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .section-title { font-size: 22px; font-weight: 800; line-height: 1.2; margin-bottom: 20px; }
+
+    .narrative { font-size: 15px; color: #c8c8e0; line-height: 1.8; margin-bottom: 16px; }
+    .narrative em { color: var(--accent-light); font-style: normal; font-weight: 700; }
+    .narrative strong { color: var(--text); }
+
+    .divider { width: 40px; height: 3px; background: var(--accent); border-radius: 2px; margin: 28px 0; }
+
+    /* ── Hero image ── */
+    .hero-image {
+      width: 100%; border-radius: 12px; margin-bottom: 32px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── Full-width photo ── */
+    .full-photo {
+      width: calc(100% + 48px); margin-left: -24px; margin-right: -24px;
+      margin-top: 24px; margin-bottom: 24px;
+    }
+    .chart-img { width: 100%; border-radius: 10px; margin: 12px 0 6px; }
+    .chart-caption { font-size: 11px; color: var(--muted); margin-bottom: 20px; line-height: 1.4; }
+
+    /* ── Stat Cards ── */
+    .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 16px 14px; text-align: center;
+    }
+    .stat-num { font-size: 24px; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+    /* ── Protocol Card ── */
+    .protocol-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px; margin: 20px 0;
+    }
+    .protocol-card h4 {
+      font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .protocol-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .protocol-card ul { list-style: none; padding: 0; margin-top: 10px; }
+    .protocol-card ul li {
+      font-size: 13px; color: var(--muted); line-height: 1.6; padding: 4px 0 4px 16px;
+      position: relative;
+    }
+    .protocol-card ul li::before {
+      content: ''; position: absolute; left: 0; top: 11px;
+      width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+    }
+
+    /* ── Finding/Callout ── */
+    .finding {
+      background: rgba(232, 98, 42, 0.06); border-left: 3px solid var(--accent);
+      border-radius: 8px; padding: 16px 18px; margin: 20px 0;
+    }
+    .finding p { font-size: 14px; color: var(--accent-light); font-weight: 600; line-height: 1.6; margin: 0; }
+
+    /* ── Athlete Roster ── */
+    .roster { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+    .roster-chip {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+      padding: 6px 14px; font-size: 12px; color: var(--muted); white-space: nowrap;
+    }
+
+    /* ── Product Grid ── */
+    .product-grid { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+    .product-item {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px 16px; font-size: 13px; color: var(--muted); line-height: 1.5;
+    }
+    .product-item strong { color: var(--text); font-size: 12px; display: block; margin-bottom: 4px; }
+
+    /* ── Connection Card ── */
+    .connection-card {
+      display: block; text-decoration: none; color: inherit;
+      background: var(--surface); border: 1px solid var(--accent);
+      border-radius: 14px; padding: 24px; margin-top: 40px;
+      text-align: center; transition: box-shadow 0.3s;
+    }
+    .connection-card:hover { box-shadow: 0 0 30px var(--accent-glow); }
+    .connection-card .label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .connection-card .title { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+    .connection-card .cta { font-size: 12px; font-weight: 700; color: var(--accent); }
+
+    /* ── Footer ── */
+    .brand-footer { border-top: 1px solid var(--border); padding: 48px 0; }
+    .footer-inner { text-align: center; }
+    .footer-logo { display: inline-flex; align-items: baseline; margin-bottom: 16px; user-select: none; }
+    .footer-logo .api { font-size: 28px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 28px; font-weight: 300; letter-spacing: 1.5px; color: var(--blue); }
+    .footer-team { font-size: 13px; color: var(--accent-light); font-weight: 600; margin-bottom: 8px; }
+    .footer-desc { font-size: 13px; color: var(--muted); max-width: 360px; margin: 0 auto 24px; line-height: 1.6; }
+    .footer-cta { display: inline-block; padding: 12px 32px; border: 2px solid var(--blue); border-radius: 8px; color: var(--blue); font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: background 0.2s, color 0.2s; }
+    .footer-cta:hover { background: var(--blue); color: #fff; }
+    .footer-fine { margin-top: 32px; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Farm Team</span>
+        <span class="edition-date">Week 1</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">Nike Innovation Farm Team x ACG</div>
+      <div class="team-name">Week 1 &bull; April 20&ndash;24, 2026</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <section style="padding-top:32px;">
+    <div class="container">
+      <img class="hero-image" src="farmteam-lebron-welcome.jpg" alt="Welcome Nike Innovation Farm Team to the LeBron James Building" />
+      <h1 style="font-size:28px; font-weight:900; line-height:1.15; margin-bottom:16px;">Time is the Gamechanger</h1>
+      <p class="narrative">
+        Physiological resilience &mdash; the ability to resist deterioration over time &mdash; is what separates ultra from everything else. Before we can measure how these athletes change, we need to know who they are right now. 18 experienced ultra endurance trail runners. Baseline testing begins.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ THE MISSION ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The mission</div>
+      <h2 class="section-title">An exclusive community helping shape the future.</h2>
+
+      <p class="narrative">
+        Nike is a 50+ year old company whose mission is to bring inspiration and innovation to every athlete in the world &mdash; even in its wildest conditions. Founded by an athlete and a coach, Nike has always believed that everything starts with the <em>voice of the athlete</em>.
+      </p>
+      <p class="narrative">
+        That belief continues to guide how we create. And for the next 15 weeks, 18 athletes will live it alongside the Innovation team &mdash; running, testing, struggling, and sharing their minds and bodies toward a larger purpose.
+      </p>
+
+      <div class="finding">
+        <p>Nike sells one of the leading marathon shoes on earth, yet it has never been studied beyond 6 minutes of continuous running. This program changes that &mdash; from 6 minutes to 4+ hours.</p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-num">18</div>
+          <div class="stat-label">Athletes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">15</div>
+          <div class="stat-label">Weeks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">20</div>
+          <div class="stat-label">Hours / Week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">4+</div>
+          <div class="stat-label">Hour Runs</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ MEET THE TEAM ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The athletes</div>
+      <h2 class="section-title">Meet the Nike Innovation Farm Team</h2>
+
+      <p class="narrative">
+        A community of experienced runners from across the ultra and trail landscape &mdash; each bringing unique backgrounds, race histories, and biomechanics to the program.
+      </p>
+
+      <div class="roster">
+        <span class="roster-chip">Alex Angstadt</span>
+        <span class="roster-chip">Shannon Deady</span>
+        <span class="roster-chip">Alec Hewett</span>
+        <span class="roster-chip">Jessica Sherwood</span>
+        <span class="roster-chip">Andrew Morgan</span>
+        <span class="roster-chip">Tara Friend</span>
+        <span class="roster-chip">Zev Caiyem</span>
+        <span class="roster-chip">Sydney Park</span>
+        <span class="roster-chip">Alejandro Martinez Ambrosio</span>
+        <span class="roster-chip">Lexi Powell</span>
+        <span class="roster-chip">Tim Bilen</span>
+        <span class="roster-chip">Erin Forde</span>
+        <span class="roster-chip">Anthony Rule</span>
+        <span class="roster-chip">Michelle Merlis</span>
+        <span class="roster-chip">Tim Vail</span>
+        <span class="roster-chip">Meaghan Jennings</span>
+        <span class="roster-chip">Zack Bursell</span>
+        <span class="roster-chip">Kristen Gray</span>
+      </div>
+
+      <img class="full-photo" src="farmteam-barn.jpg" alt="Athletes gathered in The Barn lounge at Nike WHQ" style="border-radius:0; border:none;" />
+    </div>
+  </section>
+
+  <!-- ═══ WELCOME EXPERIENCE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Culture</div>
+      <h2 class="section-title">The Welcome Experience</h2>
+
+      <p class="narrative">
+        Before the science starts, the team bonds. A welcome dinner, &ldquo;The Barn&rdquo; athlete lounge, handwritten welcome baskets delivered to each apartment, and a full product kit to gear up for 15 weeks of running.
+      </p>
+
+      <img class="hero-image" src="farmteam-dinner.jpg" alt="Farm Team welcome dinner" />
+
+      <div class="protocol-card">
+        <h4>Product Welcome Kits</h4>
+        <ul>
+          <li>Nike Team Tech Fleece Windrunner Hoodie</li>
+          <li>ACG &ldquo;Daymax&rdquo; Duffle Bag + Crossbody Bag</li>
+          <li>Pegasus 42, Wildhorse 10, Vomero 18, Vaporfly 4, Alphafly 3</li>
+          <li>ACG Pegasus Trail, ACG Ultrafly</li>
+          <li>Nike Free Metcon 6/7</li>
+          <li>Swift Running Collection (tops, jacket, shorts, tank)</li>
+          <li>ACG Club Unstructured Cap</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ RESEARCH KICKOFF ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Research</div>
+      <h2 class="section-title">Baseline Testing Begins</h2>
+
+      <p class="narrative">
+        Week 1 is the <em>Pre-Testing Phase</em> &mdash; establishing baseline properties of ultra endurance trail runners across mechanical, metabolic, and cognitive domains.
+      </p>
+
+      <div class="protocol-card">
+        <h4>Mechanical Properties</h4>
+        <p>What is the muscle elasticity of an ultra endurance trail runner? What is the maximal muscular work capacity?</p>
+      </div>
+
+      <div class="protocol-card">
+        <h4>Metabolic Properties</h4>
+        <p>What is the maximal capacity of muscle to consume oxygen? What is the estimated muscle and bone mass?</p>
+      </div>
+
+      <div class="protocol-card">
+        <h4>Training Intervention</h4>
+        <p>Gym familiarization &mdash; introducing the strength training protocols that will form the concentric vs eccentric intervention in later weeks.</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">Weekly Insights</h3>
+
+      <div class="finding">
+        <p>Leg muscle strength can actually increase after 5 minutes of all-out exercise. Priming is real.</p>
+      </div>
+
+      <div class="finding">
+        <p>A wide range of lower-limb strength measures and competencies in the gym &mdash; additional preparation needed for some athletes.</p>
+      </div>
+
+      <div class="finding">
+        <p>A wide range of nutrition and hydration knowledge across the cohort.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ COGNITIVE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Cognitive</div>
+      <h2 class="section-title">Baseline Brain Function via EEG</h2>
+
+      <p class="narrative">
+        Using electroencephalography (EEG) &mdash; a safe, non-invasive cap that records the brain&rsquo;s electrical activity in real time &mdash; we&rsquo;re tracking two key components: <em>working memory</em> (holding and using information moment-to-moment) and <em>reward processing</em> (how the brain interprets feedback to shape motivation).
+      </p>
+
+      <div class="protocol-card">
+        <h4>Why EEG?</h4>
+        <p>EEG is sensitive to changes in fatigue, stress, and fueling &mdash; making it well-suited for tracking how training and recovery influence brain function over time. By tracking these measures weekly alongside cortisol, mental health, and training load, we aim to characterize how physical stress influences cognitive processing across a full training cycle. This integrated perspective has not previously been examined.</p>
+      </div>
+
+      <h3 style="font-size:14px; font-weight:700; margin-bottom:12px; margin-top:24px;">Resting State (Eyes Closed, 2 Min)</h3>
+      <img class="chart-img" src="farmteam-eeg-resting.png" alt="Resting state EEG power spectrum across frequency bands" />
+      <p class="chart-caption">Baseline resting state EEG power across the cohort</p>
+
+      <h3 style="font-size:14px; font-weight:700; margin-bottom:12px;">Working Memory (n-Back Task)</h3>
+      <img class="chart-img" src="farmteam-eeg-nback.png" alt="Working memory n-Back task performance" />
+      <p class="chart-caption">n-Back task performance &mdash; holding and manipulating information under load</p>
+
+      <h3 style="font-size:14px; font-weight:700; margin-bottom:12px;">Reward Processing (Doors Task)</h3>
+      <img class="chart-img" src="farmteam-eeg-reward.png" alt="Reward Positivity ERP from Doors Task" />
+      <p class="chart-caption">Reward Positivity ERP &mdash; how the brain responds to performance feedback</p>
+
+      <h3 style="font-size:14px; font-weight:700; margin-bottom:12px;">High-Load Correlations</h3>
+      <img class="chart-img" src="farmteam-eeg-correlations.png" alt="High load working memory task performance correlations" />
+      <p class="chart-caption">Correlations between high-load working memory performance and other metrics</p>
+    </div>
+  </section>
+
+  <!-- ═══ MUSCLE OXIDATIVE CAPACITY ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Metabolic</div>
+      <h2 class="section-title">Muscle Oxidative Capacity</h2>
+
+      <p class="narrative">
+        A measurement of a muscle&rsquo;s ability to utilize oxygen. Athletes wore a cuff (similar to a blood pressure cuff) on the thigh along with a NIRS device measuring local muscle oxygenation.
+      </p>
+
+      <div class="protocol-card">
+        <h4>Protocol</h4>
+        <p>The cuff rapidly inflates to completely restrict blood flow so that local muscle oxygen consumption can be measured. After very light exercise, a series of occlusions determines how quickly the muscle returns to baseline. A higher muscle oxidative capacity (k) indicates greater oxygen utilization ability.</p>
+      </div>
+
+      <div class="finding">
+        <p>In highly trained middle-distance runners, muscle oxidative capacity (k) strongly correlates with VO2max, lactate turn point, and critical speed. There is no previously published data on changes in muscle oxidative capacity over a training intervention or over prolonged running.</p>
+      </div>
+
+      <img class="chart-img" src="farmteam-mox-comparison.png" alt="Muscle oxidative capacity comparison across the cohort" />
+      <p class="chart-caption">Baseline muscle oxidative capacity (k) across the Farm Team cohort</p>
+
+      <p class="narrative" style="font-size:13px;">
+        This baseline measurement will be repeated at Week 15 to detect training-induced adaptations &mdash; a first-of-its-kind longitudinal dataset.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ MVC ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Mechanical</div>
+      <h2 class="section-title">Maximal Voluntary Contraction</h2>
+
+      <p class="narrative">
+        Baseline strength testing to quantify each athlete&rsquo;s maximal muscular work capacity &mdash; the mechanical foundation that the central hypothesis predicts governs physiological resilience during ultra-distance running.
+      </p>
+
+      <p class="narrative">
+        The concentric vs eccentric training intervention (assigned in the coming weeks) will be benchmarked against these baselines to measure whether targeted strength gains translate directly to improved resilience during 4+ hour runs.
+      </p>
+
+      <img class="full-photo" src="farmteam-training.jpg" alt="Athletes performing strength training with kettlebells in the NSRL gym" style="border-radius:0; border:none;" />
+    </div>
+  </section>
+
+  <!-- ═══ PRODUCT ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Product</div>
+      <h2 class="section-title">Innovation Meets the Athlete</h2>
+
+      <p class="narrative">
+        Introduction of the Farm Team athletes to the Innovation and ACG Apparel and Footwear teams. Wear testing begins immediately.
+      </p>
+
+      <div class="product-grid">
+        <div class="product-item">
+          <strong>Apparel Wear Tests Kicked Off</strong>
+          Endurance Half Tight, SS Performance Top (NXT% P1), SS Performance Top (NXT% LIT)
+        </div>
+        <div class="product-item">
+          <strong>Innovation Footwear Fitting</strong>
+          Kiger 10 vs Picklejuice for upcoming treadmill testing. Showcased: Wildhorse, Zegama, Pegasus Trail, KigerFly
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PARTNERSHIPS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Partnerships</div>
+      <h2 class="section-title">Science in Sport (S.I.S.)</h2>
+
+      <p class="narrative">
+        Nutrition and hydration partner providing the Farm Team with energy bars, protein powder, energy gels (with and without caffeine), energy drink mix, and collagen for recovery across the 15-week program.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ CONNECTION CARD ═══ -->
+  <section style="padding:40px 0;">
+    <div class="container">
+      <a class="connection-card" href="api-access-farmteam-series.html">
+        <div class="label">Innovation Series</div>
+        <div class="title">Nike Innovation Farm Team x ACG</div>
+        <div class="cta">View series overview &#8594;</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </div>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <div class="footer-desc">Nike Sport Research Lab</div>
+        <a href="api-access-landing.html" class="footer-cta">Back to Hub</a>
+        <div class="footer-fine">Highly Confidential &bull; Internal Use Only</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Netlify Identity gate -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    const defined = typeof netlifyIdentity !== 'undefined';
+    if (defined) {
+      netlifyIdentity.on('init', user => {
+        if (!user) {
+          const page = location.pathname.split('/').pop().replace('.html','');
+          window.location.href = 'api-access-gate.html?redirect=' + page;
+        }
+      });
+    }
+  </script>
+</body>
+</html>

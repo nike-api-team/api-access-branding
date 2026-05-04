@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Nike Innovation Farm Team x ACG</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #050507;
+      --surface: #0e0e14;
+      --border: #1f1f30;
+      --accent: #e8622a;
+      --accent-light: #f4905e;
+      --accent-glow: rgba(232, 98, 42, 0.2);
+      --text: #f0f0f8;
+      --muted: #8888a0;
+      --blue: #3a6df5;
+      --blue-light: #7a9dff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 480px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Header ── */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(5, 5, 7, 0.92);
+    }
+    .brand-header .container { display: flex; align-items: center; justify-content: space-between; }
+    .brand-logo { display: flex; align-items: baseline; user-select: none; text-decoration: none; }
+    .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--blue); }
+    .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+    .edition-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+    .brand-intro { padding: 32px 0 0; text-align: center; }
+    .brand-intro .from-line { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .brand-intro .team-name { font-size: 14px; color: var(--accent-light); font-weight: 600; margin-bottom: 20px; }
+    .brand-intro .edition-divider { width: 40px; height: 2px; background: var(--accent); margin: 0 auto; }
+
+    /* ── Sections ── */
+    section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 90vh; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center; padding: 48px 0;
+    }
+    .hero-series-tag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent);
+      padding: 6px 16px; border-radius: 20px; margin-bottom: 28px;
+    }
+    .hero-headline {
+      font-size: 38px; font-weight: 900; letter-spacing: -1px; line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .hero-headline .innovation { color: var(--text); }
+    .hero-headline .x-acg { color: var(--accent); }
+    .hero-sub {
+      font-size: 16px; font-weight: 400; color: #c8c8e0; max-width: 400px; line-height: 1.7;
+      margin-bottom: 16px; margin-top: 20px;
+    }
+    .hero-detail { font-size: 14px; color: var(--muted); max-width: 380px; line-height: 1.7; }
+    .scroll-hint { margin-top: 48px; font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    /* ── Section labels ── */
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .section-title { font-size: 24px; font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
+
+    .narrative { font-size: 16px; color: #c8c8e0; line-height: 1.8; margin-bottom: 20px; }
+    .narrative em { color: var(--accent-light); font-style: normal; font-weight: 700; }
+    .narrative strong { color: var(--text); }
+
+    .divider { width: 40px; height: 3px; background: var(--accent); border-radius: 2px; margin: 32px 0; }
+
+    /* ── Stats row ── */
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .mini-stat {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 16px 14px; text-align: center;
+    }
+    .mini-stat-num { font-size: 28px; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+    .mini-stat-label { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+    /* ── Thesis Block ── */
+    .thesis-block {
+      background: var(--surface); border: 1px solid var(--accent); border-radius: 14px;
+      padding: 28px 22px; box-shadow: 0 0 30px var(--accent-glow); text-align: center;
+      margin: 32px 0;
+    }
+    .thesis-text {
+      font-size: 18px; font-weight: 800; line-height: 1.4; color: var(--accent-light);
+    }
+
+    /* ── Chapter Cards ── */
+    .chapter-stack { display: flex; flex-direction: column; gap: 20px; }
+    .chapter-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 28px 22px; text-decoration: none; color: inherit; display: block;
+      transition: border-color 0.3s, box-shadow 0.3s; position: relative;
+      border-left: 3px solid var(--accent);
+    }
+    .chapter-card:hover { border-color: var(--accent); box-shadow: 0 0 30px var(--accent-glow); }
+    .chapter-card.coming-soon { opacity: 0.5; pointer-events: none; }
+    .chapter-num {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .chapter-title { font-size: 18px; font-weight: 800; line-height: 1.25; margin-bottom: 8px; }
+    .chapter-date { font-size: 11px; color: var(--muted); opacity: 0.7; margin-bottom: 12px; }
+    .chapter-summary { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 14px; }
+    .chapter-finding {
+      font-size: 13px; color: var(--accent-light); font-weight: 600; line-height: 1.5;
+      padding: 10px 14px; background: rgba(232, 98, 42, 0.06); border-radius: 8px; margin-bottom: 14px;
+    }
+    .chapter-cta { font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; }
+
+    /* ── Research Streams ── */
+    .streams-grid { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
+    .stream-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 18px 16px; display: flex; align-items: flex-start; gap: 14px;
+    }
+    .stream-icon {
+      width: 36px; height: 36px; border-radius: 8px; background: rgba(232, 98, 42, 0.1);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      font-size: 16px;
+    }
+    .stream-info { flex: 1; }
+    .stream-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .stream-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Close ── */
+    .close-section { text-align: center; padding: 80px 0; }
+    .close-statement {
+      font-size: 22px; font-weight: 800; line-height: 1.3; margin-bottom: 24px;
+      color: var(--accent-light);
+    }
+    .close-body { font-size: 15px; color: #c8c8e0; line-height: 1.7; margin-bottom: 24px; }
+
+    /* ── Footer ── */
+    .brand-footer { border-top: 1px solid var(--border); padding: 48px 0; }
+    .footer-inner { text-align: center; }
+    .footer-logo { display: inline-flex; align-items: baseline; margin-bottom: 16px; user-select: none; }
+    .footer-logo .api { font-size: 28px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 28px; font-weight: 300; letter-spacing: 1.5px; color: var(--blue); }
+    .footer-team { font-size: 13px; color: var(--accent-light); font-weight: 600; margin-bottom: 8px; }
+    .footer-desc { font-size: 13px; color: var(--muted); max-width: 360px; margin: 0 auto 24px; line-height: 1.6; }
+    .footer-cta { display: inline-block; padding: 12px 32px; border: 2px solid var(--blue); border-radius: 8px; color: var(--blue); font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: background 0.2s, color 0.2s; }
+    .footer-cta:hover { background: var(--blue); color: #fff; }
+    .footer-fine { margin-top: 32px; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Series</span>
+        <span class="edition-date">Farm Team</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">From</div>
+      <div class="team-name">Nike Sport Research Lab &bull; Innovation &bull; ACG</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+      <img src="farmteam-logo.png" alt="Nike Innovation Farm Team" style="width:280px; margin-bottom:24px; opacity:0.9;" />
+      <div class="hero-series-tag">Innovation Series &bull; 15 Weeks</div>
+      <div class="hero-headline">
+        <span class="innovation">Nike Innovation</span><br/>
+        <span class="innovation">Farm Team</span>
+        <span class="x-acg">x ACG</span>
+      </div>
+      <p class="hero-sub">18 experienced ultra endurance trail runners. 15 weeks at Nike World Headquarters. Athletes in Residence with Nike Innovation.</p>
+      <p class="hero-detail">The largest longitudinal running research program Nike has ever conducted &mdash; from 6 minutes to 4+ hours.</p>
+      <div class="scroll-hint">Scroll &#8595;</div>
+    </div>
+  </section>
+
+  <!-- ═══ THE MOMENT ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The moment</div>
+      <h2 class="section-title">Closing the Endurance Gap.</h2>
+
+      <p class="narrative">
+        Mountain and trail running has grown over <em>230%</em> in the last decade. ACG is re-launched. Outdoor brands are crossing from trail to road, and running brands are crossing from road to trail. The time is now for Nike.
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="section-label">The science we know</div>
+      <h3 style="font-size:18px; font-weight:800; margin-bottom:16px;">The Big Three</h3>
+
+      <p class="narrative">
+        For decades, endurance running performance has been explained by three physiological pillars &mdash; the Joyner Model:
+      </p>
+
+      <!-- Big Three visual -->
+      <div style="display:flex; flex-direction:column; gap:10px; margin:20px 0;">
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 18px; display:flex; align-items:center; gap:14px;">
+          <div style="font-size:28px; font-weight:900; color:var(--accent); min-width:32px; text-align:center;">1</div>
+          <div>
+            <div style="font-size:15px; font-weight:700;">VO&#8322; Max</div>
+            <div style="font-size:12px; color:var(--muted);">Maximal oxygen uptake &mdash; the ceiling of aerobic capacity</div>
+          </div>
+        </div>
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 18px; display:flex; align-items:center; gap:14px;">
+          <div style="font-size:28px; font-weight:900; color:var(--accent); min-width:32px; text-align:center;">2</div>
+          <div>
+            <div style="font-size:15px; font-weight:700;">Lactate Threshold</div>
+            <div style="font-size:12px; color:var(--muted);">The fractional utilization of VO&#8322;max before metabolic accumulation</div>
+          </div>
+        </div>
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 18px; display:flex; align-items:center; gap:14px;">
+          <div style="font-size:28px; font-weight:900; color:var(--accent); min-width:32px; text-align:center;">3</div>
+          <div>
+            <div style="font-size:15px; font-weight:700;">Economy / Efficiency</div>
+            <div style="font-size:12px; color:var(--muted);">The oxygen cost of running at a given speed</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="narrative">
+        From the 800 to the marathon, these three variables explain performance with remarkable precision. The relative contributions shift with distance &mdash; anaerobic capacity fades, aerobic dominance grows &mdash; but the model holds.
+      </p>
+
+      <!-- Pie Charts -->
+      <div style="display:flex; flex-direction:column; gap:24px; margin:28px 0;">
+
+        <!-- Marathon & Below -->
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; text-align:center;">
+          <div style="font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:16px;">Marathon &amp; Below</div>
+          <div style="width:160px; height:160px; border-radius:50%; margin:0 auto 16px; background:conic-gradient(#e8622a 0% 5%, #f4905e 5% 50%, #ffd6a0 50% 100%);"></div>
+          <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px 16px; font-size:11px; color:var(--muted);">
+            <span><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ffd6a0; margin-right:4px;"></span>Economy 50%</span>
+            <span><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f4905e; margin-right:4px;"></span>Threshold 45%</span>
+            <span><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#e8622a; margin-right:4px;"></span>VO&#8322; Max 5%</span>
+          </div>
+          <div style="font-size:12px; color:var(--muted); margin-top:12px; font-style:italic;">The Big Three explain performance.</div>
+        </div>
+
+        <!-- Beyond Marathon -->
+        <div style="background:var(--surface); border:1px solid var(--accent); border-radius:12px; padding:24px; text-align:center; box-shadow:0 0 20px var(--accent-glow);">
+          <div style="font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:16px;">Beyond Marathon (Ultra)</div>
+          <div style="width:160px; height:160px; border-radius:50%; margin:0 auto 16px; background:conic-gradient(#ff3d00 0% 60%, #f4905e 60% 80%, #ffd6a0 80% 100%);"></div>
+          <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px 16px; font-size:11px; color:var(--muted);">
+            <span><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ff3d00; margin-right:4px;"></span>Resilience 60%</span>
+            <span><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f4905e; margin-right:4px;"></span>Threshold 20%</span>
+            <span><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ffd6a0; margin-right:4px;"></span>Economy 20%</span>
+          </div>
+          <div style="font-size:12px; color:var(--accent-light); margin-top:12px; font-style:italic;">Resilience dominates. The Big Three shrink.</div>
+        </div>
+      </div>
+
+      <p class="narrative">
+        <strong>Until it doesn&rsquo;t.</strong>
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="section-label">The science we don&rsquo;t</div>
+      <h3 style="font-size:18px; font-weight:800; margin-bottom:16px;">The Fourth Dimension</h3>
+
+      <p class="narrative">
+        Beyond approximately 2 hours of exercise, the Big Three are no longer static. They <em>deteriorate</em>. VO&#8322;max drifts. Economy worsens. Threshold shifts. The &ldquo;start line&rdquo; values that predicted your marathon time are not the values you hold at hour four, eight, or sixteen.
+      </p>
+
+      <div class="thesis-block">
+        <div class="thesis-text">Physiological Resilience &mdash; the ability to resist deterioration of these physiological variables as fatiguing endurance exercise proceeds &mdash; is the fourth dimension of performance.</div>
+      </div>
+
+      <p class="narrative">
+        Some athletes lose less than 1%. Others lose over 30%. <em>Why?</em>
+      </p>
+
+      <p class="narrative">
+        The mechanistic basis for these differences is <em>unresolved</em>. The scientific community has poorly studied what happens beyond 90 minutes &mdash; let alone 4+ hours on mountain terrain. This is the gap.
+      </p>
+
+      <p class="narrative" style="font-size:12px; color:var(--muted); margin-top:24px;">
+        Jones AM (2024). &ldquo;The Fourth Dimension: Physiological Resilience as an Independent Determinant of Endurance Exercise Performance.&rdquo; <em style="color:var(--muted);">J Physiol</em>, 602(17):4113&ndash;4128.<br/>
+        Jones AM &amp; Kirby BS (2025). &ldquo;Physiological Resilience: What Is It and How Might It Be Trained?&rdquo; <em style="color:var(--muted);">Scand J Med Sci Sports</em>, 35(3):e70032.
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="section-label">What makes up resilience?</div>
+      <h3 style="font-size:18px; font-weight:800; margin-bottom:16px;">The Ingredients</h3>
+
+      <p class="narrative">
+        If resilience is the fourth dimension, what are its components? That&rsquo;s a difficult question that not Nike, not science, not anyone knows&hellip;yet. But we have our guesses, with unresolved evidence pointing to several interacting factors:
+      </p>
+
+      <p class="narrative" style="font-size:13px; color:var(--muted); line-height:1.7; margin:12px 0 0 0;">
+        Muscular work capacity &middot; Substrate availability &middot; Neuromuscular fatigue resistance &middot; Thermoregulation &middot; Cognitive processing &middot; Training history
+      </p>
+
+    </div>
+  </section>
+
+  <!-- ═══ THE PROGRAM ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The program</div>
+      <h2 class="section-title">The Nike Innovation Farm Team</h2>
+
+      <p class="narrative">
+        A select group of experienced runners willing to give themselves fully to exploring how their bodies and minds change at the edges of ultra endurance sport &mdash; and to helping shape the future of ACG performance product.
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="stats-row">
+        <div class="mini-stat">
+          <div class="mini-stat-num">18</div>
+          <div class="mini-stat-label">Athletes</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">15</div>
+          <div class="mini-stat-label">Weeks</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num" style="font-size:20px;">Daily</div>
+          <div class="mini-stat-label">Research Study</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num" style="font-size:20px;">Daily</div>
+          <div class="mini-stat-label">Product Testing</div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:24px;">Research Streams</div>
+
+      <div class="streams-grid">
+        <div class="stream-card">
+          <div class="stream-icon">&#128170;</div>
+          <div class="stream-info">
+            <div class="stream-name">Mechanical</div>
+            <div class="stream-desc">Soft tissue properties &mdash; the muscular foundation of resilience.</div>
+          </div>
+        </div>
+        <div class="stream-card">
+          <div class="stream-icon">&#9889;</div>
+          <div class="stream-info">
+            <div class="stream-name">Metabolic</div>
+            <div class="stream-desc">The energy cost to keep going &mdash; the metabolic foundation of resilience.</div>
+          </div>
+        </div>
+        <div class="stream-card">
+          <div class="stream-icon">&#129504;</div>
+          <div class="stream-info">
+            <div class="stream-name">Cognitive</div>
+            <div class="stream-desc">Reward processing, working memory, and brain activity &mdash; the cognitive foundation of resilience.</div>
+          </div>
+        </div>
+        <div class="stream-card">
+          <div class="stream-icon">&#10067;</div>
+          <div class="stream-info">
+            <div class="stream-name">The Unknown</div>
+            <div class="stream-desc">What we haven&rsquo;t measured yet. What emerges when 18 athletes push beyond the known for 15 weeks straight.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section-label" style="margin-top:32px;">Product Partnerships</div>
+      <p class="narrative" style="font-size:14px; margin-bottom:16px;">Small cohort, broad impact. Innovation and ACG product teams embedded alongside the research:</p>
+
+      <div class="streams-grid">
+        <div class="stream-card">
+          <div class="stream-icon">&#128095;</div>
+          <div class="stream-info">
+            <div class="stream-name">Innovation Footwear</div>
+            <div class="stream-desc">Picklejuice, Barcelona/Vomero Premium, 4Low, Training Free, Recovery Sandal</div>
+          </div>
+        </div>
+        <div class="stream-card">
+          <div class="stream-icon">&#128085;</div>
+          <div class="stream-info">
+            <div class="stream-name">Innovation Apparel</div>
+            <div class="stream-desc">Next% Dri-Fit, Lamina/Flyweb Bra, Cooling Vest, Climate Chamber testing</div>
+          </div>
+        </div>
+        <div class="stream-card">
+          <div class="stream-icon">&#128095;</div>
+          <div class="stream-info">
+            <div class="stream-name">ACG Footwear</div>
+            <div class="stream-desc">Kiger 10, KigerFly, Ultrafly, Zegama, Pegasus Trail</div>
+          </div>
+        </div>
+        <div class="stream-card">
+          <div class="stream-icon">&#128085;</div>
+          <div class="stream-info">
+            <div class="stream-name">ACG Apparel</div>
+            <div class="stream-desc">Trail Half Tights, full kit, trail bottoms, heat kit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CENTRAL AIM ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Central Aim</div>
+      <p class="narrative">
+        This program is built to investigate the mechanisms of physiological resilience &mdash; to identify the biggest contributors to ultra endurance running, to provide intentional targets for new product creation, and to accelerate what ACG brings to runners around the globe.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ RESEARCH TIMELINE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The calendar</div>
+      <h2 class="section-title">15 Weeks. Three Phases.</h2>
+
+      <p class="narrative" style="margin-bottom:24px;">
+        Pre-testing baselines bookend a 10-week training intervention. Monday gym sessions. Thursday hill repeats. Climate chambers. Footwear crossovers. And a 4-hour vertical resilience run at the start and end to measure change.
+      </p>
+
+      <!-- Phase legend -->
+      <div style="display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:10px; border-radius:50%; background:#9999b8;"></span><span style="font-size:11px; color:var(--muted);">Pre / Post-Testing</span></div>
+        <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:10px; border-radius:50%; background:var(--accent);"></span><span style="font-size:11px; color:var(--muted);">Intervention</span></div>
+      </div>
+
+      <!-- Horizontal timeline -->
+      <div class="timeline-scroll" style="overflow-x:auto; padding-bottom:12px; -webkit-overflow-scrolling:touch;">
+        <div style="display:flex; align-items:flex-start; gap:0; min-width:900px; position:relative;">
+          <!-- Track line -->
+          <div style="position:absolute; top:18px; left:20px; right:20px; height:3px; background:var(--border); border-radius:2px;"></div>
+
+          <!-- Week nodes -->
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:#9999b8; border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">1</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Baselines<br>Gym Fam.</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:#9999b8; border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">2</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Speed &times;<br>Grade</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:#9999b8; border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">3</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">4-Hr<br>Resilience</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">4</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Intervention<br>Begins</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">5</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">FW Cross.<br>Speed&times;Grade</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">6</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">FW Cross.<br>Resilience</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">7</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Climate<br>Chamber</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">8</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Climate<br>Chamber</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">9</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Ramp/<br>Gorge</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">10</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Ramp/<br>Gorge</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">11</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Ramp/<br>Gorge</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">12</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Ramp/<br>Gorge</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:#9999b8; border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">13</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Post<br>Baselines</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:#9999b8; border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">14</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Post<br>Speed&times;Gr</div>
+          </div>
+          <div class="tl-node" style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 2px;">
+            <div style="width:14px; height:14px; border-radius:50%; background:#9999b8; border:3px solid var(--bg); position:relative; z-index:2; margin-bottom:10px;"></div>
+            <div style="font-size:10px; font-weight:700; color:var(--text);">15</div>
+            <div style="font-size:9px; color:var(--muted); text-align:center; margin-top:4px; line-height:1.3;">Post 4-Hr<br>Resilience</div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:11px; color:var(--muted); margin-top:8px; text-align:center;">Scroll &rarr;</p>
+    </div>
+  </section>
+
+  <!-- ═══ WEEKLY CHAPTERS ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Weekly updates</div>
+      <h2 class="section-title">15 weeks. One story unfolding.</h2>
+
+      <p class="narrative" style="margin-bottom:32px;">
+        Each week produces new data, new insights, and new questions. Follow the science as it happens.
+      </p>
+
+      <div class="chapter-stack">
+
+        <!-- Week 1 -->
+        <a class="chapter-card" href="api-access-farmteam-week1.html">
+          <div class="chapter-num">Week 1</div>
+          <h3 class="chapter-title">Time is the Gamechanger</h3>
+          <div class="chapter-date">April 20&ndash;24, 2026</div>
+          <p class="chapter-summary">Physiological resilience &mdash; the ability to resist deterioration over time &mdash; is what separates ultra from everything else. Week 1 establishes the baseline of who these athletes are before time starts breaking them down.</p>
+          <div class="chapter-finding">18 athletes arrive. Baseline testing begins. The clock starts now.</div>
+          <span class="chapter-cta">Read Week 1 &#8594;</span>
+        </a>
+
+        <!-- Week 2 -->
+        <a class="chapter-card" href="api-access-farmteam-week2.html">
+          <div class="chapter-num">Week 2</div>
+          <h3 class="chapter-title">Pace Has No Place in the Mountains</h3>
+          <div class="chapter-date">April 27 &ndash; May 1, 2026</div>
+          <p class="chapter-summary">Vertical meters is the metric of choice for trail runners. Lactate threshold mapped across four gradients &mdash; from flat to +15%. Being a strong flat runner does not automatically make you a strong climber.</p>
+          <div class="chapter-finding">From flat to +15% grade, average LT speed dropped by nearly half (13.7 &rarr; 7.1 kph).</div>
+          <span class="chapter-cta">Read Week 2 &#8594;</span>
+        </a>
+
+        <!-- Week 3 -->
+        <div class="chapter-card coming-soon">
+          <div class="chapter-num">Week 3</div>
+          <h3 class="chapter-title">Coming Soon</h3>
+          <div class="chapter-date">May 4&ndash;8, 2026</div>
+          <p class="chapter-summary">Next weekly update will appear here.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CLOSE ═══ -->
+  <section class="close-section">
+    <div class="container">
+      <div class="close-statement">Creating the Future of Ultra Trail Running.</div>
+      <p class="close-body">This is the start line of an ultramarathon of scientific investigation. Each week brings new data, new athlete voices, and new implications for how Nike builds product for the trail.</p>
+    </div>
+  </section>
+
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </div>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <div class="footer-desc">Nike Sport Research Lab</div>
+        <a href="api-access-landing.html" class="footer-cta">Back to Hub</a>
+        <div class="footer-fine">Highly Confidential &bull; Internal Use Only</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Netlify Identity gate -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    const defined = typeof netlifyIdentity !== 'undefined';
+    if (defined) {
+      netlifyIdentity.on('init', user => {
+        if (!user) {
+          const page = location.pathname.split('/').pop().replace('.html','');
+          window.location.href = 'api-access-gate.html?redirect=' + page;
+        }
+      });
+    }
+  </script>
+</body>
+</html>
