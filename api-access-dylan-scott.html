@@ -217,6 +217,69 @@
       color: var(--story-light);
     }
 
+    /* ── Update Section (World Champion) ── */
+    .update-section {
+      position: relative;
+      background: linear-gradient(180deg, rgba(232, 217, 42, 0.08), rgba(232, 217, 42, 0.02) 60%, transparent);
+      border-top: 2px solid var(--hyrox);
+      border-bottom: 2px solid var(--hyrox);
+      padding: 32px 0 40px;
+      margin-top: 0;
+    }
+    .update-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--hyrox);
+      margin-bottom: 14px;
+    }
+    .update-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--hyrox);
+      box-shadow: 0 0 12px rgba(232, 217, 42, 0.85);
+    }
+    .update-headline {
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.8px;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+    .update-headline .gold { color: var(--hyrox); }
+    .update-lede {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .update-lede strong { color: var(--text); font-weight: 600; }
+    .update-sub {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--hyrox);
+      margin: 28px 0 12px;
+    }
+    .update-section .stat-cell .val { color: var(--hyrox); }
+    .update-source {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      margin-top: 22px;
+      line-height: 1.6;
+    }
+    .update-source a {
+      color: var(--story-light);
+      text-decoration: none;
+    }
+    .update-source a:hover { text-decoration: underline; }
+
     /* ── Mobile adjustments ── */
     @media screen and (max-width: 400px) {
       .stat-strip { grid-template-columns: repeat(2, 1fr) !important; }
@@ -261,9 +324,66 @@
     <div class="hero-overlay">
       <div class="hero-tag">NSRL Athlete Visit</div>
       <h1 class="hero-title">Dylan Scott</h1>
-      <p class="hero-sub">3rd at the <strong>HYROX World Championships</strong> walks into the LeBron James Innovation Center at Nike World Headquarters to find out what's happening inside his body — and what it means for race day.</p>
+      <p class="hero-sub">Reigning <strong>HYROX Doubles World Champion</strong> and 3rd-place finisher at the 2025 Singles World Championships in Chicago, Dylan walks into the LeBron James Innovation Center at Nike World Headquarters to find out what's happening inside his body — and what it means for race day.</p>
     </div>
   </div>
+
+  <!-- ═══ UPDATE: WORLD CHAMPION (June 2026) ═══ -->
+  <section class="update-section">
+    <div class="container">
+      <div class="update-tag">
+        <span class="update-dot"></span>
+        Update &mdash; June 2026
+      </div>
+      <h2 class="update-headline">World <span class="gold">Champion.</span></h2>
+      <p class="update-lede">Five months after this NSRL visit, Dylan crossed the line first at the <strong>2026 HYROX World Championships in Stockholm</strong> &mdash; taking the Elite 15 Singles Men's title in <strong>53:47</strong>. With this win, he becomes a rare <strong>Singles and Doubles</strong> HYROX World Champion.</p>
+
+      <div class="stat-strip" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="stat-cell">
+          <div class="val">53:47</div>
+          <div class="label">Finish Time</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">1st</div>
+          <div class="label">Elite 15 Men</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">5</div>
+          <div class="label">Top-3 Stations</div>
+        </div>
+      </div>
+
+      <div class="update-sub">Stockholm splits</div>
+      <div class="race-flow">
+        <div class="race-segment station"><div class="race-seg-label">SkiErg</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:65%"></div><div class="race-bar-val">5th</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Sled Push</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:25%"></div><div class="race-bar-val">14th</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Sled Pull</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:50%"></div><div class="race-bar-val">8th</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Burpees</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:100%"></div><div class="race-bar-val">1st</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Row</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:80%"></div><div class="race-bar-val">3rd</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Farmer Carry</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:80%"></div><div class="race-bar-val">3rd</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Lunges</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:90%"></div><div class="race-bar-val">2nd</div></div></div>
+        <div class="race-segment station"><div class="race-seg-label">Wall Balls</div><div class="race-seg-bar"><div class="race-bar-fill" style="width:80%"></div><div class="race-bar-val">3rd</div></div></div>
+      </div>
+
+      <p class="section-text">Dylan's plan: <strong>stay controlled early, apply pressure later.</strong> The sled push knocked him to 14th &mdash; exactly the kind of high-load, lower-body station the lab had shown crashes his quads &mdash; but he climbed the field through the back half, finishing top-3 on five of the last six stations.</p>
+
+      <div class="callout">
+        <div class="callout-text">"The enemy of proper execution is panic. You cannot panic in a race. No matter how it's going."</div>
+        <div class="callout-source">Dylan Scott &mdash; Post-race, Stockholm</div>
+      </div>
+
+      <p class="section-text" style="margin-top: 28px;">Looking back, Dylan credits the lab work directly:</p>
+
+      <div class="callout">
+        <div class="callout-text">"When I did performance testing at the LeBron James Innovation Center, I was working with people who could give me insights I couldn't facilitate on my own at home... It really could be the difference between where I am now and where I need to get to win it all."</div>
+        <div class="callout-source">Dylan Scott &mdash; Nike, June 2026</div>
+      </div>
+
+      <p class="update-source">
+        Sources: <a href="https://www.menshealth.com/uk/fitness/a71636704/dylan-scott-hyrox-world-championship-splits/">Men's Health</a> &middot; <a href="https://about.nike.com/en/magazine/how-dylan-scott-is-becoming-a-hyrox-champion">Nike</a>
+      </p>
+    </div>
+  </section>
 
   <!-- ═══ INTRO ═══ -->
   <div class="brand-intro">
@@ -283,7 +403,7 @@
     <div class="container">
       <div class="section-label">The Athlete</div>
       <h2 class="section-title">A hybrid competitor at the top of his game</h2>
-      <p class="section-text">Dylan Scott is one of the best HYROX athletes in the world — <strong>3rd place at the 2025 World Championships</strong> with a personal best of 54:47. He came to Nike World Headquarters to spend a day with the Applied Performance Innovation team in the Nike Sport Research Lab, learning more about himself and his body during HYROX-style exercise.</p>
+      <p class="section-text">Dylan Scott is one of the best HYROX athletes in the world — a <strong>Doubles World Champion</strong> who finished <strong>3rd at the 2025 Singles World Championships in Chicago</strong> with a personal best of 54:47. He came to Nike World Headquarters to spend a day with the Applied Performance Innovation team in the Nike Sport Research Lab, learning more about himself and his body during HYROX-style exercise.</p>
       <p class="section-text">The primary goal: <strong>review his priming protocol, test race pace, examine thresholds of tolerance, and deploy strategies</strong> to improve performance.</p>
     </div>
   </section>
@@ -337,7 +457,7 @@
       <div class="section-label">The Session</div>
       <h2 class="section-title">Simulating the back half of HYROX</h2>
       <p class="section-text">To model the demands of the second half of competition — where races are won and lost — Dylan performed a structured warm-up followed by the final five station-and-run sequences: <strong>Burpees, Row, Farmers Carry, Lunges, and Wall Balls</strong>, each separated by 1 km runs on the indoor track.</p>
-      <p class="section-text">Throughout the session, the team captured <strong>venous blood lactate, heart rate, and local muscle oxygenation</strong> (Moxy sensors on the shoulder, forearm, and quadriceps) to map the shifting physiological demands in real time.</p>
+      <p class="section-text">Throughout the session, the team captured <strong>venous blood lactate, heart rate, and local muscle oxygenation</strong> to map the shifting physiological demands in real time.</p>
 
       <div class="stat-strip" style="grid-template-columns: repeat(4, 1fr);">
         <div class="stat-cell">
@@ -362,8 +482,8 @@
 
   <!-- ═══ PHOTO: Blood Lactate Testing ═══ -->
   <div class="photo-break">
-    <img src="dylan-lactate.jpg" alt="NSRL scientist taking blood lactate sample from Dylan Scott with Moxy sensors visible" />
-    <div class="caption">Blood lactate sampling between stations — Moxy sensors tracking muscle oxygen in real time.</div>
+    <img src="dylan-lactate.jpg" alt="NSRL scientist taking a blood lactate sample from Dylan Scott between stations" />
+    <div class="caption">Blood lactate sampling and real-time muscle oxygen monitoring between stations.</div>
   </div>
 
   <!-- ═══ THE DATA ═══ -->
@@ -416,7 +536,7 @@
       </div>
 
       <div class="callout">
-        <div class="callout-text">"The demands for this sport appear to rely heavily on work at upper threshold for a long period of time. That is very difficult."</div>
+        <div class="callout-text">"The demands for this sport appear to rely heavily on work at upper threshold for a long period of time. That is very difficult. Therefore, proper pacing to ensure optimal energy management across the entire competition is crucial."</div>
         <div class="callout-source">API Team Observation</div>
       </div>
     </div>
@@ -443,9 +563,68 @@
 
   <!-- ═══ PHOTO: Data Review ═══ -->
   <div class="photo-break">
-    <img src="dylan-data-review.jpg" alt="Overhead view of Dylan Scott and scientists reviewing real-time Moxy data on laptop" />
-    <div class="caption">Reviewing Moxy data in real time between stations — the numbers tell the story.</div>
+    <img src="dylan-data-review.jpg" alt="Overhead view of Dylan Scott and scientists reviewing real-time data on laptop" />
+    <div class="caption">Reviewing muscle oxygen and lactate data in real time between stations — the numbers tell the story.</div>
   </div>
+
+  <!-- ═══ PHOTO: Wall Balls from Behind ═══ -->
+  <div class="photo-break">
+    <img src="dylan-wallball-behind.jpg" alt="Dylan Scott performing wall balls from behind at the NSRL, LeBron logo visible" />
+    <div class="caption">100 wall balls — the final station. Where lactate peaked and races are decided.</div>
+  </div>
+
+  <!-- ═══ PATH FORWARD ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Path Forward</div>
+      <h2 class="section-title">From lab readout to race execution</h2>
+      <p class="section-text">Wrapping up the day was a discussion around future opportunities — how to prime, how to recover, and how to train the transitions that separate podium finishers from the rest.</p>
+
+      <p class="section-text">This session included Dylan and the API team having an in-depth discussion on pacing — how exercise performance during high intensity exercise can be predictable based on energy usage and work performed. Dylan showed a keen interest to deeply understand how he could manage his energy above and below a threshold called <strong>'critical intensity'</strong>, an intensity that appears essential to top-level HYROX performance.</p>
+
+      <div class="callout">
+        <div class="callout-text">"I've always been willing to go to a dark place in training, but I've learned not to go there too often. A lot of athletes really value the ability to suffer and sometimes test it too much... and what tends to happen is you just burn your body out."</div>
+        <div class="callout-source">Dylan Scott &mdash; Nike, June 2026</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">01</div>
+        <div class="signal-title">Extend the warm-up — aerobic and anaerobic</div>
+        <div class="signal-body">Priming before a HYROX race should include both aerobic and anaerobic stimulation. Get the system fully primed, not just moving.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">02</div>
+        <div class="signal-title">Practice pacing in training</div>
+        <div class="signal-body">Train with pacing strategies in workouts to find the just-right sustainable pace. The cost of going too hard early compounds through every remaining station.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">03</div>
+        <div class="signal-title">Post-exercise nutrition</div>
+        <div class="signal-body">Immediate intake of carbohydrate and protein post-session, and prioritizing sleep or "synthetic sleep" recovery tools like Shiftwave.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">04</div>
+        <div class="signal-title">Train the transitions, not just the pieces</div>
+        <div class="signal-body">Build sessions that force repeated run-to-station-to-run switches. The ability to manage oxygen recovery while clearing lactate between tasks is where races are won.</div>
+      </div>
+
+      <div class="callout" style="margin-top: 28px;">
+        <div class="callout-text">"So much learned, so much to learn."</div>
+        <div class="callout-source">Rapid Summary</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO: Team Review ═══ -->
+  <div class="photo-break">
+    <img src="dylan-team-review.jpg" alt="Dylan Scott and NSRL team reviewing session data together" />
+    <div class="caption">Applied data. Athlete context. Better decisions.</div>
+  </div>
+
+  <div class="section-divider"></div>
 
   <!-- ═══ ATHLETE VOICE ═══ -->
   <section>
@@ -492,58 +671,6 @@
       <p class="section-text">He also tried on the <strong>weighted compression hoodie</strong> and immediately said with a wide smile: <em>"This feels like a big hug."</em></p>
     </div>
   </section>
-
-  <div class="section-divider"></div>
-
-  <!-- ═══ PHOTO: Wall Balls from Behind ═══ -->
-  <div class="photo-break">
-    <img src="dylan-wallball-behind.jpg" alt="Dylan Scott performing wall balls from behind at the NSRL, LeBron logo visible" />
-    <div class="caption">100 wall balls — the final station. Where lactate peaked and races are decided.</div>
-  </div>
-
-  <!-- ═══ PATH FORWARD ═══ -->
-  <section>
-    <div class="container">
-      <div class="section-label">The Path Forward</div>
-      <h2 class="section-title">From lab readout to race execution</h2>
-      <p class="section-text">Wrapping up the day was a discussion around future opportunities — how to prime, how to recover, and how to train the transitions that separate podium finishers from the rest.</p>
-
-      <div class="signal-card">
-        <div class="signal-num">01</div>
-        <div class="signal-title">Extend the warm-up — aerobic and anaerobic</div>
-        <div class="signal-body">Priming before a HYROX race should include both aerobic and anaerobic stimulation. Get the system fully primed, not just moving.</div>
-      </div>
-
-      <div class="signal-card">
-        <div class="signal-num">02</div>
-        <div class="signal-title">Practice pacing in training</div>
-        <div class="signal-body">Train with pacing strategies in workouts to find the just-right sustainable pace. The cost of going too hard early compounds through every remaining station.</div>
-      </div>
-
-      <div class="signal-card">
-        <div class="signal-num">03</div>
-        <div class="signal-title">Post-exercise nutrition</div>
-        <div class="signal-body">Immediate intake of carbohydrate and protein post-session, and prioritizing sleep or "synthetic sleep" recovery tools like Shiftwave.</div>
-      </div>
-
-      <div class="signal-card">
-        <div class="signal-num">04</div>
-        <div class="signal-title">Train the transitions, not just the pieces</div>
-        <div class="signal-body">Build sessions that force repeated run-to-station-to-run switches. The ability to manage oxygen recovery while clearing lactate between tasks is where races are won.</div>
-      </div>
-
-      <div class="callout" style="margin-top: 28px;">
-        <div class="callout-text">"So much learned, so much to learn."</div>
-        <div class="callout-source">Rapid Summary</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ PHOTO: Team Review ═══ -->
-  <div class="photo-break">
-    <img src="dylan-team-review.jpg" alt="Dylan Scott and NSRL team reviewing session data together" />
-    <div class="caption">Applied data. Athlete context. Better decisions.</div>
-  </div>
 
   <!-- ═══ FOOTER ═══ -->
   <footer class="brand-footer">
