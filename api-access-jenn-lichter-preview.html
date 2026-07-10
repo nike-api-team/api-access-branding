@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Jenn Lichter &mdash; Big Magic</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --story: #e8622a;
+      --story-light: #f0915e;
+      --story-glow: rgba(232, 98, 42, 0.22);
+      --story-deep: #c44e1c;
+      --champion: #d9c48a;
+      --champion-dim: rgba(217, 196, 138, 0.14);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.92);
+    }
+    .brand-header .container { display: flex; align-items: center; justify-content: space-between; }
+    .brand-logo { display: flex; align-items: baseline; text-decoration: none; }
+    .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--story); }
+    .edition-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+    /* Hero */
+    .hero { position: relative; overflow: hidden; }
+    .hero-img { width: 100%; display: block; filter: brightness(0.78); }
+    .hero-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 52px 24px 28px;
+      background: linear-gradient(transparent, rgba(10,10,15,0.85) 40%, var(--bg));
+    }
+    .hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--story-light); margin-bottom: 8px; }
+    .hero-title { font-size: 32px; font-weight: 800; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero-sub { font-size: 15px; color: var(--muted); line-height: 1.5; }
+    .hero-sub strong { color: var(--text); font-weight: 600; }
+
+    /* Intro */
+    .brand-intro { padding: 32px 0 0; text-align: center; }
+    .brand-intro .from-line { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .brand-intro .team-name { font-size: 14px; color: var(--story-light); font-weight: 600; margin-bottom: 20px; }
+    .edition-divider { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .edition-divider .line { flex: 1; height: 1px; background: var(--border); }
+    .edition-divider .label { font-size: 11px; color: var(--story); letter-spacing: 3px; text-transform: uppercase; font-weight: 700; white-space: nowrap; }
+
+    /* Section */
+    section { padding: 48px 0; }
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--story); margin-bottom: 12px; }
+    .section-title { font-size: 22px; font-weight: 700; line-height: 1.3; margin-bottom: 16px; }
+    .section-text { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+    .section-text strong { color: var(--text); font-weight: 600; }
+    .section-text em { color: var(--text); font-style: italic; }
+    .section-divider { height: 1px; background: var(--border); margin: 0 24px; max-width: 432px; margin-left: auto; margin-right: auto; }
+
+    /* Photos */
+    .photo-break { width: 100%; overflow: hidden; }
+    .photo-break img { width: 100%; display: block; }
+    .photo-break .caption { text-align: center; font-size: 11px; color: var(--muted); letter-spacing: 0.5px; padding: 10px 24px; background: var(--surface); border-bottom: 1px solid var(--border); }
+
+    .photo-inset { border-radius: 12px; overflow: hidden; margin: 24px 0; background: var(--surface); }
+    .photo-inset img { width: 100%; display: block; }
+    .photo-inset .caption { font-size: 11px; color: var(--muted); letter-spacing: 0.5px; padding: 10px 14px; text-align: center; }
+
+    .viz-block { margin: 24px 0; }
+    .viz-block .viz-title { font-size: 13px; font-weight: 700; color: var(--story-light); letter-spacing: 0.5px; margin-bottom: 8px; }
+    .viz-block img { width: 100%; display: block; border-radius: 10px; background: #fff; padding: 8px; }
+    .viz-block .caption { font-size: 11px; color: var(--muted); letter-spacing: 0.3px; padding: 8px 4px 0; line-height: 1.6; }
+
+    /* Stat Strip */
+    .stat-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin: 28px 0; background: var(--border); border-radius: 10px; overflow: hidden; }
+    .stat-cell { background: var(--surface); padding: 18px 8px; text-align: center; }
+    .stat-cell .val { font-size: 26px; font-weight: 800; color: var(--story); line-height: 1; }
+    .stat-cell .label { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; }
+
+    /* Study Cards */
+    .study-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 14px; position: relative; overflow: hidden; }
+    .study-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--story); border-radius: 3px 0 0 3px; }
+    .study-name { font-size: 14px; font-weight: 700; color: var(--story-light); margin-bottom: 6px; letter-spacing: 0.5px; }
+    .study-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .study-desc strong { color: var(--text); font-weight: 600; }
+
+    /* Callout */
+    .callout { background: var(--story-glow); border-left: 3px solid var(--story); border-radius: 0 10px 10px 0; padding: 18px 20px; margin: 28px 0; }
+    .callout-text { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.5; font-style: italic; }
+    .callout-source { font-size: 11px; color: var(--story-light); letter-spacing: 1px; text-transform: uppercase; margin-top: 10px; }
+
+    /* Voice */
+    .voice-grid { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; }
+    .voice-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; }
+    .voice-card::after { content: '\201D'; position: absolute; top: 8px; right: 16px; font-size: 48px; color: var(--story-glow); font-family: Georgia, serif; line-height: 1; }
+    .voice-quote { font-size: 14px; color: var(--text); line-height: 1.6; font-style: italic; padding-right: 24px; }
+    .voice-attr { font-size: 11px; color: var(--story-light); margin-top: 10px; letter-spacing: 0.5px; }
+
+    /* Segment Flow */
+    .seg-flow { margin: 24px 0; }
+    .seg-row { display: flex; align-items: stretch; margin-bottom: 2px; }
+    .seg-label { width: 140px; flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.5px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-right: none; border-radius: 6px 0 0 6px; display: flex; align-items: center; }
+    .seg-bar { flex: 1; display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 0 6px 6px 0; }
+    .seg-fill { height: 6px; border-radius: 3px; background: var(--story); }
+    .seg-val { font-size: 12px; font-weight: 700; color: var(--story-light); white-space: nowrap; }
+
+    /* Signal Cards */
+    .signal-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 14px; }
+    .signal-num { font-size: 28px; font-weight: 900; color: var(--story); line-height: 1; margin-bottom: 8px; }
+    .signal-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .signal-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .signal-body strong { color: var(--text); font-weight: 600; }
+
+    /* Product Tags */
+    .product-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+    .product-tag { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 8px 16px; font-size: 12px; color: var(--text); font-weight: 600; letter-spacing: 0.5px; }
+    .product-tag.highlight { border-color: var(--story); color: var(--story-light); background: var(--story-glow); }
+
+    /* Champion (Update) Section */
+    .champion-section {
+      position: relative;
+      background: linear-gradient(180deg, rgba(217, 196, 138, 0.10), rgba(217, 196, 138, 0.02) 60%, transparent);
+      border-top: 2px solid var(--champion);
+      border-bottom: 2px solid var(--champion);
+      padding: 32px 0 40px;
+    }
+    .champion-tag {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--champion); margin-bottom: 14px;
+    }
+    .champion-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--champion);
+      box-shadow: 0 0 12px rgba(217, 196, 138, 0.85);
+    }
+    .champion-headline {
+      font-size: 36px; font-weight: 900; line-height: 1.05; letter-spacing: -0.8px;
+      margin-bottom: 14px; color: var(--text);
+    }
+    .champion-headline .accent { color: var(--champion); }
+    .champion-lede { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+    .champion-lede strong { color: var(--text); font-weight: 600; }
+    .champion-section .stat-cell .val { color: var(--champion); }
+    .champion-source {
+      font-size: 11px; color: var(--muted); letter-spacing: 0.5px;
+      margin-top: 22px; line-height: 1.6;
+    }
+    .champion-source a { color: var(--story-light); text-decoration: none; }
+    .champion-source a:hover { text-decoration: underline; }
+
+    /* Ambient Bar */
+    .ambient-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; margin: 20px 0 8px; }
+    .ambient-cell { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 6px; text-align: center; }
+    .ambient-cell .place { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+    .ambient-cell .val { font-size: 18px; font-weight: 800; color: var(--story-light); line-height: 1.1; margin-top: 4px; }
+    .ambient-cell .unit { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+    /* Mobile */
+    @media screen and (max-width: 400px) {
+      .stat-strip { grid-template-columns: repeat(2, 1fr) !important; }
+      .stat-cell .val { font-size: 22px; }
+      .seg-label { width: 110px; font-size: 10px; }
+      .seg-val { font-size: 11px; }
+      .hero-title { font-size: 28px; }
+      .section-title { font-size: 20px; }
+      .champion-headline { font-size: 30px; }
+      .ambient-cell .val { font-size: 16px; }
+    }
+
+    /* Footer */
+    .brand-footer { background: var(--surface); border-top: 1px solid var(--border); padding: 48px 0; text-align: center; }
+    .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .footer-logo { text-decoration: none; }
+    .footer-logo .api { font-size: 20px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 20px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .footer-team { font-size: 11px; color: var(--story-light); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+    .footer-desc { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 340px; }
+    .footer-cta { display: inline-block; margin-top: 8px; padding: 12px 32px; background: var(--accent); color: var(--text); border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; }
+    .footer-fine { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Athlete Story</span>
+        <span class="edition-date">July 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img class="hero-img" src="jenn-hero-finish.jpg" alt="Jenn Lichter holding the Western States finish tape above her head after winning the 2026 race" />
+    <div class="hero-overlay">
+      <div class="hero-tag">WSER 2026 &middot; Course Record</div>
+      <h1 class="hero-title">Jenn Lichter</h1>
+      <p class="hero-sub">In her <strong>100-mile debut</strong>, Jenn broke the Western States course record. Five weeks earlier, the <strong>Nike Sport Research Lab's Applied Performance Innovation (API) team</strong> was with her in the California foothills &mdash; sensors on, notebooks open, dialing in the plan that would carry her from Robinson Flat to the Placer High track.</p>
+    </div>
+  </div>
+
+  <!-- CHAMPION UPDATE -->
+  <section class="champion-section">
+    <div class="container">
+      <div class="champion-tag">
+        <span class="champion-dot"></span>
+        June 27, 2026 &mdash; Auburn, CA
+      </div>
+      <h2 class="champion-headline">Course <span class="accent">Record.</span></h2>
+      <p class="champion-lede">Jenn crossed the line at Placer High in <strong>15:28:05</strong>, taking down Courtney Dauwalter's 2023 course mark by <strong>1 minute, 28 seconds</strong>. She took the lead on the climb to <strong>Devil's Thumb</strong> and never gave it back, closing the final track lap at a <strong>5:20 mile pace</strong>.</p>
+
+      <div class="stat-strip">
+        <div class="stat-cell">
+          <div class="val">15:28:05</div>
+          <div class="label">Finish</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">-1:28</div>
+          <div class="label">Course Record</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">1st</div>
+          <div class="label">100mi Debut</div>
+        </div>
+      </div>
+
+      <div class="callout" style="border-left-color: var(--champion); background: var(--champion-dim);">
+        <div class="callout-text">&ldquo;Do you want a course record?&rdquo;</div>
+        <div class="callout-source" style="color: var(--champion);">Nick Cornell &mdash; Jenn's partner &mdash; at Robie Point, mile 98.9</div>
+      </div>
+
+      <p class="section-text">The answer came in her pace. From a 36-second cushion at Robie Point to a course record by 1:28 just over a mile later, Jenn tapped the same self-belief she had trusted for the previous 15 hours &mdash; and turned a possible win into a definitive one.</p>
+
+      <p class="champion-source">
+        Sources: <a href="https://www.runnersworld.com/news/a69125881/jenn-lichter-trail-running/">Runner's World</a> &middot; <a href="https://trainright.com/how-she-did-it-jennifer-lichter-western-states-win/">TrainRight (John Fitzgerald)</a> &middot; <a href="https://www.trailrunnermag.com/gear/shoes/fastest-shoes-at-the-2026-western-states-100/">Trail Runner Magazine</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">From the</div>
+      <div class="team-name">Nike Sport Research Lab &times; API</div>
+      <div class="edition-divider">
+        <div class="line"></div>
+        <div class="label">Auburn, CA &bull; May 2026</div>
+        <div class="line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE ATHLETE -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Athlete</div>
+      <h2 class="section-title">Missoula's newest 100-mile champion</h2>
+      <p class="section-text">Jennifer Lichter is a professional trail and ultra runner based in <strong>Missoula, Montana</strong>. Born in <strong>Bogot&aacute;, Colombia</strong> and adopted at nine into a family in La Crosse, Wisconsin, she found running in middle school and endurance sport in her twenties. In 2021 she won the Run the Rut 50K in her ultra debut. By 2025 she was setting course records at Broken Arrow 46K and Speedgoat 50K.</p>
+      <p class="section-text">She stepped up to 100 miles for the first time at Western States 2026. She won it &mdash; and reset the course record while doing it.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- THE MISSION -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Mission</div>
+      <h2 class="section-title">One long day. Race-like conditions. A championship on the line.</h2>
+      <p class="section-text">On <strong>Monday, May 18, 2026</strong> &mdash; roughly five weeks before race day &mdash; the API team traveled to Auburn, California to support Jenn on the biggest day of her training camp: a <strong>~50-mile</strong> preview from <strong>Robinson Flat to Rucky Chucky River</strong> covering the middle sections of the Western States course.</p>
+      <p class="section-text">In coordination with her coach, <strong>John Fitzgerald (CTS)</strong>, the API team offered custom support in three areas that would matter most on race day &mdash; and in the humid canyons in between:</p>
+
+      <div class="study-card">
+        <div class="study-name">01 &middot; Thermoregulation management</div>
+        <div class="study-desc">Core body temperature (ingestible pill), skin temperature at <strong>six sites</strong> (iButtons on calf, quad, tricep, scapula, and left &amp; right chest), and the <strong>core-to-skin gradient</strong> that governs how efficiently she can shed heat.</div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">02 &middot; Sweat &amp; sodium</div>
+        <div class="study-desc"><strong>Sweat patches</strong> on both forearms to quantify sodium concentration, paired with continuous body-mass tracking to estimate whole-body sweat rate segment by segment.</div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">03 &middot; Fuel &amp; hydration</div>
+        <div class="study-desc">Fluid in and out, carbohydrate intake logged at each checkpoint, and environmental conditions &mdash; temperature, humidity, wind, and barometric pressure &mdash; captured on-site as she moved through the day.</div>
+      </div>
+
+      <p class="section-text" style="margin-top: 24px;">Four checkpoints: <strong>Devil's Thumb &middot; Michigan Bluff &middot; Foresthill &middot; Rucky Chucky River.</strong> One pre-run kit-up at Robinson Flat, one final weigh-in at the river. Jenn moved with intention through the aid stations to keep the day race-realistic while allowing the team enough time to collect what they came for.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- THERMOREGULATION -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Data &middot; Thermoregulation</div>
+      <h2 class="section-title">Core held. The gradient closed.</h2>
+      <p class="section-text">Over 7 hours and 20 minutes of running, ambient temperature climbed from <strong>8.7&deg;C at Robinson Flat to 31.4&deg;C at Rucky Chucky</strong>. Jenn's core temperature stayed calm &mdash; hovering between <strong>37 and 38.3&deg;C</strong>, well under the <strong>38.5&deg;C threshold</strong> we watch as an early caution line.</p>
+
+      <div class="viz-block">
+        <div class="viz-title">Core &amp; skin temperature &mdash; full day</div>
+        <img src="jenn-core-skin-temp.jpg" alt="Line chart of core and skin temperature over the training day. Core temperature stays flat around 37 to 38 degrees C. Skin temperature rises in the afternoon canyons." />
+        <div class="caption">Robinson Flat &rarr; Rucky Chucky. Core (teal) stayed stable; skin (blue) rose through the afternoon canyons, with brief drops at aid stations where she cooled down.</div>
+      </div>
+
+      <p class="section-text">The story worth watching is underneath that: the <strong>core-to-skin gradient</strong>. That gap is how the body dumps heat &mdash; the wider the gradient, the easier heat dissipation. Early in the day, the gradient was healthy (<strong>8&ndash;10&deg;C</strong>). As she pushed into the exposed section from Foresthill down to the river, ambient temperatures climbed into the low 30s and the gradient <strong>compressed toward 4&ndash;5&deg;C</strong> &mdash; approaching the range where cooling becomes work.</p>
+
+      <div class="viz-block">
+        <div class="viz-title">Core-to-skin gradient &mdash; the heat dissipation window</div>
+        <img src="jenn-temp-gradient.jpg" alt="Line chart showing core-to-skin temperature gradient shrinking from about 8 degrees C early in the day to about 4 to 5 degrees C in the afternoon canyons." />
+        <div class="caption">A wide gradient means heat is leaving the body easily. As the day heated up, the gradient narrowed &mdash; a signal that heat dissipation was working harder to keep pace with the environment.</div>
+      </div>
+
+      <p class="section-text">At <strong>Foresthill</strong> &mdash; with the gradient tightening and the hottest, most exposed stretch of the day still ahead &mdash; the team took <strong>proactive cooling measures</strong> before she left the checkpoint: water on her body and ice around her neck. Not a reaction to a core-temp alarm, a <em>pre-emptive</em> intervention driven by the gradient trend.</p>
+
+      <div class="callout">
+        <div class="callout-text">Core body temperature didn't ring the alarm bells. The <em>core-to-skin gradient</em> did &mdash; and it pointed straight to the same canyons Jenn would face on race day afternoon.</div>
+        <div class="callout-source">API Team Observation</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SWEAT + SODIUM -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Call &middot; Sweat &amp; Sodium</div>
+      <h2 class="section-title">The moment the data met the feeling</h2>
+      <p class="section-text">The sweat patches applied at Robinson Flat came off at Devil's Thumb. While Jenn ran the next section to Michigan Bluff, the team analyzed them on the roadside. The results came back on the <strong>lower end of the range: 500 and 560 ppm sodium</strong> (approximately mg per liter of sweat).</p>
+
+      <p class="section-text">When Jenn came through Michigan Bluff, she flagged something separately: <strong>GI discomfort</strong>. She was alternating one bottle of water with one bottle of Precision Rapid Hydration &mdash; a high-sodium formulation &mdash; and she had a feeling the sodium load was contributing. Two pieces of information landed at the same checkpoint:</p>
+
+      <div class="signal-card">
+        <div class="signal-num">01</div>
+        <div class="signal-title">Objective: modest sodium concentration in sweat</div>
+        <div class="signal-body">500&ndash;560 ppm across both patches &mdash; not a high-loser profile. Suggested she didn't need aggressive sodium replacement to stay in balance.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">02</div>
+        <div class="signal-title">Subjective: gut feedback matched the data</div>
+        <div class="signal-body">Jenn's own read on her stomach independently pointed to the same lever. When athlete instinct and the numbers agree, the confidence to act is high.</div>
+      </div>
+
+      <p class="section-text">This is where <strong>field testing pays off</strong>. Because API team scientists were on the course with the sweat patches and the analyzer, the objective sodium number was in the team's hands at the exact checkpoint Jenn's own subjective signal came in. Two data streams. One conversation. <strong>Athlete and Nike Sport Research Lab making a shared, real-time decision on performance.</strong></p>
+      <p class="section-text">Together, we backed off the high-sodium bottle for the remainder of the day. By Foresthill she confirmed her <strong>GI discomfort had resolved</strong>, and she headed into the hottest, most exposed section of the day with more room to work with.</p>
+
+      <div class="callout">
+        <div class="callout-text">This is the shape of the work &mdash; not to override the athlete, and not to trust a single number in isolation. Give her the picture, listen to what she's telling us, and make the smallest right adjustment.</div>
+        <div class="callout-source">API Team &mdash; Field Notes</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUEL + HYDRATION -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Data &middot; Fuel &amp; Hydration</div>
+      <h2 class="section-title">The full picture of a 7-hour training day</h2>
+      <p class="section-text">Continuous measurement of body mass, fluid intake, sweat rate, carbohydrate intake, and environmental conditions across all four segments produced the training day's fingerprint.</p>
+
+      <div class="stat-strip" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="stat-cell">
+          <div class="val">5.88 L</div>
+          <div class="label">Total sweat</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">4.32 L</div>
+          <div class="label">Fluid in</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">-3.6%</div>
+          <div class="label">Body mass loss</div>
+        </div>
+      </div>
+
+      <div class="viz-block">
+        <div class="viz-title">Segment-by-segment hydration &amp; fueling</div>
+        <img src="jenn-hydration-dashboard.jpg" alt="Multi-panel dashboard showing sweat rate, fluid intake, carbohydrate intake, dehydration trend, and environmental conditions across the four segments of the training day." />
+        <div class="caption">The full training-day dashboard: sweat rate peaked at 1.13 L/hr through the Michigan Bluff climb; carbohydrate rate peaked at 71 g/hr into Foresthill; net dehydration ended at 3.6% body-mass loss, above the &le;2% target for a hot race day.</div>
+      </div>
+
+      <div class="section-label" style="margin-top: 32px;">Ambient temperatures across the day</div>
+      <div class="ambient-row">
+        <div class="ambient-cell">
+          <div class="place">Robinson Flat</div>
+          <div class="val">8.7</div>
+          <div class="unit">&deg;C</div>
+        </div>
+        <div class="ambient-cell">
+          <div class="place">Devil's Thumb</div>
+          <div class="val">22.5</div>
+          <div class="unit">&deg;C</div>
+        </div>
+        <div class="ambient-cell">
+          <div class="place">Michigan Bluff</div>
+          <div class="val">23.1</div>
+          <div class="unit">&deg;C</div>
+        </div>
+        <div class="ambient-cell">
+          <div class="place">Rucky Chucky</div>
+          <div class="val">31.4</div>
+          <div class="unit">&deg;C</div>
+        </div>
+      </div>
+
+      <p class="section-text" style="margin-top: 16px;">The final 15-mile push from Foresthill to Rucky Chucky was the hardest segment of the day: <strong>+9&deg;C jump in ambient temperature, 1.11 L/hr sweat rate, only 25 g/hr of carbohydrate</strong>, and the largest body-mass drop of the run. It also happened to be the most useful segment we captured &mdash; the closest match to what race day would ask of her.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- THE SIGNAL -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Signal</div>
+      <h2 class="section-title">Three things the day told us</h2>
+
+      <div class="study-card">
+        <div class="study-name">Thermoregulation was resilient &mdash; but has a ceiling</div>
+        <div class="study-desc">Core never entered the danger zone, but the gradient tightened in the canyons. On a hotter race day, that same physiology would need <strong>more headroom</strong> &mdash; which is what heat acclimation training is designed to build.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-name">Sodium is not a fixed prescription</div>
+        <div class="study-desc">A general "drink more electrolyte" default would have kept the GI issue going. Individual sweat sodium data, combined with the athlete's own gut feedback, unlocked <strong>the specific right answer for this athlete</strong>.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-name">Fuel intake has room to grow</div>
+        <div class="study-desc">Average carbohydrate intake of <strong>40 g/hr</strong> sat below the 60&ndash;90 g/hr band that top ultra-endurance performers now target. As gut tolerance allows, more fuel would support a longer, faster back half.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTO BREAK: hydration dashboard is above; core/skin/gradient are above; no separate photo asset -->
+
+  <!-- RECOMMENDATIONS -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Recommendations</div>
+      <h2 class="section-title">From the field notes to the final weeks of prep</h2>
+      <p class="section-text">In the follow-up with Jenn and John Fitzgerald, three specific recommendations came out of the day &mdash; each pointing at the pieces that would matter most on race day:</p>
+
+      <div class="signal-card">
+        <div class="signal-num">01</div>
+        <div class="signal-title">Build heat tolerance ahead of race-day conditions</div>
+        <div class="signal-body">The gradient trend told us where the ceiling is. <strong>Structured heat acclimation</strong> in the final weeks would widen the window she has to work with when ambient temperatures spike.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">02</div>
+        <div class="signal-title">Slightly increase fluid intake</div>
+        <div class="signal-body">Target: <strong>&le; 2% body-mass loss by the finish</strong>. On this training day she finished at &minus;3.6%. Nudging fluid volume up (without spiking sodium) protects the second half of a 100-miler.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">03</div>
+        <div class="signal-title">Push carbohydrate intake toward 60&ndash;90 g/hr</div>
+        <div class="signal-body">Move toward the top of the tolerable range as the gut adapts. The upside on the last 30 miles &mdash; where races are won or lost &mdash; is real and measurable.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- RACE DAY -->
+  <section>
+    <div class="container">
+      <div class="section-label">Race Day</div>
+      <h2 class="section-title">The plan met the mountain</h2>
+      <p class="section-text">On June 27, Jenn ran the race by <em>feel</em> &mdash; the same way she has always run &mdash; but into a plan the whole team had helped her build. Three days before the start she caught a stomach bug, and per her coach's write-up, the pivot for race-day fueling turned into a surprisingly low-tech Plan B: <strong>Wonder Bread soaked in Coca-Cola</strong>.</p>
+      <p class="section-text">She took the lead <strong>on the climb to Devil's Thumb</strong> &mdash; the exact section her coach had asked her to run three separate times during the training camp. From there she extended, closed the final canyons cleanly, and came into Robie Point at mile 98.9 with a 36-second cushion on the course record.</p>
+
+      <div class="callout">
+        <div class="callout-text">&ldquo;She doesn't run by splits or pacing calculations, but rather by feel and a very well-tuned internal intensity gauge.&rdquo;</div>
+        <div class="callout-source">John Fitzgerald, CTS &mdash; TrainRight</div>
+      </div>
+
+      <p class="section-text">The final track lap: <strong>5:20 pace</strong>. Course record: <strong>-1:28</strong>. Body: doing what the training had prepared it to do.</p>
+    </div>
+  </section>
+
+  <!-- ATHLETE VOICE -->
+  <section>
+    <div class="container">
+      <div class="section-label">Athlete Voice</div>
+      <h2 class="section-title">&ldquo;Big magic&rdquo;</h2>
+      <p class="section-text">Talking on the <em>Singletrack Podcast</em> in the 2026 Western States 100 pre-race interview, Jenn returned again and again to the May 18 course-preview day &mdash; the day the API team spent with her on the Western States course. She had captioned her Strava post from that day &ldquo;big magic.&rdquo; In her own words, this is why:</p>
+
+      <div class="voice-grid">
+        <div class="voice-card">
+          <div class="voice-quote">&ldquo;I called it &lsquo;big magic&rsquo; on my Strava because it felt so super magical. It was the first time that it really hit me that I was racing this race... being at camp, it became really real. I just came out of it really, really excited.&rdquo;</div>
+          <div class="voice-attr">Jenn Lichter &mdash; Singletrack Podcast, 2026 WSER Pre-Race Interview</div>
+        </div>
+
+        <div class="voice-card">
+          <div class="voice-quote">&ldquo;My Nike manager Lucy came out along with Emma, who is one of the Nike Research Sports Scientists, and she was helping me figure out my sodium... I was consuming too much sodium because I thought in my head I was about 900. It turns out I'm like 500 &mdash; so I'm on a lower level &mdash; which I'm glad I found out, because I was able to learn from that and fix.&rdquo;</div>
+          <div class="voice-attr">Jenn Lichter &mdash; on the sweat-sodium call in the field</div>
+        </div>
+
+        <div class="voice-card">
+          <div class="voice-quote">&ldquo;I would say maybe like the moment where I was like, &lsquo;ok, I can do this.&rsquo;&rdquo;</div>
+          <div class="voice-attr">Jenn Lichter &mdash; on what the camp day gave her</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- THE PRODUCT -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Product</div>
+      <h2 class="section-title">The prototype on her feet</h2>
+      <p class="section-text">Jenn ran the majority of Western States in a <strong>Nike ACG prototype</strong> &mdash; a lighter, faster take on the Ultrafly lineage that our team on the ground has been calling the "Kigerfly." After the deep river crossing in the back half of the course, she swapped into the production <strong>Nike ACG Ultrafly 2</strong> for the final push to Auburn.</p>
+      <p class="section-text">The shoe story wasn't a side plot on this day. It was the prototype's biggest test yet &mdash; a 100-mile debut, in a course-record run, on the feet of the woman who won it.</p>
+
+      <div class="product-tags">
+        <span class="product-tag highlight">Nike ACG Kigerfly (proto)</span>
+        <span class="product-tag highlight">Nike ACG Ultrafly 2</span>
+        <span class="product-tag">Lighter than Ultrafly</span>
+        <span class="product-tag">Trail-first geometry</span>
+        <span class="product-tag">River-to-finish swap</span>
+      </div>
+
+      <p class="section-text"><em>Reference:</em> <a href="https://www.trailrunnermag.com/gear/shoes/fastest-shoes-at-the-2026-western-states-100/" style="color: var(--story-light);">Trail Runner Magazine &mdash; Fastest Shoes at the 2026 Western States 100</a>.</p>
+    </div>
+  </section>
+
+  <!-- PATH FORWARD -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Path Forward</div>
+      <h2 class="section-title">What one day with an athlete makes possible</h2>
+      <p class="section-text">The value of a course-preview day is not any single metric. It's the <strong>alignment</strong> that happens when the athlete, the coach, and the API team all look at the same picture at the same time. Sweat sodium alone doesn't tell you to change the bottle. GI discomfort alone doesn't tell you which lever to pull. Together, in real time, they do.</p>
+
+      <div class="signal-card">
+        <div class="signal-num">01</div>
+        <div class="signal-title">Field-first, race-realistic</div>
+        <div class="signal-body">Not a lab treadmill. A real 50-mile day on the actual course &mdash; the closest surrogate we have to what race day will ask.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">02</div>
+        <div class="signal-title">Custom, athlete-in-the-loop</div>
+        <div class="signal-body">The plan flexed to Jenn's feel, her stomach, and her tempo. The team followed the athlete's lead and offered the numbers when they mattered.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">03</div>
+        <div class="signal-title">Small right adjustments, real outcomes</div>
+        <div class="signal-body">Back off the sodium bottle. Widen the heat window. Nudge fuel upward. The kind of changes that compound over 100 miles.</div>
+      </div>
+
+      <div class="callout" style="margin-top: 28px;">
+        <div class="callout-text">One day of well-collected field data + one open conversation with the athlete = a plan she can trust for 15 hours in the mountains.</div>
+        <div class="callout-source">Rapid Summary</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Insights from the cutting edge of athlete performance &mdash; the problems, the solutions, and what we're learning along the way.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+<!-- netlify identity stripped for local preview -->
+</body>
+</html>

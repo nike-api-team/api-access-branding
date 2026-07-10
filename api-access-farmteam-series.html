@@ -56,6 +56,7 @@
     /* ── Sections ── */
     section { padding: 64px 0; border-bottom: 1px solid var(--border); }
     section:last-of-type { border-bottom: none; }
+    section[id] { scroll-margin-top: 120px; }
 
     /* ── Hero ── */
     .hero {
@@ -109,6 +110,66 @@
     .thesis-text {
       font-size: 18px; font-weight: 800; line-height: 1.4; color: var(--accent-light);
     }
+
+    /* ── Chapter Pills (sticky nav under header) ── */
+    .chapter-pills {
+      border-top: 1px solid var(--border);
+      margin-top: 12px;
+      padding: 10px 0 6px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .chapter-pills::-webkit-scrollbar { display: none; }
+    .chapter-pills .container {
+      display: flex; gap: 6px; padding-bottom: 4px;
+      width: max-content; min-width: 100%;
+      justify-content: flex-start;
+    }
+    .pill {
+      flex-shrink: 0;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      padding: 7px 14px; border: 1px solid var(--border); border-radius: 20px;
+      white-space: nowrap;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .pill:hover { color: var(--text); border-color: var(--accent-light); }
+    .pill-disabled { opacity: 0.4; pointer-events: none; }
+    .pill-all {
+      color: var(--text); background: var(--accent); border-color: var(--accent);
+    }
+    .pill-all:hover { background: var(--accent-light); border-color: var(--accent-light); color: var(--text); }
+
+    /* ── Latest Drop card (post-hero) ── */
+    .latest-drop-section { padding: 32px 0 40px; }
+    .latest-drop {
+      background: linear-gradient(135deg, rgba(232, 98, 42, 0.10), rgba(232, 98, 42, 0));
+      border: 1px solid var(--accent); border-radius: 16px;
+      padding: 26px 22px; text-decoration: none; color: inherit; display: block;
+      box-shadow: 0 0 40px rgba(232, 98, 42, 0.12);
+      transition: box-shadow 0.3s, border-color 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .latest-drop:hover { box-shadow: 0 0 60px rgba(232, 98, 42, 0.28); border-color: var(--accent-light); }
+    .latest-drop .pulse-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 10px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 16px;
+    }
+    .latest-drop .pulse-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+      animation: pulse-dot 2.2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(232, 98, 42, 0.65); }
+      50% { box-shadow: 0 0 0 9px rgba(232, 98, 42, 0); }
+    }
+    .latest-drop .drop-chapter { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-light); margin-bottom: 6px; }
+    .latest-drop .drop-title { font-size: 22px; font-weight: 900; line-height: 1.2; margin-bottom: 8px; color: var(--text); letter-spacing: -0.3px; }
+    .latest-drop .drop-date { font-size: 11px; color: var(--muted); margin-bottom: 16px; }
+    .latest-drop .drop-teaser { font-size: 14px; color: #c8c8e0; line-height: 1.7; margin-bottom: 18px; }
+    .latest-drop .drop-cta { font-size: 12px; font-weight: 700; letter-spacing: 1.2px; color: var(--accent); text-transform: uppercase; }
 
     /* ── Chapter Cards ── */
     .chapter-stack { display: flex; flex-direction: column; gap: 20px; }
@@ -181,6 +242,14 @@
         <span class="edition-date">Farm Team</span>
       </div>
     </div>
+    <nav class="chapter-pills" aria-label="Weekly chapters">
+      <div class="container">
+        <a href="api-access-farmteam-week1.html" class="pill">Week 1</a>
+        <a href="api-access-farmteam-week2.html" class="pill">Week 2</a>
+        <span class="pill pill-disabled">Week 3</span>
+        <a href="#chapters" class="pill pill-all">All &rarr;</a>
+      </div>
+    </nav>
   </header>
 
   <div class="brand-intro">
@@ -201,11 +270,30 @@
         <span class="innovation">Farm Team</span>
         <span class="x-acg">x ACG</span>
       </div>
-      <p class="hero-sub">18 experienced ultra endurance trail runners. 15 weeks at Nike World Headquarters. Athletes in Residence with Nike Innovation.</p>
-      <p class="hero-detail">The largest longitudinal running research program Nike has ever conducted &mdash; from 6 minutes to 4+ hours.</p>
+      <p style="font-size:15px; font-weight:600; letter-spacing:0.5px; color:var(--accent-light); text-transform:uppercase; margin:8px 0 18px; max-width:380px; line-height:1.4;">Creating the Future of ACG and Trail Running</p>
+      <p class="hero-sub">18 experienced trail runners. 15 weeks at Nike WHQ. What better than Athletes-in-Residence.</p>
+      <p class="hero-detail">The largest longitudinal ultra endurance running research program Nike has ever conducted.</p>
+      <p style="font-size:14px; font-weight:600; color:var(--text); max-width:380px; line-height:1.55; margin-top:18px; font-style:italic;">Why do people stop, and how can we solve that.</p>
       <div class="scroll-hint">Scroll &#8595;</div>
     </div>
   </section>
+
+  <!-- ═══ LATEST DROP ═══ -->
+  <div class="latest-drop-section">
+    <div class="container">
+      <a class="latest-drop" href="api-access-farmteam-week2.html">
+        <div class="pulse-label">
+          <span class="pulse-dot"></span>
+          Latest Drop
+        </div>
+        <div class="drop-chapter">Week 2</div>
+        <h3 class="drop-title">Pace Has No Place in the Mountains</h3>
+        <div class="drop-date">April 27 &ndash; May 1, 2026</div>
+        <p class="drop-teaser">Vertical meters is the metric of choice for trail runners. Lactate threshold mapped across four gradients &mdash; from flat to +15%. Being a strong flat runner does not automatically make you a strong climber.</p>
+        <span class="drop-cta">Read Week 2 &rarr;</span>
+      </a>
+    </div>
+  </div>
 
   <!-- ═══ THE MOMENT ═══ -->
   <section>
@@ -293,7 +381,7 @@
       <h3 style="font-size:18px; font-weight:800; margin-bottom:16px;">The Fourth Dimension</h3>
 
       <p class="narrative">
-        Beyond approximately 2 hours of exercise, the Big Three are no longer static. They <em>deteriorate</em>. VO&#8322;max drifts. Economy worsens. Threshold shifts. The &ldquo;start line&rdquo; values that predicted your marathon time are not the values you hold at hour four, eight, or sixteen.
+        Beyond approximately 2 hours of exercise, the Big Three are no longer static. They are dynamic &ndash; and often they <em>deteriorate</em>. VO&#8322;max drifts. Economy worsens. Threshold drops. The &ldquo;start line&rdquo; values that predicted your marathon time are not the same values at hour four, eight, or sixteen.
       </p>
 
       <div class="thesis-block">
@@ -305,7 +393,7 @@
       </p>
 
       <p class="narrative">
-        The mechanistic basis for these differences is <em>unresolved</em>. The scientific community has poorly studied what happens beyond 90 minutes &mdash; let alone 4+ hours on mountain terrain. This is the gap.
+        The mechanistic basis for these differences is <em>unresolved</em>. The scientific community has limited study on what happens beyond 90 minutes &mdash; let alone 4+ hours on mountain terrain. This is the gap.
       </p>
 
       <p class="narrative" style="font-size:12px; color:var(--muted); margin-top:24px;">
@@ -319,7 +407,7 @@
       <h3 style="font-size:18px; font-weight:800; margin-bottom:16px;">The Ingredients</h3>
 
       <p class="narrative">
-        If resilience is the fourth dimension, what are its components? That&rsquo;s a difficult question that not Nike, not science, not anyone knows&hellip;yet. But we have our guesses, with unresolved evidence pointing to several interacting factors:
+        If resilience is the fourth dimension, what are its components? That&rsquo;s a difficult question that not Nike, not science, not anyone fully knows&hellip;yet. But we have our guesses, with unresolved evidence pointing to several interacting factors:
       </p>
 
       <p class="narrative" style="font-size:13px; color:var(--muted); line-height:1.7; margin:12px 0 0 0;">
@@ -546,7 +634,7 @@
   </section>
 
   <!-- ═══ WEEKLY CHAPTERS ═══ -->
-  <section>
+  <section id="chapters">
     <div class="container">
       <div class="section-label">Weekly updates</div>
       <h2 class="section-title">15 weeks. One story unfolding.</h2>

@@ -1,6 +1,16 @@
 {
   "stories": [
     {
+      "title": "Jenn Lichter: Big Magic",
+      "teaser": "Five weeks before her 100-mile debut and course-record win at Western States, the API team spent a day with Jenn Lichter on the actual course. Thermoregulation, sweat & sodium, fuel — and one real-time call that changed her day.",
+      "url": "https://api-access.netlify.app/api-access-jenn-lichter.html",
+      "date": "2026-07-09",
+      "category": "Athlete Story",
+      "image": "jenn-hero-finish.jpg",
+      "source": "NSRL × API — Auburn, CA",
+      "tags": ["ultra", "trail running", "Western States", "WSER", "100 mile", "course record", "thermoregulation", "core temperature", "skin temperature", "iButton", "sweat", "sodium", "hydration", "carbohydrate", "fueling", "heat acclimation", "ACG", "Kigerfly", "Ultrafly", "prototype", "field testing", "training camp", "custom support", "athlete story", "NSRL"]
+    },
+    {
       "title": "Nike Innovation Farm Team x ACG: Week 2 — Speed x Grade & The Brain at Baseline",
       "teaser": "Treadmill testing begins. Lactate threshold is mapped across four trail gradients revealing that being a strong flat runner does not make you a strong climber. EEG baselines captured. Muscle oxidative capacity measured. First product debriefs land on endurance apparel prototypes.",
       "url": "https://api-access.netlify.app/api-access-farmteam-week2.html",
