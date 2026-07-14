@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Yao Miao &mdash; How Nike Innovation Compounds</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --story: #e8622a;
+      --story-light: #f0915e;
+      --story-glow: rgba(232, 98, 42, 0.22);
+      --story-deep: #c44e1c;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.92);
+    }
+    .brand-header .container { display: flex; align-items: center; justify-content: space-between; }
+    .brand-logo { display: flex; align-items: baseline; text-decoration: none; }
+    .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--story); }
+    .edition-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+    /* Hero */
+    .hero { position: relative; }
+    .hero-img { width: 100%; display: block; }
+    .hero-overlay {
+      padding: 30px 24px 26px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--story-light); margin-bottom: 10px; }
+    .hero-title { font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -0.5px; margin-bottom: 12px; }
+    .hero-sub { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .hero-sub strong { color: var(--text); font-weight: 600; }
+    .hero-sub em { color: var(--story-light); font-style: normal; font-weight: 600; }
+
+    /* Intro */
+    .brand-intro { padding: 32px 0 0; text-align: center; }
+    .brand-intro .from-line { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .brand-intro .team-name { font-size: 14px; color: var(--story-light); font-weight: 600; margin-bottom: 20px; }
+    .edition-divider { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .edition-divider .line { flex: 1; height: 1px; background: var(--border); }
+    .edition-divider .label { font-size: 11px; color: var(--story); letter-spacing: 3px; text-transform: uppercase; font-weight: 700; white-space: nowrap; }
+
+    /* Section */
+    section { padding: 48px 0; }
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--story); margin-bottom: 12px; }
+    .section-title { font-size: 22px; font-weight: 700; line-height: 1.3; margin-bottom: 16px; }
+    .section-text { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+    .section-text strong { color: var(--text); font-weight: 600; }
+    .section-text em { color: var(--text); font-style: italic; }
+    .section-divider { height: 1px; background: var(--border); margin: 0 24px; max-width: 432px; margin-left: auto; margin-right: auto; }
+
+    /* At a Glance (VP skim) */
+    .glance-section {
+      background: linear-gradient(180deg, rgba(232, 98, 42, 0.05), transparent);
+      padding: 40px 0 32px;
+    }
+    .glance-list { display: flex; flex-direction: column; gap: 10px; margin: 20px 0 4px; }
+    .glance-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 16px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--story);
+      border-radius: 10px;
+    }
+    .glance-num { font-size: 22px; font-weight: 900; color: var(--story); line-height: 1; flex-shrink: 0; min-width: 30px; margin-top: 2px; }
+    .glance-body { flex: 1; }
+    .glance-title { font-size: 11px; font-weight: 700; color: var(--story-light); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 6px; }
+    .glance-text { font-size: 14px; color: var(--muted); line-height: 1.55; }
+    .glance-text strong { color: var(--text); font-weight: 600; }
+    .glance-text em { color: var(--story-light); font-style: normal; font-weight: 600; }
+
+    /* Arc badge (Yao → Farm Team → Yao) */
+    .arc-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px;
+      background: var(--story-glow);
+      border: 1px solid var(--story);
+      border-radius: 20px;
+      font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--story-light);
+      margin-bottom: 14px;
+    }
+    .arc-badge .arrow { color: var(--story); font-weight: 900; }
+
+    /* Photos */
+    .photo-inset { border-radius: 12px; overflow: hidden; margin: 24px 0; background: var(--surface); border: 1px solid var(--border); }
+    .photo-inset img { width: 100%; display: block; }
+    .photo-inset .caption { font-size: 11px; color: var(--muted); letter-spacing: 0.5px; padding: 12px 16px; text-align: center; line-height: 1.5; }
+
+    .viz-block { margin: 24px 0; }
+    .viz-block .viz-title { font-size: 13px; font-weight: 700; color: var(--story-light); letter-spacing: 0.5px; margin-bottom: 8px; }
+    .viz-block img { width: 100%; display: block; border-radius: 10px; background: #fff; padding: 8px; }
+    .viz-block .caption { font-size: 11px; color: var(--muted); letter-spacing: 0.3px; padding: 8px 4px 0; line-height: 1.6; }
+
+    /* Stat Strip */
+    .stat-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin: 24px 0; background: var(--border); border-radius: 10px; overflow: hidden; }
+    .stat-cell { background: var(--surface); padding: 18px 8px; text-align: center; }
+    .stat-cell .val { font-size: 24px; font-weight: 800; color: var(--story); line-height: 1.1; }
+    .stat-cell .label { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; }
+
+    /* Study Cards */
+    .study-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 14px; position: relative; overflow: hidden; }
+    .study-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--story); border-radius: 3px 0 0 3px; }
+    .study-name { font-size: 14px; font-weight: 700; color: var(--story-light); margin-bottom: 6px; letter-spacing: 0.5px; }
+    .study-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .study-desc strong { color: var(--text); font-weight: 600; }
+    .study-desc em { color: var(--text); font-style: italic; }
+
+    /* Callout */
+    .callout { background: var(--story-glow); border-left: 3px solid var(--story); border-radius: 0 10px 10px 0; padding: 18px 20px; margin: 28px 0; }
+    .callout-text { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.5; font-style: italic; }
+    .callout-source { font-size: 11px; color: var(--story-light); letter-spacing: 1px; text-transform: uppercase; margin-top: 10px; }
+
+    /* Voice */
+    .voice-grid { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; }
+    .voice-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; }
+    .voice-card::after { content: '\201D'; position: absolute; top: 8px; right: 16px; font-size: 48px; color: var(--story-glow); font-family: Georgia, serif; line-height: 1; }
+    .voice-quote { font-size: 14px; color: var(--text); line-height: 1.6; font-style: italic; padding-right: 24px; }
+    .voice-attr { font-size: 11px; color: var(--story-light); margin-top: 10px; letter-spacing: 0.5px; }
+
+    /* Cue Card block */
+    .cue-card {
+      background: linear-gradient(180deg, rgba(232, 98, 42, 0.08), rgba(232, 98, 42, 0.02));
+      border: 1px solid var(--story);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 24px 0;
+      position: relative;
+    }
+    .cue-card::before {
+      content: 'EXAMPLE';
+      position: absolute; top: -8px; right: 16px;
+      background: var(--story); color: var(--bg);
+      padding: 2px 8px; border-radius: 3px;
+      font-size: 9px; font-weight: 800; letter-spacing: 1.5px;
+    }
+    .cue-header { margin-bottom: 14px; }
+    .cue-card .cue-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--story); margin-bottom: 6px;
+    }
+    .cue-card .cue-title {
+      font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: 0.3px; line-height: 1.35;
+    }
+    .cue-fields {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: var(--border); border-radius: 6px; overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .cue-field {
+      background: rgba(0, 0, 0, 0.35); padding: 10px 6px; text-align: center;
+    }
+    .cue-field-label {
+      font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase;
+      font-weight: 600; margin-bottom: 4px;
+    }
+    .cue-field-value {
+      font-size: 14px; color: var(--story-light); font-weight: 800; letter-spacing: 0.3px; line-height: 1.15;
+    }
+    .cue-checklist {
+      background: rgba(0, 0, 0, 0.28); padding: 10px 14px; border-radius: 6px;
+      margin-bottom: 10px; border-left: 2px solid var(--story);
+    }
+    .cue-checklist-title {
+      font-size: 10px; color: var(--story); letter-spacing: 1.5px; text-transform: uppercase;
+      font-weight: 700; margin-bottom: 4px;
+    }
+    .cue-checklist-items {
+      font-size: 13px; color: var(--text); line-height: 1.5;
+    }
+    .cue-card .cue-body {
+      font-size: 14px; color: var(--text); line-height: 1.7; font-family: 'Consolas', 'Monaco', monospace;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 14px 16px;
+      border-radius: 6px;
+      border-left: 2px solid var(--story-light);
+      margin-top: 4px;
+    }
+    .cue-card .cue-body em { color: var(--story-light); font-style: normal; font-weight: 600; }
+
+    /* Signal Cards */
+    .signal-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 14px; }
+    .signal-num { font-size: 28px; font-weight: 900; color: var(--story); line-height: 1; margin-bottom: 8px; }
+    .signal-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .signal-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .signal-body strong { color: var(--text); font-weight: 600; }
+    .signal-body em { color: var(--text); font-style: italic; }
+
+    /* Product Tags */
+    .product-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+    .product-tag { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 8px 16px; font-size: 12px; color: var(--text); font-weight: 600; letter-spacing: 0.5px; }
+    .product-tag.highlight { border-color: var(--story); color: var(--story-light); background: var(--story-glow); }
+
+    /* Model Validated Section (mid-story proof) */
+    .validation-section {
+      position: relative;
+      background: linear-gradient(180deg, rgba(232, 98, 42, 0.10), rgba(232, 98, 42, 0.02) 60%, transparent);
+      border-top: 2px solid var(--story);
+      border-bottom: 2px solid var(--story);
+      padding: 36px 0 40px;
+    }
+    .validation-tag {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--story); margin-bottom: 14px;
+    }
+    .validation-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--story);
+      box-shadow: 0 0 12px rgba(232, 98, 42, 0.85);
+    }
+    .validation-headline {
+      font-size: 34px; font-weight: 900; line-height: 1.05; letter-spacing: -0.7px;
+      margin-bottom: 14px; color: var(--text);
+    }
+    .validation-headline .accent { color: var(--story); }
+    .validation-lede { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; }
+    .validation-lede strong { color: var(--text); font-weight: 600; }
+    .validation-section .stat-cell .val { color: var(--story); font-size: 20px; }
+    .validation-note {
+      font-size: 12px; color: var(--muted); line-height: 1.65;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 14px 16px;
+      border-radius: 8px;
+      border-left: 2px solid var(--story-light);
+      margin-top: 20px;
+    }
+    .validation-note strong { color: var(--text); font-weight: 600; }
+    .validation-note em { color: var(--story-light); font-style: normal; font-weight: 700; }
+
+    /* Mobile */
+    @media screen and (max-width: 400px) {
+      .stat-strip { grid-template-columns: repeat(2, 1fr) !important; }
+      .stat-cell .val { font-size: 20px; }
+      .hero-title { font-size: 26px; }
+      .section-title { font-size: 20px; }
+      .validation-headline { font-size: 28px; }
+      .glance-num { font-size: 20px; min-width: 26px; }
+      .glance-text { font-size: 13px; }
+    }
+
+    /* Footer */
+    .brand-footer { background: var(--surface); border-top: 1px solid var(--border); padding: 48px 0; text-align: center; }
+    .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .footer-logo { text-decoration: none; }
+    .footer-logo .api { font-size: 20px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 20px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .footer-team { font-size: 11px; color: var(--story-light); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+    .footer-desc { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 340px; }
+    .footer-cta { display: inline-block; margin-top: 8px; padding: 12px 32px; background: var(--accent); color: var(--text); border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; }
+    .footer-fine { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Case Study</span>
+        <span class="edition-date">July 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img class="hero-img" src="yao-hero-composite.jpg" alt="Yao Miao running on a Woodway treadmill in the Nike Sport Research Lab. She is wearing a breathing mask connected to metabolic-cart tubing, a muscle-oxygen sensor taped to her arm, and Nike race shoes. A Nike Trail-branded lab technician stands directly behind her supervising the run; a second technician on the right monitors the equipment rack. The Nike Sport Research Lab track surface and cabling are visible in the surrounding space." />
+    <div class="hero-overlay">
+      <div class="hero-tag">Nike Innovation &middot; Applied Performance Innovation &middot; Case Study</div>
+      <h1 class="hero-title">How Nike Innovation compounds.</h1>
+      <p class="hero-sub">Cutting-edge research done in advance at the <strong>Nike Sport Research Lab</strong>, turned into a <strong>race-day plan</strong> for a Nike athlete when it matters most. In July 2026, that plan went to Chinese trail runner <strong>Yao Miao</strong> &mdash; who ran <strong>13:04:34</strong> at the <strong>Camins d'H&egrave;r (CDH)</strong> at HOKA Val d'Aran by UTMB, <em>arguably the fastest time ever on the true, standard 110-km course.</em></p>
+    </div>
+  </div>
+
+  <!-- AT A GLANCE (VP skim) -->
+  <section class="glance-section">
+    <div class="container">
+      <div class="section-label">At a Glance</div>
+      <h2 class="section-title">30 seconds, for anyone in a hurry</h2>
+
+      <div class="glance-list">
+        <div class="glance-item">
+          <div class="glance-num">01</div>
+          <div class="glance-body">
+            <div class="glance-title">What we did</div>
+            <div class="glance-text">Built a first-of-its-kind, <strong>athlete-specific race-day performance model</strong> from cross-project Nike Innovation science, then translated it into a pacing chart and cue cards Yao carried into the race.</div>
+          </div>
+        </div>
+        <div class="glance-item">
+          <div class="glance-num">02</div>
+          <div class="glance-body">
+            <div class="glance-title">Farm Team, double duty</div>
+            <div class="glance-text">The same Nike Innovation Farm Team studies that mapped <strong>physiological resilience</strong> &mdash; including how footwear technology influences it &mdash; also validated the <strong>apparel prototypes</strong> Yao chose to race in. One test bed. Multiple dividends. All delivered <em>in the same season</em>.</div>
+          </div>
+        </div>
+        <div class="glance-item">
+          <div class="glance-num">03</div>
+          <div class="glance-body">
+            <div class="glance-title">What she got on the trail</div>
+            <div class="glance-text">A <strong>pacing chart</strong> that showed what effort would produce what finish time, plus <strong>one cue card per segment and one per aid station</strong> &mdash; each with target heart rate, target vertical rate, cooling cues, and the mental frame for that stretch of trail.</div>
+          </div>
+        </div>
+        <div class="glance-item">
+          <div class="glance-num">04</div>
+          <div class="glance-body">
+            <div class="glance-title">What happened</div>
+            <div class="glance-text">Yao ran <strong>13:04:34</strong> at the CDH 110&nbsp;km &mdash; <em>arguably the fastest time on the true, standard modern course</em>. First woman (of 83). Eighth overall (of 859). Her finish landed inside the model's predicted window.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Mission</div>
+      <h2 class="section-title">A race-day plan for a 100-kilometer mountain ultra</h2>
+      <p class="section-text">The athlete: <strong>Yao Miao</strong>. Chinese trail runner from Guizhou Province, known back home as China's "Queen of Trail Running," and the newest name on Nike's <a href="https://about.nike.com/en/magazine/trail-runner-yao-miao-is-running-down-new-goals-with-acg" style="color: var(--story-light);">ACG All Conditions Racing Department</a>.</p>
+      <p class="section-text">The race: the <strong>Camins d'H&egrave;r (CDH)</strong> at HOKA Val d'Aran by UTMB. A specific mountain &mdash; <strong>110 km, 6,400 m of vertical, 12 segments, one hot Pyrenean afternoon.</strong></p>
+      <p class="section-text">The ask was simple to say and hard to answer: <strong>build a race-day plan &mdash; pacing, fueling, apparel, cooling &mdash; that lets one athlete run at the ceiling of her physiology without going through it.</strong> Underneath every segment, the one variable that behaves differently from all the others: <strong>how she is still going after 12 hours on her feet.</strong></p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- THE DILEMMA -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Dilemma</div>
+      <h2 class="section-title">How to keep going</h2>
+      <p class="section-text">One thing separates the ultra-endurance athlete from every shorter-distance runner: <strong>physiological resilience</strong> &mdash; the ability to resist functional decline under acute and chronic stressors. Everyone slows down over 13 hours. <em>The winner is the one who slows least.</em></p>
+      <p class="section-text">Here is the dilemma: <strong>truly measuring an individual athlete's resilience</strong> would require running an instrumented ultra &mdash; sensors, gas analyzers, blood samples, and all &mdash; in real race conditions. That is not a thing you can ask an athlete to do. And race data alone isn't a shortcut, because the timing splits don't come with the metabolic instrumentation attached.</p>
+      <p class="section-text">Without a resilience cofactor tuned to something real, a race-day performance model becomes <em>a well-dressed guess</em>. And guesses are what elite athletes cannot afford at the finish line.</p>
+
+      <div class="callout">
+        <div class="callout-text">Physiological resilience &mdash; the ability to resist functional decline following acute and chronic stressors &mdash; is a fourth physiological determinant of endurance performance, in addition to V&#775;O&#8322;max, running economy, and lactate threshold.</div>
+        <div class="callout-source">Jones &amp; Kirby, 2025 &middot; <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11872681/" style="color: var(--story-light);"><em>Scand J Med Sci Sports</em></a></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- FARM TEAM -->
+  <section>
+    <div class="container">
+      <div class="arc-badge">Yao <span class="arrow">&rarr;</span> Farm Team <span class="arrow">&rarr;</span> Yao</div>
+      <div class="section-label">The Solve</div>
+      <h2 class="section-title">The cutting edge, already waiting</h2>
+      <p class="section-text">In the months before Yao's visit, the <strong>Nike Innovation Farm Team</strong> &mdash; a program at Nike World Headquarters that runs elite-level athletes through structured protocols &mdash; had already put in the work on two problems that any 100-kilometer race plan would need answers to.</p>
+
+      <div class="study-card">
+        <div class="study-name">01 &middot; The 4-hour running study</div>
+        <div class="study-desc">Farm Team athletes ran <strong>4 hours at moderate intensity</strong> across two experimental variables: <strong>fuel intake</strong> (40 g/hr vs 80 g/hr of carbohydrate) and <strong>footwear technology</strong> (an advanced Nike prototype vs a standard offering &mdash; neither of which was the shoe Yao ultimately raced in). Continuous gas exchange gave us <strong>running economy decay</strong> and <strong>respiratory-exchange ratio (RER) decay</strong> as a function of time on feet, fuel, and footwear technology &mdash; the variables that describe how efficiently the aerobic engine still runs late in an ultra. <em>These decay curves became the resilience cofactor in Yao's race-day model.</em></div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">02 &middot; Nike NXT% Dri-Fit prototype testing</div>
+        <div class="study-desc">The same Farm Team put the newest Nike Innovation <strong>Dri-Fit concept</strong> through both in-lab climate-chamber tests and on-trail wear tests. Same test bed. Same athletes. Two dividends. <em>The top Yao would eventually pull out of the pile on race morning was the top the Farm Team had already validated.</em></div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">We didn't need to guess. We had truths, based on science, directly at our fingertips.</div>
+        <div class="callout-source">API Team &mdash; Field Notes</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- THE LAB VISIT -->
+  <section>
+    <div class="container">
+      <div class="section-label">April 2026 &middot; The Lab Visit</div>
+      <h2 class="section-title">One day at Philip H. Knight Campus</h2>
+      <p class="section-text">On <strong>April 7, 2026</strong>, Yao arrived at PHK in Beaverton, Oregon. In the space of a day she moved through four sessions:</p>
+
+      <div class="study-card">
+        <div class="study-name">01 &middot; Baseline Assessment &mdash; Jackie Shea, NSRL</div>
+        <div class="study-desc">Full-body and foot scanning to inform detailed footwear and apparel dimensions, muscle strength testing, joint range of motion.</div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">02 &middot; Apparel Innovation &mdash; Flyweb &amp; NXT% Dri-Fit</div>
+        <div class="study-desc">The <strong>Flyweb Bra</strong> &mdash; a 3D-printed, seamless TPU sports bra that made its public debut on Faith Kipyegon's <em>Breaking4</em> mile attempt &mdash; and the not-yet-released <strong>Nike NXT% Dri-Fit</strong> concept.</div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">03 &middot; ACG Radical AirFlow briefing</div>
+        <div class="study-desc">The engineered-knit long-sleeve top designed to accelerate airflow to the skin using a Bernoulli/Venturi-inspired airduct pattern &mdash; ACG's other summer 2026 apparel innovation, in the same test-bed lineage.</div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">04 &middot; API team &mdash; Speed &times; Grade test</div>
+        <div class="study-desc">An instrumented treadmill test to map her <strong>energy cost across every combination of grade and pace</strong> she would face on the CDH &mdash; the raw input to her race-day performance model.</div>
+      </div>
+
+      <p class="section-text" style="margin-top: 24px;">The three apparel &plus; product sessions were feedback loops. The Speed &times; Grade test was the data engine.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- THE MODEL -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Model</div>
+      <h2 class="section-title">Four ingredients, one race-day plan</h2>
+
+      <div class="study-card">
+        <div class="study-name">01 &middot; Her metabolic profile</div>
+        <div class="study-desc">From the Speed &times; Grade test in her April lab visit: her <strong>oxygen cost per kilometer at every grade</strong>, her <strong>Lactate Threshold ceiling</strong>, her <strong>running economy</strong>, and her heart-rate response.</div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">02 &middot; Her energy and fuel demand</div>
+        <div class="study-desc">Her metabolic profile applied to the CDH's specific segments gave us her <strong>estimated total energy expenditure</strong> for the race and, from that, the <strong>carbohydrate intake rate (g/hr)</strong> she would need to sustain the engine end-to-end. That number became the fueling target in her race-day plan.</div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">03 &middot; Farm Team's resilience cofactor</div>
+        <div class="study-desc">Fitted <strong>running-economy and RER decay curves</strong> from the Farm Team's 4-hour running study. Two versions were built: a <strong>best case</strong> in which fueling keeps up with the effort and the engine only fades a little (intake-protected), and a <strong>worst case</strong> in which fatigue outruns the fuel and the engine fades faster (time-dominated). Both were applied across the race duration.</div>
+      </div>
+      <div class="study-card">
+        <div class="study-name">04 &middot; Mountain physics and environment</div>
+        <div class="study-desc"><strong>Altitude</strong> penalty above 1,500 m (Buskirk-Faulkner). <strong>Eccentric-descent damage</strong> on steep downhill kilometers. A <strong>biomechanical descent cap</strong> so the model doesn't predict unphysical speeds on the plunge to Arties. And a <strong>thermoregulation load</strong> applied across the hot Aran valley afternoon.</div>
+      </div>
+
+      <p class="section-text" style="margin-top: 24px;">Sum them up and run the math <em>backward</em>. Pick a target finish time. Solve for the fractional effort she'd need to hold to arrive there. Translate that fractional effort into a specific per-segment prescription &mdash; average heart rate, average pace, average vertical rate on the climbs. An <strong>inverse-solve race-day model</strong> that reads out as instructions she can follow on the trail.</p>
+
+      <div class="viz-block">
+        <div class="viz-title">Physiological resilience &mdash; Farm Team fits, projected on Yao</div>
+        <img src="yao-resilience.jpg" alt="Four-panel chart showing running economy and RER decay from Farm Team's 4-hour running study, with Yao's projections at 110 g per hour intake overlaid." />
+        <div class="caption">Top: Farm Team data at <strong>40 g/hr</strong> (blue) and <strong>80 g/hr</strong> (red). Left is running-economy decay over time; right is RER decay. Bottom: Yao-specific projections at her race-day <strong>110 g/hr</strong> intake. Solid green is the intake-protected best case; dashed black is the time-dominated worst case.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- THE MENU -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Menu</div>
+      <h2 class="section-title">What effort buys what finish</h2>
+      <p class="section-text">With the model built, one chart shows the entire coaching decision. Pacing on the horizontal. Finish time on the vertical. Two curves &mdash; best case and worst case for resilience &mdash; and the elite reference lines to anchor context.</p>
+
+      <div class="viz-block">
+        <div class="viz-title">Pacing-to-finish menu (S1-S2 resilience window, elite refs)</div>
+        <img src="yao-pacing-sweep.jpg" alt="Chart of finish time versus pacing percentage of LT effort. Two curves: green Scenario 1 (intake-protected drift) and red Scenario 2 (time-dominated drift). Shaded band between them is the resilience window. Purple dash-dot line marks Schide 2022 course record at 13:06:34. Pink dotted line marks Baca 2024 full-course reference at 14:44:51." />
+        <div class="caption">Green: Scenario 1 (intake-protected drift). Red: Scenario 2 (time-dominated drift). Shaded band: the <strong>resilience window</strong> &mdash; the honest range between best and worst case. Purple dash-dot: Schide 2022 course record (13:06:34, 107&nbsp;km version). Pink dotted: Baca 2024 full-course reference (14:44:51, 110&nbsp;km).</div>
+      </div>
+
+      <p class="section-text">A single chart. A single decision. The whole night's worth of coaching debate compressed into one line the coach could point at.</p>
+    </div>
+  </section>
+
+  <!-- MODEL VALIDATED (mid-story proof) -->
+  <section class="validation-section">
+    <div class="container">
+      <div class="validation-tag">
+        <span class="validation-dot"></span>
+        Model validated &mdash; July 3, 2026 &mdash; Vielha, Spain
+      </div>
+      <h2 class="validation-headline">The prediction <span class="accent">held.</span></h2>
+      <p class="validation-lede">At approximately <strong>80% LT effort</strong> &mdash; the coach's chosen intensity band for the first 6 hours &mdash; the model predicted a finish between <strong>12:37 (best case) and 13:44 (worst case)</strong>. She crossed the arch in Vielha at <strong>13:04:34</strong>. Inside the window. First woman of 83. Eighth overall of 859.</p>
+
+      <div class="stat-strip">
+        <div class="stat-cell">
+          <div class="val">13:04:34</div>
+          <div class="label">Actual finish</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">12:37 &ndash; 13:44</div>
+          <div class="label">Predicted range</div>
+        </div>
+        <div class="stat-cell">
+          <div class="val">1st / 83</div>
+          <div class="label">Women's field</div>
+        </div>
+      </div>
+
+      <div class="validation-note">
+        <em>Note on the course record.</em> The previous best on the modern <strong>110 km</strong> CDH course was Baca 2024 in <strong>14:44:51</strong> &mdash; Yao's 13:04:34 is <strong>1h 40m faster</strong> on the same course length. Schide's often-cited 2022 mark of <strong>13:06:34</strong> was on a shorter <strong>107 km</strong> version. Fenre's 2025 mark of 12:31:45 was on a <strong>weather-shortened 103 km</strong> variant. On the true, standard 110-kilometer CDH course as designed and run today, Yao's 13:04:34 is <em>the fastest time on record</em>.
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE CONVERSATIONS -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Handoff</div>
+      <h2 class="section-title">Lab data doesn't win races. Conversations do.</h2>
+      <p class="section-text">Between the April lab visit and race day, the API team held <strong>three working sessions</strong> with Yao and her team. Each one narrowed the field from "what the science says" to "what to do on Friday."</p>
+
+      <div class="signal-card">
+        <div class="signal-num">01</div>
+        <div class="signal-title">Lab review</div>
+        <div class="signal-body">What the Speed &times; Grade test told us &mdash; where her aerobic ceiling sits, what her running economy is, how CHO oxidation scales with intensity, and what fueling target that implies.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">02</div>
+        <div class="signal-title">Race-day model review</div>
+        <div class="signal-body">Athlete-specific &times; course-specific. We walked through the <strong>pacing chart</strong> (what effort produces what finish time), the <strong>honest range of possible finish times</strong> at each intensity, and the <strong>per-segment prescription</strong>: for every one of the 12 segments, a target <strong>average heart rate</strong>, a target <strong>vertical rate on the climbs</strong> (m/hr), a target <strong>pace on the flats and descents</strong>, and the fueling and cooling checkpoints along the way.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">03</div>
+        <div class="signal-title">Cue cards</div>
+        <div class="signal-body">The tangible take-home. <strong>One segment card per stretch of trail. One aid-station card per meeting point.</strong> Each card carries the intensity to hold, the failure modes to watch, and the things <em>not</em> to say &mdash; laminated, clipped to a belt, ready for a coach in a race.</div>
+      </div>
+
+      <p class="section-text" style="margin-top: 24px;">One more decision remained &mdash; one the plan set up but Yao alone would make: <strong>what to wear on race morning.</strong></p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- THE KIT -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Kit</div>
+      <h2 class="section-title">Flyweb Bra + Nike NXT% Dri-Fit prototype</h2>
+      <p class="section-text">The Farm Team had already done the hard part &mdash; putting the newest Nike Innovation apparel prototypes through climate-chamber tests and on-trail wear tests. Yao's job was to try on the results and pick. On race morning, she pulled two Nike Innovation garments out of the pile: the <strong>Flyweb Bra</strong> &mdash; the 3D-printed, seamless TPU sports bra Faith Kipyegon wore for Breaking4 &mdash; and the <strong>Nike NXT% Dri-Fit</strong> prototype, the same top she had tested in the climate chamber. Both aimed at the same target: <strong>maximize sweat efficiency, minimize thermal burden, delay time to dehydration</strong>.</p>
+      <p class="section-text">The <strong>Radical AirFlow</strong> long-sleeve was also on the table. On the day, in her judgment, the NXT% Dri-Fit &plus; Flyweb Bra combo was the better fit for the race she wanted to run. She wore that combo for 110 kilometers of Pyrenean climb, plunge, and finish.</p>
+
+      <div class="product-tags">
+        <span class="product-tag highlight">Nike NXT% Dri-Fit (proto)</span>
+        <span class="product-tag highlight">Nike Flyweb Bra</span>
+        <span class="product-tag">3D-printed, seamless</span>
+        <span class="product-tag">Farm Team validated</span>
+        <span class="product-tag">Sweat efficiency</span>
+        <span class="product-tag">Reduced thermal burden</span>
+      </div>
+
+      <div class="photo-inset">
+        <img src="yao-nxt-drifit.jpg" alt="Detail photograph of the Nike NXT% Dri-Fit top on a hanger, showing the engineered knit fabric and the small ACG triangle logo on the chest." />
+        <div class="caption">The Nike NXT% Dri-Fit prototype she chose for CDH &mdash; an engineered knit whose wear behavior was first mapped by the Nike Innovation Farm Team, then tested at 6,400 m of Pyrenean vertical by Yao.</div>
+      </div>
+
+      <p class="section-text"><em>Reference:</em> <a href="https://about.nike.com/en/magazine/nike-new-performance-material-flyweb" style="color: var(--story-light);">Nike Flyweb</a> &middot; <a href="https://about.nike.com/en/magazine/what-is-nike-radical-airflow" style="color: var(--story-light);">Nike Radical AirFlow</a></p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- CUE CARD EXCERPT -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Take-Home</div>
+      <h2 class="section-title">What a cue card looked like</h2>
+      <p class="section-text">With the kit chosen, the last artifact of the handoff was the one that would live in the coach's pocket. <strong>Twelve segment cards, six aid-station cards</strong> &mdash; each one distilled the model's per-segment prescription into a few lines a coach could hand Yao at an aid station and she could carry in her pocket. Here is <em>one card</em>: <strong>Segment 11 &mdash; the final wall.</strong> Hundred-kilometer races are usually decided at the point where you already have 96 km on your legs, and on the CDH that is the climb from Arties to Escunhau, in the hottest part of the afternoon.</p>
+
+      <div class="cue-card">
+        <div class="cue-header">
+          <div class="cue-label">Cue Card &middot; Segment 11 / 12</div>
+          <div class="cue-title">Arties &rarr; Escunhau &mdash; the final wall, hot valley</div>
+        </div>
+
+        <div class="cue-fields">
+          <div class="cue-field">
+            <div class="cue-field-label">Distance</div>
+            <div class="cue-field-value">5.9 km</div>
+          </div>
+          <div class="cue-field">
+            <div class="cue-field-label">Vertical</div>
+            <div class="cue-field-value">&plus;641 m</div>
+          </div>
+          <div class="cue-field">
+            <div class="cue-field-label">Avg grade</div>
+            <div class="cue-field-value">&plus;11 %</div>
+          </div>
+          <div class="cue-field">
+            <div class="cue-field-label">Duration</div>
+            <div class="cue-field-value">~57 min</div>
+          </div>
+          <div class="cue-field">
+            <div class="cue-field-label">Target HR</div>
+            <div class="cue-field-value">96 % LT</div>
+          </div>
+          <div class="cue-field">
+            <div class="cue-field-label">Vert rate</div>
+            <div class="cue-field-value">~670 m/hr</div>
+          </div>
+        </div>
+
+        <div class="cue-checklist">
+          <div class="cue-checklist-title">Cool at ART aid station</div>
+          <div class="cue-checklist-items">Ice bandana &bull; Cold water on head &bull; Salt</div>
+        </div>
+
+        <div class="cue-checklist">
+          <div class="cue-checklist-title">Technique</div>
+          <div class="cue-checklist-items">Head down &bull; Shortest stride &bull; Poles fully engaged</div>
+        </div>
+
+        <div class="cue-body">
+          <em>KEY MESSAGE:</em><br />
+          "Final wall. 57 minutes. HR will be 96% LT the whole time, that <em>IS</em> the plan. You will feel awful, everyone does. From the top, only 8 km remain."
+        </div>
+      </div>
+
+      <p class="section-text">Every card had the same shape: the numbers to hit, the cooling cues, the technique reminders, and the mental frame. Twelve segments. Six aid stations. One race plan in the coach's pocket.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- RACE DAY -->
+  <section>
+    <div class="container">
+      <div class="section-label">Race Day</div>
+      <h2 class="section-title">13 hours, 4 minutes, 34 seconds</h2>
+      <p class="section-text"><strong>Kit on. Cards clipped to the coach's belt.</strong> Yao started at 06:00 from Les. She climbed the queen (16&nbsp;km, &plus;1,036 m to Coth de Varrad&ograve;s) inside the plan. She rode the two "trap" segments at the intensity the cards prescribed. She reset thermally at Colomers refuge. She dropped through the plunge to Arties without wasting the eccentric budget. And then she climbed the final wall.</p>
+      <p class="section-text">She crossed in Vielha at 19:04 local. Right fist punched high, mid-shout, through the VAL D'ARAN tape into a corridor of cheering strangers.</p>
+
+      <div class="photo-inset">
+        <img src="yao-hero-finish.jpg" alt="Yao Miao breaking the Val d'Aran / HOKA Val d'Aran Pyrenees by UTMB finish tape at the CDH in Vielha, right arm raised in a fist punch, wearing the ACG hydration vest over the NXT% Dri-Fit top." />
+        <div class="caption">13:04:34. Vielha, Spain. First woman across the line at the CDH 110 km &mdash; and, on the true, standard modern course, the fastest time on record.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATHLETE VOICE -->
+  <section>
+    <div class="container">
+      <div class="section-label">Athlete Voice</div>
+      <h2 class="section-title">Her own words</h2>
+      <p class="section-text">In the days after the race, Yao posted her own take on the day. She has a habit of putting the process ahead of the result &mdash; and, in her Instagram note, she named exactly the thing the model tried to give her.</p>
+
+      <div class="voice-grid">
+        <div class="voice-card">
+          <div class="voice-quote">&ldquo;The coaching team calculated a target time of around 13 hours for this race, but my personal goal was 12.5. I knew that if everything went smoothly, I had it in me.&rdquo;</div>
+          <div class="voice-attr">Yao Miao &mdash; post-race</div>
+        </div>
+
+        <div class="voice-card">
+          <div class="voice-quote">&ldquo;Out on the course, I never knew my overall ranking, nor how far back the second-place woman was. I just wanted to lock into my own rhythm and give it absolutely everything I had.&rdquo;</div>
+          <div class="voice-attr">Yao Miao &mdash; post-race</div>
+        </div>
+
+        <div class="voice-card">
+          <div class="voice-quote">&ldquo;My goal was to become the best trail runner of all time. I made up my mind to keep working and continue racing. I believed I could succeed and I wanted to prove it.&rdquo;</div>
+          <div class="voice-attr">Yao Miao &mdash; Nike ACG interview, April 2026</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- THE LESSON -->
+  <section>
+    <div class="container">
+      <div class="section-label">The Lesson</div>
+      <h2 class="section-title">Even a winning day has homework</h2>
+      <p class="section-text">The cue cards were explicit about <strong>eyewear</strong>. Six touchpoints, from the pre-dawn start to peak afternoon:</p>
+      <p class="section-text" style="margin-bottom: 12px;">
+        <strong>LES start</strong> &mdash; "Cap in pack, sunglasses in pack."<br />
+        <strong>Queen climb, HON &rarr; VAR</strong> &mdash; "at 2000 m she'll be in direct sun by 08:30; sunglasses."<br />
+        <strong>MTG plateau, UV window</strong> &mdash; "cap on, glasses on."<br />
+        <strong>MTG aid station</strong> &mdash; "Cap &plus; sunglasses ON before she leaves."<br />
+        <strong>BER &rarr; SAL red flag</strong> &mdash; "Squinting / no glasses &rarr; UV strain in a 13 h day is real."<br />
+        <strong>ART last-full-aid</strong> &mdash; "Sunglasses staying on &mdash; valley sun still peak."
+      </p>
+      <p class="section-text">On race morning, Yao's sunglasses got dust on them early. Rather than stop and lose time, she ran the first 60 km without.</p>
+
+      <div class="voice-card" style="margin: 20px 0;">
+        <div class="voice-quote">&ldquo;That was a huge mistake. During long-distance ultras, especially on the fast downhills, you blink much less. Combine that with harsh light and eye fatigue hits incredibly fast. &hellip; Lesson learned: choosing the right eyewear is non-negotiable, day or night.&rdquo;</div>
+        <div class="voice-attr">Yao Miao &mdash; post-race, on her eyes</div>
+      </div>
+
+      <p class="section-text">Her eyes recovered fully. The lesson didn't need to. That's what training races are for: <strong>find the problems, and solve them.</strong> Next time out, the cue cards get an eyewear <em>discipline</em> line &mdash; not just an eyewear presence line &mdash; and the pre-race kit review lays it on top of the "no compromise" pile.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- THE SIGNAL (VP-facing) -->
+  <section>
+    <div class="container">
+      <div class="arc-badge">Yao <span class="arrow">&rarr;</span> Farm Team <span class="arrow">&rarr;</span> Yao</div>
+      <div class="section-label">The Signal</div>
+      <h2 class="section-title">What this project proves for Nike Innovation</h2>
+
+      <div class="signal-card">
+        <div class="signal-num">01</div>
+        <div class="signal-title">Farm Team is a strategic asset, playing double duty.</div>
+        <div class="signal-body">Same program, same athletes &mdash; one project mapped <strong>physiological resilience</strong> and how footwear technology influences it; another validated the <strong>apparel prototypes</strong> Yao chose to race in. Both fed directly into a single elite-athlete race plan <em>in the same season they were collected</em>.</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">02</div>
+        <div class="signal-title">The pipeline is repeatable.</div>
+        <div class="signal-body">One athlete's lab data <strong>plus</strong> another cohort's resilience science <strong>plus</strong> mountain physics <strong>plus</strong> validated product prototypes = a system we can run again. <em>Same pipeline, new inputs, next race.</em></div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">03</div>
+        <div class="signal-title">Truths, not guesses.</div>
+        <div class="signal-body">We stopped modeling resilience as folklore. Real data, real fits, real predictions. <strong>Her actual finish landed inside the model's forecast window.</strong></div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-num">04</div>
+        <div class="signal-title">Ready when the athlete arrives.</div>
+        <div class="signal-body">By the time Yao walked into PHK in April, the science that made her plan possible was <em>already on the shelf</em> &mdash; because the Farm Team had done the work first. <strong>Preparation is a moat.</strong></div>
+      </div>
+
+      <div class="callout" style="margin-top: 28px;">
+        <div class="callout-text">The Nike Sport Research Lab is a compounding investment. Cutting-edge research, done in advance. Data captured today that becomes the plan a Nike athlete runs tomorrow &mdash; and the next Nike athlete after that.</div>
+        <div class="callout-source">The Nike Innovation Cycle</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- CLOSE -->
+  <section>
+    <div class="container">
+      <div class="section-label">In Closing</div>
+      <h2 class="section-title">The Nike Innovation Cycle, in one race</h2>
+      <p class="section-text">The Nike Sport Research Lab does its most important work <strong>years before the athlete arrives</strong>. Physiological resilience gets a formal definition. A cohort of Nike Innovation Farm Team athletes maps how the engine decays across four hours of running under different fuel intakes and different footwear. A Dri-Fit concept passes climate-chamber tests and comes back with better sweat-management numbers.</p>
+      <p class="section-text">Those aren't separate projects. They are <strong>the same investment</strong>, made in advance, sitting on the shelf.</p>
+      <p class="section-text">And when a Nike athlete like Yao Miao walks into the LeBron James Innovation Center, the Applied Performance Innovation team's job is to <strong>pull the right pieces off that shelf</strong>, combine them with the athlete's own physiology, and hand back a race-day plan &mdash; and the cue cards that carry it &mdash; before she gets on the plane.</p>
+      <p class="section-text">One 13:04:34 finish at the CDH is the visible payoff. The invisible payoff is a pipeline that is now ready for the next Nike athlete, the next race, the next season. <strong>That is how Nike Innovation compounds.</strong></p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Insights from the cutting edge of athlete performance &mdash; the problems, the solutions, and what we're learning along the way.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  netlifyIdentity.on('init', function(user) {
+    if (!user) window.location.href = '/api-access-gate.html?redirect=api-access-yao-miao.html';
+  });
+  netlifyIdentity.on('logout', function() {
+    window.location.href = '/api-access-gate.html';
+  });
+</script>
+</body>
+</html>

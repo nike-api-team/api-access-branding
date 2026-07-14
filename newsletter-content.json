@@ -1,6 +1,16 @@
 {
   "stories": [
     {
+      "title": "Yao Miao: How Nike Innovation Compounds",
+      "teaser": "A case study in the Nike Innovation cycle: cutting-edge research done in advance at the Nike Sport Research Lab, delivered to a Nike athlete when race day arrives. In July 2026, the API team handed Chinese trail runner Yao Miao a first-of-its-kind athlete-specific race-day performance model — built from her own lab physiology, from Nike Innovation Farm Team resilience science, from Farm Team–validated apparel prototypes, and from mountain physics. She ran 13:04:34 at the Camins d'Hèr, arguably the fastest time on the true, standard 110-km course.",
+      "url": "https://api-access.netlify.app/api-access-yao-miao.html",
+      "date": "2026-07-10",
+      "category": "Case Study",
+      "image": "yao-hero-composite.jpg",
+      "source": "NSRL × API — PHK, Beaverton",
+      "tags": ["case study", "Nike Innovation", "Nike Innovation cycle", "compounding investment", "ultra", "trail running", "UTMB", "Val d'Aran", "CDH", "Camins d'Hèr", "Colomers", "110 K", "course record", "ACG", "All Conditions Racing", "Yao Miao", "China", "Chinese athlete", "physiological resilience", "Farm Team", "resilience cofactor", "resilience decay", "running economy", "RER decay", "speed x grade", "lactate threshold", "inverse solve", "pacing chart", "cue cards", "race day plan", "athlete-specific model", "thermoregulation", "Nike NXT% Dri-Fit", "Flyweb Bra", "apparel prototype", "footwear prototype", "sweat efficiency", "NSRL", "PHK"]
+    },
+    {
       "title": "Jenn Lichter: Big Magic",
       "teaser": "Five weeks before her 100-mile debut and course-record win at Western States, the API team spent a day with Jenn Lichter on the actual course. Thermoregulation, sweat & sodium, fuel — and one real-time call that changed her day.",
       "url": "https://api-access.netlify.app/api-access-jenn-lichter.html",
