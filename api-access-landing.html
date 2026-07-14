@@ -727,6 +727,51 @@
     .search-banner .search-icon {
       font-size: 14px;
     }
+
+    /* ═══ Jump Nav (chip row) ═══ */
+    .jump-nav {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 6px 20px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .jump-nav-label {
+      width: 100%;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .jump-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-decoration: none;
+      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+    }
+    .jump-chip:hover, .jump-chip:focus {
+      border-color: var(--accent);
+      background: rgba(58, 109, 245, 0.08);
+      color: var(--accent-light);
+      outline: none;
+    }
+    /* Give anchored sections a little breathing room so headings don't butt against the viewport top */
+    .landing-section {
+      scroll-margin-top: 16px;
+    }
   </style>
 </head>
 <body>
@@ -807,8 +852,19 @@
     </a>
   </div>
 
+  <!-- ═══ JUMP NAV (chip row) ═══ -->
+  <nav class="jump-nav" aria-label="Jump to section">
+    <div class="jump-nav-label">Jump to</div>
+    <a class="jump-chip" href="#featured">Featured</a>
+    <a class="jump-chip" href="#series">Series</a>
+    <a class="jump-chip" href="#london-lab">London Lab</a>
+    <a class="jump-chip" href="#stories">Athlete Stories</a>
+    <a class="jump-chip" href="#dispatches">Dispatches</a>
+    <a class="jump-chip" href="#beyond">Beyond Our Walls</a>
+  </nav>
+
   <!-- ═══ FEATURED ═══ -->
-  <div class="landing-section">
+  <div class="landing-section" id="featured">
     <div class="container">
       <h2 class="section-title">Featured</h2>
 
@@ -831,7 +887,7 @@
   </div>
 
   <!-- ═══ DATA DROPS ═══ -->
-  <div class="landing-section">
+  <div class="landing-section" id="series">
     <div class="container">
       <h2 class="section-title">Data Drops</h2>
       <p class="section-tagline">Our science. Our findings. Direct from the source.</p>
@@ -879,7 +935,7 @@
   </div>
 
   <!-- ═══ LISTENING IN FROM THE LONDON LAB ═══ -->
-  <div class="landing-section">
+  <div class="landing-section" id="london-lab">
     <div class="container">
       <h2 class="section-title">Listening In from the London Lab</h2>
       <p class="section-tagline">Athlete Insights from the NSRL London API Team.</p>
@@ -929,7 +985,7 @@
   </div>
 
   <!-- ═══ ATHLETE STORIES ═══ -->
-  <div class="landing-section">
+  <div class="landing-section" id="stories">
     <div class="container">
       <h2 class="section-title">Athlete Stories</h2>
       <p class="section-tagline">Time spent. Lessons learned.</p>
@@ -1035,7 +1091,7 @@
   </div>
 
   <!-- ═══ CONFERENCE DISPATCHES ═══ -->
-  <div class="landing-section">
+  <div class="landing-section" id="dispatches">
     <div class="container">
       <h2 class="section-title">Conference Dispatches</h2>
       <p class="section-tagline">On the ground at the events shaping sports science.</p>
@@ -1066,7 +1122,7 @@
   </div>
 
   <!-- ═══ BEYOND OUR WALLS ═══ -->
-  <div class="landing-section">
+  <div class="landing-section" id="beyond">
     <div class="container">
       <h2 class="section-title">Beyond Our Walls</h2>
       <p class="section-tagline">What the world is discovering.</p>
