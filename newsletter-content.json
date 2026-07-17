@@ -1,8 +1,18 @@
 {
   "stories": [
     {
+      "title": "Toronto Blue Jays: From Tissue Stiffness to Sock Liners",
+      "teaser": "A muscle-stiffness collaboration put the API team at Blue Jays spring training. Standing on the field, we heard a second problem: players were sore on metal-bladed cleats. We took it back to Adam Welliver and the Nike Space team, who returned with the Zoom Sock Liner — a drop-in, thin, full-length Zoom Air bag. Vlad Guerrero Jr. tried them in 2024 and stuck. Word moved player-to-player through the clubhouse. In 2026, the roster is still asking for them.",
+      "url": "https://api-access.netlify.app/api-access-blue-jays.html",
+      "date": "2026-07-14",
+      "category": "Athlete Story",
+      "image": "bluejays-hero.jpg",
+      "source": "NSRL × Toronto Blue Jays — Dunedin, FL",
+      "tags": ["baseball", "MLB", "Toronto Blue Jays", "Vlad Guerrero Jr", "Jordan", "spring training", "Dunedin", "shear wave elastography", "ultrasound", "Myoton PRO", "muscle stiffness", "tendon stiffness", "training load", "cleats", "footwear", "Zoom Air", "Zoom Sock Liner", "Space team", "Adam Welliver", "comfort", "cleat pressure", "athlete voice", "NSRL"]
+    },
+    {
       "title": "Yao Miao: How Nike Innovation Compounds",
-      "teaser": "A case study in the Nike Innovation cycle: cutting-edge research done in advance at the Nike Sport Research Lab, delivered to a Nike athlete when race day arrives. In July 2026, the API team handed Chinese trail runner Yao Miao a first-of-its-kind athlete-specific race-day performance model — built from her own lab physiology, from Nike Innovation Farm Team resilience science, from Farm Team–validated apparel prototypes, and from mountain physics. She ran 13:04:34 at the Camins d'Hèr, arguably the fastest time on the true, standard 110-km course.",
+      "teaser": "A case study in the Nike Innovation cycle: cutting-edge research done in the Nike Sport Research Lab, delivered to a Nike athlete when race day arrives. In July 2026, the API team handed Chinese trail runner Yao Miao a first-of-its-kind athlete-specific race-day performance model — built from her own lab physiology, from Nike Innovation Farm Team resilience science, from Farm Team–validated apparel prototypes, and from mountain physics. She ran 13:04:34 at the Camins d'Hèr, the fastest time on the true, standard 110-km course.",
       "url": "https://api-access.netlify.app/api-access-yao-miao.html",
       "date": "2026-07-10",
       "category": "Case Study",

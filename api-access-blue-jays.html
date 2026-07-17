@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Access: Toronto Blue Jays — From Tissue Stiffness to Sock Liners</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121c;
+      --surface-2: #181828;
+      --border: #2a2a45;
+      --accent: #3a6df5;
+      --accent-light: #7a9dff;
+      --accent-glow: rgba(58, 109, 245, 0.25);
+      --text: #f0f0f8;
+      --muted: #9999b8;
+      --story: #134a8e;
+      --story-light: #7fb7e6;
+      --story-glow: rgba(19, 74, 142, 0.25);
+      --champion: #d9c48a;
+      --jays-red: #e8291c;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Branded Header ── */
+    .brand-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(18, 18, 28, 0.9);
+    }
+
+    .brand-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo { display: flex; align-items: baseline; user-select: none; text-decoration: none; }
+    .brand-logo .api { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .brand-logo .access { font-size: 22px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+
+    .brand-edition { display: flex; flex-direction: column; align-items: flex-end; }
+    .edition-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--story-light); }
+    .edition-sub { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+
+    .brand-intro { padding: 32px 0 0; text-align: center; }
+    .brand-intro .from-line { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .brand-intro .team-name { font-size: 14px; color: var(--accent-light); font-weight: 600; margin-bottom: 4px; }
+    .brand-intro .reporter { font-size: 12px; color: var(--story-light); font-weight: 600; margin-bottom: 20px; }
+    .brand-intro .edition-divider { width: 40px; height: 2px; background: var(--story); margin: 0 auto; }
+
+    /* ── Hero ── */
+    .hero-img-wrap { position: relative; width: 100%; overflow: hidden; }
+    .hero-img-wrap img {
+      width: 100%;
+      display: block;
+      min-height: 360px;
+      max-height: 620px;
+      object-fit: cover;
+      object-position: center 20%;
+    }
+    .hero-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 100px 24px 32px;
+      background: linear-gradient(transparent 0%, rgba(10,10,15,0.55) 30%, rgba(10,10,15,0.96) 78%);
+    }
+    .hero-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--story-light); margin-bottom: 10px; }
+    .hero-headline { font-size: 32px; font-weight: 900; line-height: 1.08; letter-spacing: -0.5px; }
+    .hero-headline .accent { color: var(--story-light); }
+    .hero-sub { font-size: 15px; color: var(--muted); margin-top: 12px; line-height: 1.55; }
+
+    /* ── Content Sections ── */
+    section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--story-light); margin-bottom: 12px; }
+    .section-title { font-size: 22px; font-weight: 800; line-height: 1.2; margin-bottom: 20px; }
+
+    .story-text { font-size: 15px; color: #c8c8e0; line-height: 1.75; margin-bottom: 16px; }
+    .story-text:last-child { margin-bottom: 0; }
+    .story-text em { color: var(--story-light); font-style: normal; font-weight: 700; }
+    .story-text strong { color: var(--text); font-weight: 700; }
+
+    .divider { width: 40px; height: 3px; background: var(--story); border-radius: 2px; margin: 24px 0; }
+
+    /* ── Full-bleed photo ── */
+    .full-photo { width: 100%; border-radius: 14px; border: 1px solid var(--border); margin: 24px 0; display: block; }
+    .photo-caption { font-size: 12px; color: var(--muted); margin-top: -16px; margin-bottom: 24px; text-align: center; font-style: italic; line-height: 1.45; }
+
+    /* ── Callout card ── */
+    .callout {
+      background: var(--surface);
+      border-left: 3px solid var(--story);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin: 24px 0;
+    }
+    .callout h3 { font-size: 14px; font-weight: 700; color: var(--story-light); margin-bottom: 6px; }
+    .callout p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── Pull quote ── */
+    .pull-quote {
+      background: linear-gradient(135deg, rgba(19,74,142,0.16) 0%, var(--surface) 100%);
+      border: 1px solid rgba(127,183,230,0.32);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .pull-quote .quote-mark { font-size: 44px; line-height: 0.6; color: var(--story-light); font-family: Georgia, serif; margin-bottom: 4px; }
+    .pull-quote .quote-text { font-size: 16px; color: #e6e6f4; line-height: 1.55; font-style: italic; margin-bottom: 12px; }
+    .pull-quote .quote-attr { font-size: 12px; color: var(--story-light); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* ── Problem card ── */
+    .problem-card {
+      background: linear-gradient(135deg, rgba(19,74,142,0.14) 0%, var(--surface) 100%);
+      border: 1px solid rgba(19,74,142,0.4);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .problem-card .problem-icon { font-size: 28px; margin-bottom: 12px; }
+    .problem-card .problem-title { font-size: 16px; font-weight: 800; color: var(--story-light); margin-bottom: 8px; line-height: 1.3; }
+    .problem-card .problem-text { font-size: 14px; color: #c8c8e0; line-height: 1.6; }
+
+    /* ── Tool strip (SWE + Myoton) ── */
+    .tool-strip { display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .tool-card img { width: 100%; display: block; background: #000; }
+    .tool-card .tool-meta { padding: 14px 18px; }
+    .tool-card .tool-name { font-size: 13px; font-weight: 800; color: var(--text); letter-spacing: 0.5px; margin-bottom: 4px; }
+    .tool-card .tool-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+    .tool-card .tool-desc strong { color: var(--story-light); font-weight: 700; }
+
+    /* ── Study card grid (three studies) ── */
+    .study-grid { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; }
+    .study-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .study-card.active { border-color: rgba(127,183,230,0.55); background: linear-gradient(135deg, rgba(19,74,142,0.18) 0%, var(--surface) 100%); }
+    .study-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+    .study-num { font-size: 10px; font-weight: 800; color: var(--story-light); letter-spacing: 2px; text-transform: uppercase; }
+    .study-scale { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; }
+    .study-active-flag { margin-left: auto; font-size: 9px; font-weight: 800; color: var(--champion); background: rgba(217,196,138,0.14); border: 1px solid rgba(217,196,138,0.4); padding: 3px 8px; border-radius: 4px; letter-spacing: 1.5px; text-transform: uppercase; }
+    .study-title { font-size: 15px; font-weight: 800; color: var(--text); line-height: 1.3; margin-bottom: 8px; }
+    .study-body { font-size: 13px; color: #c8c8e0; line-height: 1.6; }
+    .study-body em { color: var(--story-light); font-style: normal; font-weight: 700; }
+    .study-meta {
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.4px;
+    }
+    .study-meta .k { color: var(--story-light); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* ── Product spec card ── */
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 24px 0;
+    }
+    .spec-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--story-light);
+    }
+    .spec-body { padding: 20px; }
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(42,42,69,0.5);
+      font-size: 13px;
+      gap: 16px;
+    }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-label { color: var(--muted); flex-shrink: 0; }
+    .spec-value { font-weight: 700; color: var(--text); text-align: right; }
+
+    /* ── Champion card (Vlad) ── */
+    .champion-card {
+      background: linear-gradient(135deg, rgba(217,196,138,0.14) 0%, var(--surface) 100%);
+      border: 1px solid rgba(217,196,138,0.4);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .champion-card .champ-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--champion); margin-bottom: 8px; }
+    .champion-card .champ-title { font-size: 20px; font-weight: 900; color: var(--text); line-height: 1.2; margin-bottom: 8px; }
+    .champion-card .champ-desc { font-size: 14px; color: #c8c8e0; line-height: 1.6; margin-bottom: 12px; }
+    .champion-card .champ-desc:last-child { margin-bottom: 0; }
+    .champion-card .champ-desc em { color: var(--champion); font-style: normal; font-weight: 700; }
+
+    /* ── Culture link list ── */
+    .link-list { list-style: none; margin: 16px 0 0; padding: 0; }
+    .link-list li { padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .link-list li:last-child { border-bottom: none; }
+    .link-list a { color: var(--story-light); text-decoration: none; font-size: 13px; font-weight: 700; display: block; line-height: 1.4; }
+    .link-list a:hover { color: var(--text); }
+    .link-list .link-src { display: block; font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; }
+
+    /* ── Insight chips ── */
+    .insight-strip { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+    .insight-chip {
+      background: rgba(19,74,142,0.17);
+      border: 1px solid rgba(127,183,230,0.36);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--story-light);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* ── Process flow ── */
+    .process-flow { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+    .process-step { display: flex; gap: 16px; padding: 16px 0; }
+    .process-marker { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+    .process-dot {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--story);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 900; color: #fff;
+    }
+    .process-line { width: 2px; flex: 1; background: var(--border); margin-top: 4px; }
+    .process-step:last-child .process-line { display: none; }
+    .process-content { padding-top: 6px; }
+    .process-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .process-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Takeaway ── */
+    .takeaway-section { text-align: center; padding: 64px 0; }
+    .takeaway-statement {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.28;
+      margin-bottom: 20px;
+      color: var(--story-light);
+      letter-spacing: -0.2px;
+    }
+    .takeaway-body { font-size: 15px; color: #c8c8e0; line-height: 1.7; margin-bottom: 16px; }
+
+    /* ── Connection card ── */
+    .connection-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 32px 0;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+      transition: border-color 0.2s;
+    }
+    .connection-card:hover { border-color: var(--story-light); }
+    .connection-card .conn-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--story-light); margin-bottom: 8px; }
+    .connection-card .conn-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .connection-card .conn-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── Branded Footer ── */
+    .brand-footer { border-top: 1px solid var(--border); padding: 48px 0; }
+    .footer-inner { text-align: center; }
+    .footer-logo { display: inline-flex; align-items: baseline; margin-bottom: 16px; user-select: none; text-decoration: none; }
+    .footer-logo .api { font-size: 28px; font-weight: 900; color: var(--text); }
+    .footer-logo .access { font-size: 28px; font-weight: 300; letter-spacing: 1.5px; color: var(--accent); }
+    .footer-team { font-size: 13px; color: var(--accent-light); font-weight: 600; margin-bottom: 8px; }
+    .footer-desc { font-size: 13px; color: var(--muted); max-width: 360px; margin: 0 auto 24px; line-height: 1.6; }
+    .footer-cta {
+      display: inline-block;
+      padding: 12px 32px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    .footer-cta:hover { background: var(--accent); color: #fff; }
+    .footer-fine { margin-top: 32px; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ BRANDED HEADER ═══ -->
+  <header class="brand-header">
+    <div class="container">
+      <a href="api-access-landing.html" class="brand-logo">
+        <span class="api">API</span><span class="access">ACCESS</span>
+      </a>
+      <div class="brand-edition">
+        <span class="edition-title">Athlete Story</span>
+        <span class="edition-sub">NSRL &times; Toronto Blue Jays</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="brand-intro">
+    <div class="container">
+      <div class="from-line">Reported by</div>
+      <div class="team-name">Applied Performance Innovation</div>
+      <div class="reporter">NSRL &times; Toronto Blue Jays &bull; Dunedin, FL</div>
+      <div class="edition-divider"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="hero-img-wrap">
+    <img src="bluejays-hero.jpg" alt="Vladimir Guerrero Jr. mid-swing in a Toronto Blue Jays home uniform, red Jordan Jumpman batting gloves visible, bat dropping from his lead hand" />
+    <div class="hero-overlay">
+      <h1 class="hero-headline">From Tissue Stiffness <span class="accent">to Sock Liners.</span></h1>
+      <p class="hero-sub">A muscle-stiffness collaboration put the API team at Blue Jays spring training. Once we were there, we heard about the cleats.</p>
+    </div>
+  </div>
+
+  <!-- ═══ THE ENTRY POINT ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The entry point</div>
+      <h2 class="section-title">Shear wave elastography opened the door.</h2>
+
+      <p class="story-text">
+        The API team's relationship with the <strong>Toronto Blue Jays</strong> performance staff didn't start with a shoe. It started with <em>muscle and tendon tissue mechanics</em> &mdash; specifically, shear wave elastography measured with ultrasound.
+      </p>
+
+      <p class="story-text">
+        Tissue stiffness <em>tracks with training load</em>, <em>changes with fatigue</em>, and can flag an athlete drifting toward injury weeks before they feel it. The Blue Jays' staff wanted to understand it. We wanted to work with a group that cared enough to ask.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ SPRING TRAINING ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Spring training</div>
+      <h2 class="section-title">Meeting them where the season starts.</h2>
+
+      <p class="story-text">
+        The conversation moved from Zoom to Florida. The API team ran a hands-on session at the Blue Jays' <strong>spring training facility</strong> &mdash; teaching the performance staff how to <em>collect</em> clean stiffness data and <em>interpret</em> what the probe returns, in the daily rhythm of a professional baseball camp.
+      </p>
+
+      <div class="callout">
+        <h3>Teach the staff, don't do it for them</h3>
+        <p>Our model isn't to fly in, collect data, and disappear. It's to put the tool in the club's own hands so the practice keeps running after we leave &mdash; every subsequent spring, cage session, and bullpen turns into another data point they can read on their own.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE SCIENCE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The science</div>
+      <h2 class="section-title">What tissue stiffness actually looks like.</h2>
+
+      <p class="story-text">
+        Muscle and tendon stiffness are mechanical properties &mdash; measurable with two clinical tools that fit in a training-room bag.
+      </p>
+
+      <div class="tool-strip">
+        <div class="tool-card">
+          <img src="bluejays-swe.jpg" alt="Shear wave elastography ultrasound image showing a color-mapped stiffness overlay (red-yellow-blue heatmap) on a longitudinal muscle scan, with wave propagation traces on the right panel" />
+          <div class="tool-meta">
+            <div class="tool-name">Shear Wave Elastography (SWE)</div>
+            <div class="tool-desc"><strong>Ultrasound-based.</strong> An acoustic push generates a shear wave; the probe measures how fast it propagates. Faster wave = stiffer tissue. Result overlays a live B-mode scan as a color map.</div>
+          </div>
+        </div>
+        <div class="tool-card">
+          <img src="bluejays-myoton.jpg" alt="Handheld Myoton PRO device pressed against the back of a human lower leg to measure tissue stiffness via a brief mechanical impulse" />
+          <div class="tool-meta">
+            <div class="tool-name">Myoton PRO</div>
+            <div class="tool-desc"><strong>Handheld impulse probe.</strong> A tap on the skin drives a damped oscillation into the tissue. The device returns tone, stiffness, and elasticity in seconds &mdash; fast enough to run between reps.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <h3>Why both tools</h3>
+        <p>SWE gives spatial maps of specific tendons and muscle heads. Myoton PRO gives rapid point measurements when you're screening the full roster. Together, one staffer can cover a whole camp before batting practice.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE STUDY (LEARN) ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The proposal &bull; Learn</div>
+      <h2 class="section-title">One question. Three time scales.</h2>
+
+      <p class="story-text">
+        Out of the training week came the next question: <em>what happens to muscle and tendon stiffness as training load ramps through a baseball season?</em> The API team scoped it across <em>three time scales</em>, so the club could pick the one that fit its calendar.
+      </p>
+
+      <div class="study-grid">
+        <div class="study-card">
+          <div class="study-head">
+            <span class="study-num">Study 1</span>
+            <span class="study-scale">Single game &bull; 5&ndash;10 games</span>
+          </div>
+          <div class="study-title">Acute pre &rarr; post game</div>
+          <div class="study-body">
+            Pre-game, during, and post-game (within 30&ndash;60&nbsp;min) with <em>Myoton PRO</em> (SWE where available) on upper- and lower-body muscle and tendon. Hypothesis: properties shift acutely with within-game load, then return to baseline before the next start.
+          </div>
+        </div>
+
+        <div class="study-card">
+          <div class="study-head">
+            <span class="study-num">Study 2</span>
+            <span class="study-scale">Multi-week &bull; in-season</span>
+          </div>
+          <div class="study-title">Weekly recovery / readiness</div>
+          <div class="study-body">
+            One measurement day each week, alongside the team's existing battery (ultrasound, force plates, Plantiga, MRI). Hypothesis: chronic tissue properties correlate with weekly gym/lab metrics and can serve as a <em>recovery / readiness</em> proxy.
+          </div>
+        </div>
+
+        <div class="study-card">
+          <div class="study-head">
+            <span class="study-num">Study 3</span>
+            <span class="study-scale">3&ndash;4 weeks &bull; spring training</span>
+          </div>
+          <div class="study-title">Cushioning &times; soft-tissue adaptation</div>
+          <div class="study-body">
+            <em>10&ndash;12 minor-league position players</em> (no pitchers), two arms: <strong>Extra Cushion</strong> (Zoom bag sock liners in their own cleats) vs. <strong>Control</strong> (regular cleat, no cushion).
+          </div>
+          <div class="study-meta">
+            <span class="k">Daily</span> &nbsp;SWE on rec fem, semimembranosus / BF long, patellar &amp; hamstring tendons &nbsp;&bull;&nbsp; Catapult loading &nbsp;&bull;&nbsp; RPE
+            <br /><span class="k">Pre &amp; Post</span> &nbsp;Lower-body MRI (tissue volume) &nbsp;&bull;&nbsp; watt-bike 10&times;10&thinsp;s &nbsp;&bull;&nbsp; force-plate CMJ
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <h3>Why the field, not the NSRL</h3>
+        <p>Daily, 3&ndash;4-week protocols don't fit inside the NSRL &mdash; athletes visit for hours, not months. A club partnership unlocks <em>chronic learnings</em> a lab visit can't touch: how soft-tissue properties change over time, and what that means for training, recovery, <em>and product</em>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE PIVOT (CLEAT COMFORT) ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The pivot</div>
+      <h2 class="section-title">A second problem on the field.</h2>
+
+      <p class="story-text">
+        This part wasn't in the proposal. While we were on-site scoping the stiffness work, a second signal came in from the players &mdash; not from a form, just from the room. Their <em>cleats hurt</em>. Long days of standing on <strong>metal-bladed shoes</strong> on artificial surface were beating up their feet.
+      </p>
+
+      <div class="problem-card">
+        <div class="problem-icon">👟</div>
+        <div class="problem-title">Metal blades. Long days. Sore feet.</div>
+        <div class="problem-text">Baseball cleats are built for traction, not standing comfort. Hours of pre-game, in-game, and post-game standing on hard-plated shoes on turf turns the pressure profile under the foot into its own performance and recovery problem.</div>
+      </div>
+
+      <p class="story-text">
+        There was no fix in hand &mdash; no drop-in product, no trusted solution. The players had a real problem. We took it back to Nike.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ THE SPACE TEAM SOLUTION ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The response</div>
+      <h2 class="section-title">One call to the Space team.</h2>
+
+      <p class="story-text">
+        We took the problem to <strong>Adam Welliver</strong> and the Nike <strong>Space team</strong> &mdash; the group that lives inside the shoe, in the space between the foot and the ground. If anyone had a fast, drop-in fix for cleat pressure, it was them.
+      </p>
+
+      <p class="story-text">
+        Their answer: the <em>Zoom Sock Liner</em> &mdash; a thin, full-length Zoom Air bag inside a sock-liner form factor that drops into virtually any shoe.
+      </p>
+
+      <div class="pull-quote">
+        <div class="quote-mark">&ldquo;</div>
+        <p class="quote-text">The Zoom helps alleviate cleat pressure and adds responsiveness to improve comfort for athletes compared to regular foam sock liners.</p>
+        <div class="quote-attr">Adam Welliver &bull; Nike Space Team</div>
+      </div>
+
+      <img src="bluejays-sock-liner.jpg" alt="Two sock liners side by side: the Nike Zoom Sock Liner on the left (white, with the full-length Zoom Air bag visible through the underside) and the standard Nike foam sock liner it replaces on the right (black, with a white Nike Swoosh)" class="full-photo" />
+      <div class="photo-caption">The Zoom Sock Liner (left, full-length Zoom Air bag visible) alongside the standard foam sock liner it replaces (right, Nike Swoosh)</div>
+
+      <div class="spec-card">
+        <div class="spec-header">Zoom Sock Liner</div>
+        <div class="spec-body">
+          <div class="spec-row">
+            <span class="spec-label">Form factor</span>
+            <span class="spec-value">Drop-in sock liner</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Cushioning</span>
+            <span class="spec-value">Thin, full-length Zoom Air bag</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Compatibility</span>
+            <span class="spec-value">Any shoe &mdash; incl. metal-bladed cleats</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Benefit</span>
+            <span class="spec-value">Alleviates pressure, adds responsiveness vs. foam</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE ADOPTER (VLAD) ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">The adopter</div>
+      <h2 class="section-title">Vlad opened the door.</h2>
+
+      <p class="story-text">
+        We handed a batch of Zoom Sock Liners to the Blue Jays performance staff. Star first baseman and Jordan athlete <strong>Vladimir Guerrero Jr.</strong> was the first to try them &mdash; and the first to stick with them.
+      </p>
+
+      <div class="champion-card">
+        <div class="champ-label">The muse &bull; 2024 &rarr; 2026</div>
+        <div class="champ-title">Vlad Guerrero Jr.</div>
+        <p class="champ-desc">Vlad has been running the Zoom Sock Liners in his cleats since <em>2024</em>. Teammates noticed. Word moved player-to-player through the clubhouse, and the performance staff came back to ask us to outfit the <em>whole team</em>.</p>
+        <p class="champ-desc">Two seasons later in <em>2026</em>, the roster is still asking for Zoom Sock Liners as their comfort solution.</p>
+      </div>
+
+      <img src="bluejays-vlad-cleats.jpg" alt="Close-up of Vladimir Guerrero Jr.'s red-and-white Jordan 1 Retro cleats on infield dirt, Toronto Blue Jays away pants with royal-blue side stripe visible above" class="full-photo" />
+      <div class="photo-caption">Vlad's Jordan 1 Retro cleats (red / white colorway, 2024) &bull; photo via What Pros Wear</div>
+    </div>
+  </section>
+
+  <!-- ═══ TIMELINE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Timeline</div>
+      <h2 class="section-title">How it happened.</h2>
+
+      <p class="story-text">
+        Zoom Sock Liners in an MLB clubhouse were never the plan. They're what happened when we showed up for a different reason and listened.
+      </p>
+
+      <div class="process-flow">
+        <div class="process-step">
+          <div class="process-marker"><div class="process-dot">1</div><div class="process-line"></div></div>
+          <div class="process-content">
+            <div class="process-title">Science conversation</div>
+            <div class="process-desc">Relationship starts around shear wave elastography and Myoton&nbsp;PRO &mdash; two ways to measure muscle and tendon stiffness at the point of care.</div>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="process-marker"><div class="process-dot">2</div><div class="process-line"></div></div>
+          <div class="process-content">
+            <div class="process-title">On-site training</div>
+            <div class="process-desc">API team travels to spring training in Florida to teach the performance staff how to collect and interpret the data themselves.</div>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="process-marker"><div class="process-dot">3</div><div class="process-line"></div></div>
+          <div class="process-content">
+            <div class="process-title">Studies scoped</div>
+            <div class="process-desc">Single-game, multi-week, and 3&ndash;4-week spring-training designs proposed to the club.</div>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="process-marker"><div class="process-dot">4</div><div class="process-line"></div></div>
+          <div class="process-content">
+            <div class="process-title">Athlete voice</div>
+            <div class="process-desc">Players surface a second pain point &mdash; metal-bladed cleats on artificial surface, sore feet, no fix in hand.</div>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="process-marker"><div class="process-dot">5</div><div class="process-line"></div></div>
+          <div class="process-content">
+            <div class="process-title">Space team delivers the fix</div>
+            <div class="process-desc">API loops in Adam Welliver and the Nike Space team. Zoom Sock Liners come to the Blue Jays performance staff to hand out.</div>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="process-marker"><div class="process-dot">6</div><div class="process-line"></div></div>
+          <div class="process-content">
+            <div class="process-title">Vlad opens the door</div>
+            <div class="process-desc">Vlad Guerrero Jr. tries them, sticks with them, and teammates follow. By 2026 the roster is still standing on Zoom in their cleats.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TAKEAWAY ═══ -->
+  <section class="takeaway-section">
+    <div class="container">
+      <div class="section-label">The takeaway</div>
+      <p class="takeaway-statement">Science creates the door. Presence creates the pivot. Product closes the loop.</p>
+      <p class="takeaway-body">
+        The stiffness collaboration put us on the field. Being on the field put us in earshot of a comfort problem we hadn't come for. Having the Nike Space team a call away turned it into a product a superstar first baseman &mdash; and eventually the whole clubhouse &mdash; would still be wearing two seasons later.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ BRANDED FOOTER ═══ -->
+  <footer class="brand-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="api-access-landing.html" class="footer-logo">
+          <span class="api">API</span><span class="access">ACCESS</span>
+        </a>
+        <div class="footer-team">Applied Performance Innovation</div>
+        <p class="footer-desc">Bringing Nike Sport Research into the athlete's world.</p>
+        <a class="footer-cta" href="api-access-landing.html">Back to API Access</a>
+        <p class="footer-fine">Have questions? Reach out to the API team.</p>
+      </div>
+    </div>
+  </footer>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  netlifyIdentity.on('init', function(user) {
+    if (!user) window.location.href = '/api-access-gate.html?redirect=api-access-blue-jays.html';
+  });
+  netlifyIdentity.on('logout', function() {
+    window.location.href = '/api-access-gate.html';
+  });
+</script>
+
+</body>
+</html>
